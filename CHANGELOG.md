@@ -4,7 +4,17 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.1.0](N/A) - 2016-06-08
+### [0.1.1](N/A) - 2016-06-10
+#### Added
+* Log4TsRoot.getLogger() options parameter
+* Logger.setOptions()
+
+#### Changed
+* Renamed Log4Ts class to Log4TsRoot so it doesn't interfer with the Log4Ts module that log4ts.d.ts exports
+
+
+--------
+### [0.1.0](https://github.com/TeamworkGuy2/ts-simplog/commit/191565b983a870e5b2c2758a7d21de960f7d00bb) - 2016-06-08
 #### Added
 Initial port of log4javascript with major API changes to make it more module and interface based to work with TypeScript. 
 ConsoleAppender doesn't fully work yet. 

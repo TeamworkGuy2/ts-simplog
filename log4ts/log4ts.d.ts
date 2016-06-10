@@ -175,7 +175,7 @@ declare module Log4Ts {
     }
 
 
-    export interface CallAppenderOptions {
+    export interface LoggerOptions {
         logLoggerName?: boolean;
         logAppenderName?: boolean
     }

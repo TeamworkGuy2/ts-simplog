@@ -22,23 +22,23 @@ var BrowserConsoleAppender = (function (_super) {
         var console = this.console;
         if (console && console.log) {
             // use specific logging methods or fallback to console.log
-            var consoleFunc;
+            var funcName;
             if (console.debug && Level.DEBUG.isGreaterOrEqual(logEvent.level)) {
-                consoleFunc = console.debug;
+                funcName = "debug";
             }
             else if (console.info && Level.INFO.equals(logEvent.level)) {
-                consoleFunc = console.info;
+                funcName = "info";
             }
             else if (console.warn && Level.WARN.equals(logEvent.level)) {
-                consoleFunc = console.warn;
+                funcName = "warn";
             }
             else if (console.error && logEvent.level.isGreaterOrEqual(Level.ERROR)) {
-                consoleFunc = console.error;
+                funcName = "error";
             }
             else {
-                consoleFunc = console.log;
+                funcName = "log";
             }
-            consoleFunc.apply(console, this.getFormattedMessage(logEvent, false));
+            console[funcName].apply(console, this.getFormattedMessage(logEvent, false));
         }
         else if ((typeof opera != "undefined") && opera.postError) {
             opera.postError(this.getFormattedMessage(logEvent, true));

@@ -24,10 +24,10 @@ class Logger implements Log4Ts.Logger {
     private timers: { [name: string]: Log4Ts.Timer };
     private appenderCache: Log4Ts.Appender[] = null;
     private appenderCacheInvalidated: boolean;
-    private callAppenderOptions: Log4Ts.CallAppenderOptions;
+    private options: Log4Ts.LoggerOptions;
 
 
-    constructor(name: string, callAppenderOptions?: Log4Ts.CallAppenderOptions) {
+    constructor(name: string, options: Log4Ts.LoggerOptions = {}) {
         this.name = name;
         this.parent = null;
         this.children = [];
@@ -41,7 +41,7 @@ class Logger implements Log4Ts.Logger {
 
         this.appenderCache = null;
         this.appenderCacheInvalidated = false;
-        this.callAppenderOptions = callAppenderOptions;
+        this.options = options;
 
         this.addChild = this.addChild.bind(this);
         this.getAdditivity = this.getAdditivity.bind(this);
@@ -62,6 +62,11 @@ class Logger implements Log4Ts.Logger {
         this.timeEnd = this.timeEnd.bind(this);
         this.assert = this.assert.bind(this);
         this.toString = this.toString.bind(this);
+    }
+
+
+    public setOptions(options: Log4Ts.LoggerOptions = {}) {
+        this.options = options;
     }
 
 
@@ -226,13 +231,13 @@ class Logger implements Log4Ts.Logger {
 
 
     public callAppenders(loggingEvent: Log4Ts.LoggingEvent) {
-        var options = this.callAppenderOptions;
+        var options = this.options;
 
-        if ((options && options.logLoggerName) && loggingEvent.logger.name) {
+        if (options.logLoggerName && loggingEvent.logger.name) {
             loggingEvent.messages.unshift(loggingEvent.logger.name);
         }
 
-        var doLogAppenderName = (options && options.logAppenderName);
+        var doLogAppenderName = options.logAppenderName;
         var effectiveAppenders = this.getEffectiveAppenders();
         for (var i = 0, len = effectiveAppenders.length; i < len; i++) {
             if (doLogAppenderName && this.name) {

@@ -18,8 +18,8 @@ var Logger = require("./Logger");
  *
  * @author: TeamworkGuy2
  */
-var Log4Ts = (function () {
-    function Log4Ts(edition, version) {
+var Log4TsRoot = (function () {
+    function Log4TsRoot(edition, version) {
         this.Level = Level;
         this.logLog = LogLog;
         this.handleError = LogLog.handleError;
@@ -30,28 +30,28 @@ var Log4Ts = (function () {
         this.rootLogger = new Logger(Logger.rootLoggerName);
         this.rootLogger.setLevel(this.ROOT_LOGGER_DEFAULT_LEVEL);
     }
-    Log4Ts.prototype.setEnabled = function (enable) {
+    Log4TsRoot.prototype.setEnabled = function (enable) {
         Globals.enabled = Utils.bool(enable);
     };
-    Log4Ts.prototype.isEnabled = function () {
+    Log4TsRoot.prototype.isEnabled = function () {
         return Globals.enabled;
     };
-    Log4Ts.prototype.setTimeStampsInMilliseconds = function (timeStampsInMilliseconds) {
+    Log4TsRoot.prototype.setTimeStampsInMilliseconds = function (timeStampsInMilliseconds) {
         Globals.useTimeStampsInMilliseconds = Utils.bool(timeStampsInMilliseconds);
     };
-    Log4Ts.prototype.isTimeStampsInMilliseconds = function () {
+    Log4TsRoot.prototype.isTimeStampsInMilliseconds = function () {
         return Globals.useTimeStampsInMilliseconds;
     };
     /** This evaluates the given expression in the current scope, thus allowing
      * scripts to access private variables. Particularly useful for testing
      */
-    Log4Ts.prototype.evalInScope = function (expr) {
+    Log4TsRoot.prototype.evalInScope = function (expr) {
         return eval(expr);
     };
-    Log4Ts.prototype.setShowStackTraces = function (show) {
+    Log4TsRoot.prototype.setShowStackTraces = function (show) {
         Globals.showStackTraces = Utils.bool(show);
     };
-    Log4Ts.prototype.getLogger = function (loggerName) {
+    Log4TsRoot.prototype.getLogger = function (loggerName, options) {
         if (loggerName === void 0) { loggerName = Logger.anonymousLoggerName; }
         // Use default logger if loggerName is not specified or invalid
         if (typeof loggerName != "string") {
@@ -64,7 +64,7 @@ var Log4Ts = (function () {
         }
         // Create the logger for this name if it doesn't already exist
         if (!this.loggers[loggerName]) {
-            var logger = new Logger(loggerName);
+            var logger = new Logger(loggerName, options);
             this.loggers[loggerName] = logger;
             this.loggerNames.push(loggerName);
             // Set up parent logger, if it doesn't exist
@@ -81,16 +81,16 @@ var Log4Ts = (function () {
         }
         return this.loggers[loggerName];
     };
-    Log4Ts.prototype.getRootLogger = function () {
+    Log4TsRoot.prototype.getRootLogger = function () {
         return this.rootLogger;
     };
-    Log4Ts.prototype.getDefaultLogger = function () {
+    Log4TsRoot.prototype.getDefaultLogger = function () {
         if (this.defaultLogger == null) {
             LogLog.handleError("default logger not yet initialized, call setupDefaultLogger() to setup a default logger");
         }
         return this.defaultLogger;
     };
-    Log4Ts.prototype.getNullLogger = function () {
+    Log4TsRoot.prototype.getNullLogger = function () {
         if (!this.nullLogger) {
             this.nullLogger = new Logger(Logger.nullLoggerName);
             this.nullLogger.setLevel(Level.OFF);
@@ -98,22 +98,22 @@ var Log4Ts = (function () {
         return this.nullLogger;
     };
     // Destroys all loggers
-    Log4Ts.prototype.resetConfiguration = function () {
+    Log4TsRoot.prototype.resetConfiguration = function () {
         this.rootLogger.setLevel(this.ROOT_LOGGER_DEFAULT_LEVEL);
         this.loggers = {};
     };
-    Log4Ts.prototype.setDocumentReady = function () {
+    Log4TsRoot.prototype.setDocumentReady = function () {
         Globals.pageLoaded = true;
         LogLog.eventHandler.dispatchEvent("load", {});
     };
-    Log4Ts.setupDefaultLogger = function (defaultAppender) {
-        var logger = Log4Ts.defaultInst.getLogger(Logger.defaultLoggerName);
+    Log4TsRoot.setupDefaultLogger = function (defaultAppender) {
+        var logger = Log4TsRoot.defaultInst.getLogger(Logger.defaultLoggerName);
         logger.addAppender(defaultAppender);
         return logger;
     };
-    Log4Ts.Cctor = (function () {
-        var defaultInst = new Log4Ts("log4ts", "1.4.13");
-        Log4Ts.defaultInst = defaultInst;
+    Log4TsRoot.Cctor = (function () {
+        var defaultInst = new Log4TsRoot("log4ts", "1.4.13");
+        Log4TsRoot.defaultInst = defaultInst;
         // Main load
         var logOnLoad = defaultInst.setDocumentReady;
         if (typeof window !== "undefined") {
@@ -131,6 +131,6 @@ var Log4Ts = (function () {
             logOnLoad();
         }
     }());
-    return Log4Ts;
+    return Log4TsRoot;
 }());
-module.exports = Log4Ts;
+module.exports = Log4TsRoot;

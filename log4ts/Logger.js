@@ -8,7 +8,8 @@ var Timer = require("../log-util/Timer");
 /** Loggers
  */
 var Logger = (function () {
-    function Logger(name, callAppenderOptions) {
+    function Logger(name, options) {
+        if (options === void 0) { options = {}; }
         this.appenderCache = null;
         this.name = name;
         this.parent = null;
@@ -21,7 +22,7 @@ var Logger = (function () {
         this.isNull = (this.name === Logger.nullLoggerName);
         this.appenderCache = null;
         this.appenderCacheInvalidated = false;
-        this.callAppenderOptions = callAppenderOptions;
+        this.options = options;
         this.addChild = this.addChild.bind(this);
         this.getAdditivity = this.getAdditivity.bind(this);
         this.setAdditivity = this.setAdditivity.bind(this);
@@ -42,6 +43,10 @@ var Logger = (function () {
         this.assert = this.assert.bind(this);
         this.toString = this.toString.bind(this);
     }
+    Logger.prototype.setOptions = function (options) {
+        if (options === void 0) { options = {}; }
+        this.options = options;
+    };
     Logger.prototype.trace = function () {
         this.log(Level.TRACE, arguments);
     };
@@ -162,11 +167,11 @@ var Logger = (function () {
         }
     };
     Logger.prototype.callAppenders = function (loggingEvent) {
-        var options = this.callAppenderOptions;
-        if ((options && options.logLoggerName) && loggingEvent.logger.name) {
+        var options = this.options;
+        if (options.logLoggerName && loggingEvent.logger.name) {
             loggingEvent.messages.unshift(loggingEvent.logger.name);
         }
-        var doLogAppenderName = (options && options.logAppenderName);
+        var doLogAppenderName = options.logAppenderName;
         var effectiveAppenders = this.getEffectiveAppenders();
         for (var i = 0, len = effectiveAppenders.length; i < len; i++) {
             if (doLogAppenderName && this.name) {

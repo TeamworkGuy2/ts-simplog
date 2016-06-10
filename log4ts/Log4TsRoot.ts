@@ -20,12 +20,12 @@ import Logger = require("./Logger");
  *
  * @author: TeamworkGuy2
  */
-class Log4Ts {
-    public static defaultInst: Log4Ts;
+class Log4TsRoot {
+    public static defaultInst: Log4TsRoot;
 
     private static Cctor = (function () {
-        var defaultInst = new Log4Ts("log4ts", "1.4.13");
-        Log4Ts.defaultInst = defaultInst;
+        var defaultInst = new Log4TsRoot("log4ts", "1.4.13");
+        Log4TsRoot.defaultInst = defaultInst;
 
         // Main load
         var logOnLoad = defaultInst.setDocumentReady;
@@ -100,7 +100,7 @@ class Log4Ts {
     }
 
 
-    public getLogger(loggerName: string = Logger.anonymousLoggerName) {
+    public getLogger(loggerName: string = Logger.anonymousLoggerName, options?: Log4Ts.LoggerOptions) {
         // Use default logger if loggerName is not specified or invalid
         if (typeof loggerName != "string") {
             loggerName = Logger.anonymousLoggerName;
@@ -114,7 +114,7 @@ class Log4Ts {
 
         // Create the logger for this name if it doesn't already exist
         if (!this.loggers[loggerName]) {
-            var logger = new Logger(loggerName);
+            var logger = new Logger(loggerName, options);
             this.loggers[loggerName] = logger;
             this.loggerNames.push(loggerName);
 
@@ -169,11 +169,11 @@ class Log4Ts {
 
 
     public static setupDefaultLogger(defaultAppender: Appender) {
-        var logger = Log4Ts.defaultInst.getLogger(Logger.defaultLoggerName);
+        var logger = Log4TsRoot.defaultInst.getLogger(Logger.defaultLoggerName);
         logger.addAppender(defaultAppender);
         return logger;
     }
 
 }
 
-export = Log4Ts;
+export = Log4TsRoot;
