@@ -1,9 +1,8 @@
 "use strict";
 var Utils = require("../log-util/Utils");
+var DateUtil = require("../log-util/DateUtil");
 // Date-related stuff
 var regex = /('[^']*')|(G+|y+|M+|w+|W+|D+|d+|F+|E+|a+|H+|k+|K+|h+|m+|s+|S+|Z+)|([a-zA-Z]+)|([^a-zA-Z']+)/;
-var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var TEXT2 = 0, TEXT3 = 1, NUMBER = 2, YEAR = 3, MONTH = 4, TIMEZONE = 5;
 var types = {
     G: TEXT2,
@@ -25,9 +24,6 @@ var types = {
     S: NUMBER,
     Z: TIMEZONE
 };
-var ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
-var ONE_WEEK_MILLIS = 7 * ONE_DAY_MILLIS;
-var DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK = 1;
 var SimpleDateFormat = (function () {
     /** SimpleDateFormat
      * @param formatString
@@ -43,7 +39,7 @@ var SimpleDateFormat = (function () {
         this.minimalDaysInFirstWeek = days;
     };
     SimpleDateFormat.prototype.getMinimalDaysInFirstWeek = function () {
-        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
+        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
     };
     SimpleDateFormat.prototype.formatText = function (data, numberOfLetters, minLength) {
         return (numberOfLetters >= 4) ? data : data.substr(0, Math.max(minLength, numberOfLetters));
@@ -51,13 +47,13 @@ var SimpleDateFormat = (function () {
     SimpleDateFormat.prototype.formatNumber = function (data, numberOfLetters) {
         var dataString = "" + data;
         // Pad with 0s as necessary
-        return SimpleDateFormat.padWithZeroes(dataString, numberOfLetters);
+        return Utils.padWithZeroes(dataString, numberOfLetters);
     };
     SimpleDateFormat.prototype.format = function (date) {
         var formattedString = "";
         var result;
-        var searchString = this.formatString;
-        while ((result = regex.exec(searchString))) {
+        var searchStr = this.formatString;
+        while ((result = regex.exec(searchStr))) {
             var quotedString = result[1];
             var patternLetters = result[2];
             var otherLetters = result[3];
@@ -93,13 +89,13 @@ var SimpleDateFormat = (function () {
                         rawData = date.getMonth();
                         break;
                     case "w":
-                        rawData = SimpleDateFormat.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
+                        rawData = DateUtil.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
                         break;
                     case "W":
-                        rawData = SimpleDateFormat.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
+                        rawData = DateUtil.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
                         break;
                     case "D":
-                        rawData = SimpleDateFormat.getDayInYear(date);
+                        rawData = DateUtil.getDayInYear(date);
                         break;
                     case "d":
                         rawData = date.getDate();
@@ -108,7 +104,7 @@ var SimpleDateFormat = (function () {
                         rawData = 1 + Math.floor((date.getDate() - 1) / 7);
                         break;
                     case "E":
-                        rawData = dayNames[date.getDay()];
+                        rawData = DateUtil.dayNames[date.getDay()];
                         break;
                     case "a":
                         rawData = (date.getHours() >= 12) ? "PM" : "AM";
@@ -160,7 +156,7 @@ var SimpleDateFormat = (function () {
                         break;
                     case MONTH:
                         if (numberOfLetters >= 3) {
-                            formattedString += this.formatText(monthNames[rawData], numberOfLetters, numberOfLetters);
+                            formattedString += this.formatText(DateUtil.monthNames[rawData], numberOfLetters, numberOfLetters);
                         }
                         else {
                             // NB. Months returned by getMonth are zero-based
@@ -174,94 +170,18 @@ var SimpleDateFormat = (function () {
                         var absData = Math.abs(rawData);
                         // Hours
                         var hours = "" + Math.floor(absData / 60);
-                        hours = SimpleDateFormat.padWithZeroes(hours, 2);
+                        hours = Utils.padWithZeroes(hours, 2);
                         // Minutes
                         var minutes = "" + (absData % 60);
-                        minutes = SimpleDateFormat.padWithZeroes(minutes, 2);
+                        minutes = Utils.padWithZeroes(minutes, 2);
                         formattedString += prefix + hours + minutes;
                         break;
                 }
             }
-            searchString = searchString.substr(result.index + result[0].length);
+            searchStr = searchStr.substr(result.index + result[0].length);
         }
         return formattedString;
     };
     return SimpleDateFormat;
 }());
-var SimpleDateFormat;
-(function (SimpleDateFormat) {
-    function padWithZeroes(str, len) {
-        while (str.length < len) {
-            str = "0" + str;
-        }
-        return str;
-    }
-    SimpleDateFormat.padWithZeroes = padWithZeroes;
-    function newDateAtMidnight(year, month, day) {
-        var d = new Date(year, month, day, 0, 0, 0);
-        d.setMilliseconds(0);
-        return d;
-    }
-    SimpleDateFormat.newDateAtMidnight = newDateAtMidnight;
-    function getDifference(base, date) {
-        return base.getTime() - date.getTime();
-    }
-    SimpleDateFormat.getDifference = getDifference;
-    function isBefore(base, date) {
-        return base.getTime() < date.getTime();
-    }
-    SimpleDateFormat.isBefore = isBefore;
-    function getUtcTime(date) {
-        return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-    }
-    SimpleDateFormat.getUtcTime = getUtcTime;
-    function getTimeSince(base, date) {
-        return getUtcTime(base) - getUtcTime(date);
-    }
-    SimpleDateFormat.getTimeSince = getTimeSince;
-    function getPreviousSunday(date) {
-        // Using midday avoids any possibility of DST messing things up
-        var midday = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-        var previousSunday = new Date(midday.getTime() - date.getDay() * ONE_DAY_MILLIS);
-        return newDateAtMidnight(previousSunday.getFullYear(), previousSunday.getMonth(), previousSunday.getDate());
-    }
-    SimpleDateFormat.getPreviousSunday = getPreviousSunday;
-    function getWeekInYear(date, minimalDaysInFirstWeek) {
-        if (Utils.isUndefined(minimalDaysInFirstWeek)) {
-            minimalDaysInFirstWeek = DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
-        }
-        var previousSunday = getPreviousSunday(date);
-        var startOfYear = newDateAtMidnight(date.getFullYear(), 0, 1);
-        var weeksSinceSartOfYear = Math.floor(getTimeSince(previousSunday, startOfYear) / ONE_WEEK_MILLIS);
-        var numberOfSundays = isBefore(previousSunday, startOfYear) ? 0 : 1 + weeksSinceSartOfYear;
-        var numberOfDaysInFirstWeek = 7 - startOfYear.getDay();
-        var weekInYear = numberOfSundays;
-        if (numberOfDaysInFirstWeek < minimalDaysInFirstWeek) {
-            weekInYear--;
-        }
-        return weekInYear;
-    }
-    SimpleDateFormat.getWeekInYear = getWeekInYear;
-    function getWeekInMonth(date, minimalDaysInFirstWeek) {
-        if (Utils.isUndefined(minimalDaysInFirstWeek)) {
-            minimalDaysInFirstWeek = DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
-        }
-        var previousSunday = getPreviousSunday(date);
-        var startOfMonth = newDateAtMidnight(date.getFullYear(), date.getMonth(), 1);
-        var numberOfSundays = isBefore(previousSunday, startOfMonth) ?
-            0 : 1 + Math.floor(getTimeSince(previousSunday, startOfMonth) / ONE_WEEK_MILLIS);
-        var numberOfDaysInFirstWeek = 7 - startOfMonth.getDay();
-        var weekInMonth = numberOfSundays;
-        if (numberOfDaysInFirstWeek >= minimalDaysInFirstWeek) {
-            weekInMonth++;
-        }
-        return weekInMonth;
-    }
-    SimpleDateFormat.getWeekInMonth = getWeekInMonth;
-    function getDayInYear(date) {
-        var startOfYear = newDateAtMidnight(date.getFullYear(), 0, 1);
-        return 1 + Math.floor(getTimeSince(date, startOfYear) / ONE_DAY_MILLIS);
-    }
-    SimpleDateFormat.getDayInYear = getDayInYear;
-})(SimpleDateFormat || (SimpleDateFormat = {}));
 module.exports = SimpleDateFormat;

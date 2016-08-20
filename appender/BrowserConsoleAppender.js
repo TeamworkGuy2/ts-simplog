@@ -11,11 +11,12 @@ var NullLayout = require("../layout/NullLayout");
  */
 var BrowserConsoleAppender = (function (_super) {
     __extends(BrowserConsoleAppender, _super);
-    function BrowserConsoleAppender(console, name) {
-        _super.call(this);
+    function BrowserConsoleAppender(console, name, opts) {
+        _super.call(this, opts);
+        this.name = "BrowserConsoleAppender";
         this.layout = new NullLayout();
         this.threshold = Level.DEBUG;
-        this.name = name;
+        this.customName = name;
         this.console = console;
     }
     BrowserConsoleAppender.prototype.append = function (logEvent) {
@@ -55,7 +56,7 @@ var BrowserConsoleAppender = (function (_super) {
         }
     };
     BrowserConsoleAppender.prototype.toString = function () {
-        return "BrowserConsoleAppender";
+        return this.name + ": " + this.customName;
     };
     BrowserConsoleAppender.prototype.getFormattedMessage = function (logEvent, concatenate) {
         var formattedMessage = this.getLayout().formatWithException(logEvent);

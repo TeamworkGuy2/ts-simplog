@@ -6,6 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Globals = require("../log4ts/Globals");
 var Utils = require("../log-util/Utils");
+var DateUtil = require("../log-util/DateUtil");
 var LogLog = require("../log4ts/LogLog");
 var Layout = require("./Layout");
 var SimpleDateFormat = require("../log4ts/SimpleDateFormat");
@@ -22,13 +23,13 @@ var PatternLayout = (function (_super) {
             this.pattern = PatternLayout.DEFAULT_CONVERSION_PATTERN;
         }
     }
-    PatternLayout.prototype.format = function (loggingEvent) {
+    PatternLayout.prototype.format = function (logEvent) {
         var regex = /%(-?[0-9]+)?(\.?[0-9]+)?([acdfmMnpr%])(\{([^\}]+)\})?|([^%]+)/;
         var formattedString = "";
         var result;
-        var searchString = this.pattern;
+        var searchStr = this.pattern;
         // Cannot use regex global flag since it doesn't work with exec in IE5
-        while ((result = regex.exec(searchString))) {
+        while ((result = regex.exec(searchStr))) {
             var matchedString = result[0];
             var padding = result[1];
             var truncation = result[2];
@@ -56,7 +57,7 @@ var PatternLayout = (function (_super) {
                                 depth = 0;
                             }
                         }
-                        var messages = (conversionCharacter === "a") ? loggingEvent.messages[0] : loggingEvent.messages;
+                        var messages = (conversionCharacter === "a") ? logEvent.messages[0] : logEvent.messages;
                         for (var i = 0, len = messages.length; i < len; i++) {
                             if (i > 0 && (replacement.charAt(replacement.length - 1) !== " ")) {
                                 replacement += " ";
@@ -70,10 +71,10 @@ var PatternLayout = (function (_super) {
                         }
                         break;
                     case "c":
-                        var loggerName = loggingEvent.logger.name;
+                        var loggerName = logEvent.logger.name;
                         if (specifier) {
                             var precision = parseInt(specifier, 10);
-                            var loggerNameBits = loggingEvent.logger.name.split(".");
+                            var loggerNameBits = logEvent.logger.name.split(".");
                             if (precision >= loggerNameBits.length) {
                                 replacement = loggerName;
                             }
@@ -101,7 +102,7 @@ var PatternLayout = (function (_super) {
                             }
                         }
                         // Format the date
-                        replacement = (new SimpleDateFormat(dateFormat)).format(loggingEvent.timeStamp);
+                        replacement = (new SimpleDateFormat(dateFormat)).format(logEvent.timeStamp);
                         break;
                     case "f":
                         if (this.hasCustomFields()) {
@@ -123,7 +124,7 @@ var PatternLayout = (function (_super) {
                             }
                             var val = this.customFields[fieldIndex].value;
                             if (typeof val == "function") {
-                                val = val(this, loggingEvent);
+                                val = val(this, logEvent);
                             }
                             replacement = val;
                         }
@@ -132,10 +133,10 @@ var PatternLayout = (function (_super) {
                         replacement = Globals.newLine;
                         break;
                     case "p":
-                        replacement = loggingEvent.level.name;
+                        replacement = logEvent.level.name;
                         break;
                     case "r":
-                        replacement = "" + SimpleDateFormat.getDifference(loggingEvent.timeStamp, Globals.applicationStartDate);
+                        replacement = "" + DateUtil.getDifference(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
                     case "%":
                         replacement = "%";
@@ -144,8 +145,7 @@ var PatternLayout = (function (_super) {
                         replacement = matchedString;
                         break;
                 }
-                // Format the replacement according to any padding or
-                // truncation specified
+                // Format the replacement according to any padding or truncation specified
                 var l;
                 // First, truncation
                 if (truncation) {
@@ -174,7 +174,7 @@ var PatternLayout = (function (_super) {
                 }
                 formattedString += replacement;
             }
-            searchString = searchString.substr(result.index + result[0].length);
+            searchStr = searchStr.substr(result.index + result[0].length);
         }
         return formattedString;
     };

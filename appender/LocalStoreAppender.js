@@ -14,9 +14,10 @@ var NullLayout = require("../layout/NullLayout");
  */
 var LocalStoreAppender = (function (_super) {
     __extends(LocalStoreAppender, _super);
-    function LocalStoreAppender(store, mergeGroupEvents) {
+    function LocalStoreAppender(store, mergeGroupEvents, opts) {
         if (mergeGroupEvents === void 0) { mergeGroupEvents = false; }
-        _super.call(this);
+        _super.call(this, opts);
+        this.name = "LocalStoreAppender";
         this.groupNames = [];
         this.groupEvents = [];
         this.layout = new NullLayout();
@@ -52,7 +53,7 @@ var LocalStoreAppender = (function (_super) {
         this.groupEvents.pop();
     };
     LocalStoreAppender.prototype.toString = function () {
-        return "LocalStoreAppender";
+        return this.name;
     };
     return LocalStoreAppender;
 }(Appender));

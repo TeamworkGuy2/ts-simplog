@@ -23,17 +23,18 @@ class PopUpAppender extends ConsoleAppender {
         showCloseButton: true,
         useDocumentWrite: true
     };
+    public name = "PopUpAppender";
 
 
-    constructor(lazyInit?: boolean, initiallyMinimized?: boolean, useDocumentWrite?: boolean, width?: string | number, height?: string | number) {
-        super();
+    constructor(lazyInit?: boolean, initiallyMinimized?: boolean, useDocumentWrite?: boolean, width?: string | number, height?: string | number, opts?: Log4Ts.AppenderOptions) {
+        super(opts);
 
         this.create(false, null, lazyInit, initiallyMinimized, useDocumentWrite, width, height, this.defaults.focusPopUp);
     }
 
 
     public toString() {
-        return "PopUpAppender";
+        return this.name;
     }
 
 }

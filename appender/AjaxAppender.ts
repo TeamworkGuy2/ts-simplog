@@ -18,6 +18,7 @@ class AjaxAppender extends Appender {
         postVarName: "data",
         contentType: "application/x-www-form-urlencoded"
     };
+    public name = "AjaxAppender";
 
     public getSessionId: () => string;
     public setSessionId: (sessionId: string) => void;
@@ -50,8 +51,8 @@ class AjaxAppender extends Appender {
     public sendAllRemaining: () => boolean;
 
 
-    constructor(url: string, withCredentials?: boolean) {
-        super();
+    constructor(url: string, withCredentials?: boolean, opts?: Log4Ts.AppenderOptions) {
+        super(opts);
 
         this.layout = new HttpPostDataLayout();
 
@@ -372,7 +373,7 @@ class AjaxAppender extends Appender {
 
 
     public toString() {
-        return "AjaxAppender";
+        return this.name;
     }
 
 }

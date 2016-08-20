@@ -39,6 +39,7 @@ function script() {
     var loaded = false;
     var currentLogItem = null;
     var logMainContainer;
+    var logLevels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
     function copyProperties(obj, props) {
         for (var i in props) {
             obj[i] = props[i];
@@ -187,7 +188,7 @@ function script() {
     }
     GroupElementContainer.prototype = new LogItemContainerElement();
     copyProperties(GroupElementContainer.prototype, {
-        toggleExpanded: function () {
+        toggleExpanded: function toggleExpanded() {
             if (!this.isRoot) {
                 var oldCssClass, newCssClass, expanderText;
                 if (this.group.expanded) {
@@ -204,7 +205,7 @@ function script() {
                 this.expanderTextNode.nodeValue = expanderText;
             }
         },
-        remove: function () {
+        remove: function remove() {
             if (!this.isRoot) {
                 this.headingDiv = null;
                 this.expander.onclick = null;
@@ -216,7 +217,7 @@ function script() {
                 this.mainDiv = null;
             }
         },
-        reverseChildren: function () {
+        reverseChildren: function reverseChildren() {
             // Invert the order of the log entries
             var node = null;
             // Remove all the log container nodes
@@ -230,7 +231,7 @@ function script() {
                 this.contentDiv.appendChild(node);
             }
         },
-        update: function () {
+        update: function update() {
             if (!this.isRoot) {
                 if (this.group.expandable) {
                     removeClass(this.expander, "greyedout");
@@ -240,7 +241,7 @@ function script() {
                 }
             }
         },
-        clear: function () {
+        clear: function clear() {
             if (this.isRoot) {
                 this.contentDiv.innerHTML = "";
             }
@@ -260,11 +261,11 @@ function script() {
     }
     Group.prototype = new LogItem();
     copyProperties(Group.prototype, {
-        addChild: function (logItem) {
+        addChild: function addChild(logItem) {
             this.children.push(logItem);
             logItem.group = this;
         },
-        render: function () {
+        render: function render() {
             if (isIe) {
                 var unwrappedDomContainer, wrappedDomContainer;
                 if (this.isRoot) {
@@ -286,28 +287,28 @@ function script() {
             }
             this.rendered = true;
         },
-        toggleExpanded: function () {
+        toggleExpanded: function toggleExpanded() {
             this.expanded = !this.expanded;
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].toggleExpanded();
             }
         },
-        expand: function () {
+        expand: function expand() {
             if (!this.expanded) {
                 this.toggleExpanded();
             }
         },
-        accept: function (visitor) {
+        accept: function accept(visitor) {
             visitor.visitGroup(this);
         },
-        reverseChildren: function () {
+        reverseChildren: function reverseChildren() {
             if (this.rendered) {
                 for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                     this.elementContainers[i].reverseChildren();
                 }
             }
         },
-        update: function () {
+        update: function update() {
             var previouslyExpandable = this.expandable;
             this.expandable = (this.children.length !== 0);
             if (this.expandable !== previouslyExpandable) {
@@ -316,19 +317,19 @@ function script() {
                 }
             }
         },
-        flatten: function () {
+        flatten: function flatten() {
             var visitor = new GroupFlattener();
             this.accept(visitor);
             return visitor.logEntriesAndSeparators;
         },
-        removeChild: function (child, doUpdate) {
+        removeChild: function removeChild(child, doUpdate) {
             array_remove(this.children, child);
             child.group = null;
             if (doUpdate) {
                 this.update();
             }
         },
-        remove: function (doUpdate, removeFromGroup) {
+        remove: function remove(doUpdate, removeFromGroup) {
             for (var i = 0, len = this.children.length; i < len; i++) {
                 this.children[i].remove(false, false);
             }
@@ -339,7 +340,7 @@ function script() {
             }
             this.doRemove(doUpdate, removeFromGroup);
         },
-        serialize: function (items) {
+        serialize: function serialize(items) {
             items.push([LogItem.serializedItemKeys.GROUP_START, this.name]);
             for (var i = 0, len = this.children.length; i < len; i++) {
                 this.children[i].serialize(items);
@@ -348,27 +349,28 @@ function script() {
                 items.push([LogItem.serializedItemKeys.GROUP_END]);
             }
         },
-        clear: function () {
+        clear: function clear() {
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].clear();
             }
         }
     });
     /*----------------------------------------------------------------*/
-    function LogEntryElementContainer() {
-    }
-    LogEntryElementContainer.prototype = new LogItemContainerElement();
-    copyProperties(LogEntryElementContainer.prototype, {
-        remove: function () {
+    var LogEntryElementContainer = (function (_super) {
+        __extends(LogEntryElementContainer, _super);
+        function LogEntryElementContainer() {
+            _super.call(this);
+        }
+        LogEntryElementContainer.prototype.remove = function () {
             this.doRemove();
-        },
-        doRemove: function () {
+        };
+        LogEntryElementContainer.prototype.doRemove = function () {
             this.mainDiv.parentNode.removeChild(this.mainDiv);
             this.mainDiv = null;
             this.contentElement = null;
             this.containerDomNode = null;
-        },
-        setContent: function (content, wrappedContent) {
+        };
+        LogEntryElementContainer.prototype.setContent = function (content, wrappedContent) {
             if (content === this.formattedMessage) {
                 this.contentElement.innerHTML = "";
                 this.contentElement.appendChild(document.createTextNode(this.formattedMessage));
@@ -376,36 +378,41 @@ function script() {
             else {
                 this.contentElement.innerHTML = content;
             }
-        },
-        setSearchMatch: function (isMatch) {
+        };
+        LogEntryElementContainer.prototype.setSearchMatch = function (isMatch) {
             var oldCssClass = isMatch ? "searchnonmatch" : "searchmatch";
             var newCssClass = isMatch ? "searchmatch" : "searchnonmatch";
             replaceClass(this.mainDiv, newCssClass, oldCssClass);
-        },
-        clearSearch: function () {
+        };
+        LogEntryElementContainer.prototype.clearSearch = function () {
             removeClass(this.mainDiv, "searchmatch");
             removeClass(this.mainDiv, "searchnonmatch");
-        }
-    });
+        };
+        return LogEntryElementContainer;
+    }(LogItemContainerElement));
     /*----------------------------------------------------------------*/
-    function LogEntryWrappedElementContainer(logEntry, containerDomNode) {
-        this.logEntry = logEntry;
-        this.containerDomNode = containerDomNode;
-        this.mainDiv = document.createElement("div");
-        this.mainDiv.appendChild(document.createTextNode(this.logEntry.formattedMessage));
-        this.mainDiv.className = "logentry wrapped " + this.logEntry.level;
-        this.contentElement = this.mainDiv;
-    }
-    LogEntryWrappedElementContainer.prototype = new LogEntryElementContainer();
-    LogEntryWrappedElementContainer.prototype.setContent = function (content, wrappedContent) {
-        if (content === this.formattedMessage) {
-            this.contentElement.innerHTML = "";
-            this.contentElement.appendChild(document.createTextNode(this.formattedMessage));
+    var LogEntryWrappedElementContainer = (function (_super) {
+        __extends(LogEntryWrappedElementContainer, _super);
+        function LogEntryWrappedElementContainer(logEntry, containerDomNode) {
+            _super.call(this);
+            this.logEntry = logEntry;
+            this.containerDomNode = containerDomNode;
+            this.mainDiv = document.createElement("div");
+            this.mainDiv.appendChild(document.createTextNode(this.logEntry.formattedMessage));
+            this.mainDiv.className = "logentry wrapped " + this.logEntry.level;
+            this.contentElement = this.mainDiv;
         }
-        else {
-            this.contentElement.innerHTML = wrappedContent;
-        }
-    };
+        LogEntryWrappedElementContainer.prototype.setContent = function (content, wrappedContent) {
+            if (content === this.formattedMessage) {
+                this.contentElement.innerHTML = "";
+                this.contentElement.appendChild(document.createTextNode(this.formattedMessage));
+            }
+            else {
+                this.contentElement.innerHTML = wrappedContent;
+            }
+        };
+        return LogEntryWrappedElementContainer;
+    }(LogEntryElementContainer));
     /*----------------------------------------------------------------*/
     function LogEntryUnwrappedElementContainer(logEntry, containerDomNode) {
         this.logEntry = logEntry;
@@ -418,7 +425,7 @@ function script() {
         this.contentElement = this.pre;
     }
     LogEntryUnwrappedElementContainer.prototype = new LogEntryElementContainer();
-    LogEntryUnwrappedElementContainer.prototype.remove = function () {
+    LogEntryUnwrappedElementContainer.prototype.remove = function remove() {
         this.doRemove();
         this.pre = null;
     };
@@ -433,14 +440,15 @@ function script() {
     }
     LogEntryMainElementContainer.prototype = new LogEntryElementContainer();
     /*----------------------------------------------------------------*/
-    function LogEntry(level, formattedMessage) {
-        this.level = level;
-        this.formattedMessage = formattedMessage;
-        this.rendered = false;
-    }
-    LogEntry.prototype = new LogItem();
-    copyProperties(LogEntry.prototype, {
-        render: function () {
+    var LogEntry = (function (_super) {
+        __extends(LogEntry, _super);
+        function LogEntry(level, formattedMessage) {
+            _super.call(this);
+            this.level = level;
+            this.formattedMessage = formattedMessage;
+            this.rendered = false;
+        }
+        LogEntry.prototype.render = function () {
             var logEntry = this;
             var containerDomNode = this.group.contentDiv;
             // Support for the CSS attribute white-space in IE for Windows is
@@ -458,8 +466,8 @@ function script() {
             }
             this.content = this.formattedMessage;
             this.rendered = true;
-        },
-        setContent: function (content, wrappedContent) {
+        };
+        LogEntry.prototype.setContent = function (content, wrappedContent) {
             if (content != this.content) {
                 if (isIe && (content !== this.formattedMessage)) {
                     content = content.replace(/\\r\\n/g, "\\r"); // Workaround for IE\'s treatment of white space
@@ -469,8 +477,8 @@ function script() {
                 }
                 this.content = content;
             }
-        },
-        getSearchMatches: function () {
+        };
+        LogEntry.prototype.getSearchMatches = function () {
             var matches = [];
             var i, len;
             if (isIe) {
@@ -487,47 +495,48 @@ function script() {
                 }
             }
             return matches;
-        },
-        setSearchMatch: function (isMatch) {
+        };
+        LogEntry.prototype.setSearchMatch = function (isMatch) {
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].setSearchMatch(isMatch);
             }
-        },
-        clearSearch: function () {
+        };
+        LogEntry.prototype.clearSearch = function () {
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].clearSearch();
             }
-        },
-        accept: function (visitor) {
+        };
+        LogEntry.prototype.accept = function (visitor) {
             visitor.visitLogEntry(this);
-        },
-        serialize: function (items) {
+        };
+        LogEntry.prototype.serialize = function (items) {
             items.push([LogItem.serializedItemKeys.LOG_ENTRY, this.level, this.formattedMessage]);
-        }
-    });
+        };
+        return LogEntry;
+    }(LogItem));
     /*----------------------------------------------------------------*/
     function LogItemVisitor() {
     }
     LogItemVisitor.prototype = {
-        visit: function (logItem) {
+        visit: function visit(logItem) {
         },
-        visitParent: function (logItem) {
+        visitParent: function visitParent(logItem) {
             if (logItem.group) {
                 logItem.group.accept(this);
             }
         },
-        visitChildren: function (logItem) {
+        visitChildren: function visitChildren(logItem) {
             for (var i = 0, len = logItem.children.length; i < len; i++) {
                 logItem.children[i].accept(this);
             }
         },
-        visitLogEntry: function (logEntry) {
+        visitLogEntry: function visitLogEntry(logEntry) {
             this.visit(logEntry);
         },
-        visitSeparator: function (separator) {
+        visitSeparator: function visitSeparator(separator) {
             this.visit(separator);
         },
-        visitGroup: function (group) {
+        visitGroup: function visitGroup(group) {
             this.visit(group);
         }
     };
@@ -536,13 +545,13 @@ function script() {
         this.logEntriesAndSeparators = [];
     }
     GroupFlattener.prototype = new LogItemVisitor();
-    GroupFlattener.prototype.visitGroup = function (group) {
+    GroupFlattener.prototype.visitGroup = function visitGroup(group) {
         this.visitChildren(group);
     };
-    GroupFlattener.prototype.visitLogEntry = function (logEntry) {
+    GroupFlattener.prototype.visitLogEntry = function visitLogEntry(logEntry) {
         this.logEntriesAndSeparators.push(logEntry);
     };
-    GroupFlattener.prototype.visitSeparator = function (separator) {
+    GroupFlattener.prototype.visitSeparator = function visitSeparator(separator) {
         this.logEntriesAndSeparators.push(separator);
     };
     /*----------------------------------------------------------------*/
@@ -657,13 +666,14 @@ function script() {
         appender = null;
     };
     /*----------------------------------------------------------------*/
+    var appender = null;
+    var newestAtTop = false;
     function toggleLoggingEnabled() {
         setLoggingEnabled($input("enableLogging").checked);
     }
     function setLoggingEnabled(enable) {
         loggingEnabled = enable;
     }
-    var appender = null;
     function setAppender(appenderParam) {
         appender = appenderParam;
     }
@@ -673,16 +683,19 @@ function script() {
     function setShowHideButton(showHideButton) {
         $("hideButton").style.display = showHideButton ? "inline" : "none";
     }
-    var newestAtTop = false;
     /*----------------------------------------------------------------*/
     function LogItemContentReverser() {
     }
     LogItemContentReverser.prototype = new LogItemVisitor();
-    LogItemContentReverser.prototype.visitGroup = function (group) {
+    LogItemContentReverser.prototype.visitGroup = function visitGroup(group) {
         group.reverseChildren();
         this.visitChildren(group);
     };
     /*----------------------------------------------------------------*/
+    var scrollToLatest = true;
+    var closeIfOpenerCloses = true;
+    var maxMessages = null;
+    var showCommandLine = false;
     function setNewestAtTop(isNewestAtTop) {
         var oldNewestAtTop = newestAtTop;
         var i, iLen, j, jLen;
@@ -695,7 +708,7 @@ function script() {
                 var currentMatch = currentSearch.matches[currentMatchIndex];
                 var matchIndex = 0;
                 var matches = [];
-                var actOnLogEntry = function (logEntry) {
+                var actOnLogEntry = function actOnLogEntry(logEntry) {
                     var logEntryMatches = logEntry.getSearchMatches();
                     for (j = 0, jLen = logEntryMatches.length; j < jLen; j++) {
                         matches[matchIndex] = logEntryMatches[j];
@@ -730,7 +743,6 @@ function script() {
         var isNewestAtTop = $input("newestAtTop").checked;
         setNewestAtTop(isNewestAtTop);
     }
-    var scrollToLatest = true;
     function setScrollToLatest(isScrollToLatest) {
         scrollToLatest = isScrollToLatest;
         if (scrollToLatest) {
@@ -756,16 +768,13 @@ function script() {
             }
         }
     }
-    var closeIfOpenerCloses = true;
     function setCloseIfOpenerCloses(isCloseIfOpenerCloses) {
         closeIfOpenerCloses = isCloseIfOpenerCloses;
     }
-    var maxMessages = null;
     function setMaxMessages(max) {
         maxMessages = max;
         pruneLogEntries();
     }
-    var showCommandLine = false;
     function setShowCommandLine(isShowCommandLine) {
         showCommandLine = isShowCommandLine;
         if (loaded) {
@@ -952,7 +961,6 @@ function script() {
         catch (ex) { }
         return false;
     }
-    var logLevels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
     function getCheckBox(logLevel) {
         return $input("switch_" + logLevel);
     }
@@ -1031,10 +1039,10 @@ function script() {
         this.matches = [];
     }
     Search.prototype = {
-        hasMatches: function () {
+        hasMatches: function hasMatches() {
             return this.matches.length > 0;
         },
-        hasVisibleMatches: function () {
+        hasVisibleMatches: function hasVisibleMatches() {
             if (this.hasMatches()) {
                 for (var i = 0; i < this.matches.length; i++) {
                     if (this.matches[i].isVisible()) {
@@ -1044,7 +1052,7 @@ function script() {
             }
             return false;
         },
-        match: function (logEntry) {
+        match: function match(logEntry) {
             var entryText = String(logEntry.formattedMessage);
             var matchesSearch = false;
             if (this.isRegex) {
@@ -1058,7 +1066,7 @@ function script() {
             }
             return matchesSearch;
         },
-        getNextVisibleMatchIndex: function () {
+        getNextVisibleMatchIndex: function getNextVisibleMatchIndex() {
             for (var i = currentMatchIndex + 1; i < this.matches.length; i++) {
                 if (this.matches[i].isVisible()) {
                     return i;
@@ -1072,7 +1080,7 @@ function script() {
             }
             return -1;
         },
-        getPreviousVisibleMatchIndex: function () {
+        getPreviousVisibleMatchIndex: function getPreviousVisibleMatchIndex() {
             for (var i = currentMatchIndex - 1; i >= 0; i--) {
                 if (this.matches[i].isVisible()) {
                     return i;
@@ -1086,7 +1094,7 @@ function script() {
             }
             return -1;
         },
-        applyTo: function (logEntry) {
+        applyTo: function applyTo(logEntry) {
             var doesMatch = this.match(logEntry);
             if (doesMatch) {
                 logEntry.group.expand();
@@ -1099,7 +1107,9 @@ function script() {
                 var preStartTag = "<" + preTagName + " class=\\\"pre\\\">";
                 var preEndTag = "<" + "/" + preTagName + ">";
                 var startIndex = 0;
-                var searchIndex, matchedText, textBeforeMatch;
+                var searchIndex;
+                var matchedText;
+                var textBeforeMatch;
                 if (this.isRegex) {
                     var flags = this.isCaseSensitive ? "g" : "gi";
                     var capturingRegex = new RegExp("(" + this.searchRegex.source + ")", flags);
@@ -1111,14 +1121,13 @@ function script() {
                     // Escape the HTML to get rid of angle brackets
                     logEntryContent = escapeHtml(logEntryContent);
                     // Substitute the proper HTML back in for the search match
-                    var result;
-                    var searchString = logEntryContent;
+                    var searchStr = logEntryContent;
                     logEntryContent = "";
                     wrappedLogEntryContent = "";
-                    while ((searchIndex = searchString.indexOf(startToken, startIndex)) > -1) {
-                        var endTokenIndex = searchString.indexOf(endToken, searchIndex);
-                        matchedText = searchString.substring(searchIndex + startToken.length, endTokenIndex);
-                        textBeforeMatch = searchString.substring(startIndex, searchIndex);
+                    while ((searchIndex = searchStr.indexOf(startToken, startIndex)) > -1) {
+                        var endTokenIndex = searchStr.indexOf(endToken, searchIndex);
+                        matchedText = searchStr.substring(searchIndex + startToken.length, endTokenIndex);
+                        textBeforeMatch = searchStr.substring(startIndex, searchIndex);
                         logEntryContent += preStartTag + textBeforeMatch + preEndTag;
                         logEntryContent += searchTermReplacementStartTag + preStartTag + matchedText +
                             preEndTag + searchTermReplacementEndTag;
@@ -1128,9 +1137,9 @@ function script() {
                         }
                         startIndex = endTokenIndex + endToken.length;
                     }
-                    logEntryContent += preStartTag + searchString.substr(startIndex) + preEndTag;
+                    logEntryContent += preStartTag + searchStr.substr(startIndex) + preEndTag;
                     if (isIe) {
-                        wrappedLogEntryContent += searchString.substr(startIndex);
+                        wrappedLogEntryContent += searchStr.substr(startIndex);
                     }
                 }
                 else {
@@ -1169,7 +1178,7 @@ function script() {
             }
             return doesMatch;
         },
-        removeMatches: function (logEntries) {
+        removeMatches: function removeMatches(logEntries) {
             var matchesToRemoveCount = 0;
             var currentMatchRemoved = false;
             var matchesToRemove = [];
@@ -1265,10 +1274,10 @@ function script() {
         this.mainSpan = isIe ? spanInUnwrappedPre : spanInMainDiv;
     }
     Match.prototype = {
-        equals: function (match) {
+        equals: function equals(match) {
             return this.mainSpan === match.mainSpan;
         },
-        setCurrent: function () {
+        setCurrent: function setCurrent() {
             if (isIe) {
                 addClass(this.spanInUnwrappedPre, "currentmatch");
                 addClass(this.spanInWrappedDiv, "currentmatch");
@@ -1281,7 +1290,7 @@ function script() {
                 scrollIntoView(this.spanInMainDiv);
             }
         },
-        belongsTo: function (logEntry) {
+        belongsTo: function belongsTo(logEntry) {
             if (isIe) {
                 return isDescendant(this.spanInUnwrappedPre, logEntry.unwrappedPre);
             }
@@ -1289,7 +1298,7 @@ function script() {
                 return isDescendant(this.spanInMainDiv, logEntry.mainDiv);
             }
         },
-        setNotCurrent: function () {
+        setNotCurrent: function setNotCurrent() {
             if (isIe) {
                 removeClass(this.spanInUnwrappedPre, "currentmatch");
                 removeClass(this.spanInWrappedDiv, "currentmatch");
@@ -1298,13 +1307,13 @@ function script() {
                 removeClass(this.spanInMainDiv, "currentmatch");
             }
         },
-        isOrphan: function () {
-            return isOrphan(this.mainSpan);
+        isOrphan: function isOrphan() {
+            return isOrphanNode(this.mainSpan);
         },
-        isVisible: function () {
+        isVisible: function isVisible() {
             return getCheckBox(this.logEntryLevel).checked;
         },
-        remove: function () {
+        remove: function remove() {
             if (isIe) {
                 this.spanInUnwrappedPre = null;
                 this.spanInWrappedDiv = null;
@@ -1562,13 +1571,13 @@ function script() {
         }
         return false;
     }
-    function isOrphan(node) {
-        var currentNode = node;
-        while (currentNode) {
-            if (currentNode == document.body) {
+    function isOrphanNode(node) {
+        var curNode = node;
+        while (curNode) {
+            if (curNode == document.body) {
                 return false;
             }
-            currentNode = currentNode.parentNode;
+            curNode = curNode.parentNode;
         }
         return true;
     }
@@ -1627,44 +1636,11 @@ function script() {
         setCommandInputWidth();
         setLogContainerHeight();
     };
-    function array_remove(arr, val) {
-        var index = -1;
-        for (var i = 0, len = arr.length; i < len; i++) {
-            if (arr[i] === val) {
-                index = i;
-                break;
-            }
-        }
-        if (index >= 0) {
-            arr.splice(index, 1);
-            return index;
-        }
-        else {
-            return -1;
-        }
-    }
-    function array_removeFromStart(array, numberToRemove) {
-        if (Array.prototype.splice) {
-            array.splice(0, numberToRemove);
-        }
-        else {
-            for (var i = numberToRemove, len = array.length; i < len; i++) {
-                array[i - numberToRemove] = array[i];
-            }
-            array.length = array.length - numberToRemove;
-        }
-        return array;
-    }
-    function array_contains(arr, val) {
-        for (var i = 0, len = arr.length; i < len; i++) {
-            if (arr[i] == val) {
-                return true;
-            }
-        }
-        return false;
-    }
     function getErrorMessage(ex) {
-        if (ex.message) {
+        if (typeof ex === "string") {
+            return ex;
+        }
+        else if (ex.message) {
             return ex.message;
         }
         else if (ex.description) {
@@ -1754,6 +1730,42 @@ function script() {
         }
         currentCommandIndex = (expr == commandHistory[currentCommandIndex]) ? currentCommandIndex + 1 : commandHistory.length;
         lastCommand = expr;
+    }
+    function array_remove(ary, val) {
+        var index = -1;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            if (ary[i] === val) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0) {
+            ary.splice(index, 1);
+            return index;
+        }
+        else {
+            return -1;
+        }
+    }
+    function array_removeFromStart(ary, numberToRemove) {
+        if (Array.prototype.splice) {
+            ary.splice(0, numberToRemove);
+        }
+        else {
+            for (var i = numberToRemove, len = ary.length; i < len; i++) {
+                ary[i - numberToRemove] = ary[i];
+            }
+            ary.length = ary.length - numberToRemove;
+        }
+        return ary;
+    }
+    function array_contains(arr, val) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if (arr[i] == val) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 var headerEnd = [

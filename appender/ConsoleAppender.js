@@ -75,11 +75,12 @@ var consoleAppenderIdCounter = 1;
 // ConsoleAppender (prototype for PopUpAppender and InPageAppender)
 var ConsoleAppender = (function (_super) {
     __extends(ConsoleAppender, _super);
-    function ConsoleAppender() {
-        _super.call(this);
+    function ConsoleAppender(opts) {
+        _super.call(this, opts);
+        this.name = "ConsoleAppender";
     }
     ConsoleAppender.prototype.toString = function () {
-        return "ConsoleAppender";
+        return this.name;
     };
     ConsoleAppender.prototype.create = function (inPage, container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, focusConsoleWindow) {
         var _this = this;
@@ -387,7 +388,7 @@ var ConsoleAppender = (function (_super) {
     // InPageAppender
     ConsoleAppender.prototype.setupInPageAppender = function (consoleAppenderId, canConfigureFunc, width, height) {
         var _this = this;
-        var containerElement = null;
+        var containerElem = null;
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
         var cssProperties = [];
@@ -398,21 +399,21 @@ var ConsoleAppender = (function (_super) {
         };
         // Define useful variables
         var windowCreationStarted = false;
-        var iframeContainerDiv;
+        var iframeElem;
         var iframeId = Globals.uniqueId + "_InPageAppender_" + consoleAppenderId;
         this.hide = function () {
             if (_this.initialized && _this.consoleWindowCreated) {
                 if (_this.consoleWindowExists()) {
                     _this.getConsoleWindow().$("command").blur();
                 }
-                iframeContainerDiv.style.display = "none";
+                iframeElem.style.display = "none";
                 _this.minimized = true;
             }
         };
         this.show = function () {
             if (_this.initialized) {
                 if (_this.consoleWindowCreated) {
-                    iframeContainerDiv.style.display = "block";
+                    iframeElem.style.display = "block";
                     _this.setShowCommandLine(_this.showCommandLine); // Force IE to update
                     _this.minimized = false;
                 }
@@ -426,7 +427,7 @@ var ConsoleAppender = (function (_super) {
         };
         this.close = function (fromButton) {
             if (!_this.consoleClosed && (!fromButton || confirm("This will permanently remove the console from the page. No more messages will be logged. Do you wish to continue?"))) {
-                iframeContainerDiv.parentNode.removeChild(iframeContainerDiv);
+                iframeElem.parentNode.removeChild(iframeElem);
                 _this.unload();
             }
         };
@@ -466,19 +467,19 @@ var ConsoleAppender = (function (_super) {
                 }
             };
             _this.minimized = false;
-            iframeContainerDiv = containerElement.appendChild(document.createElement("div"));
-            iframeContainerDiv.style.width = width;
-            iframeContainerDiv.style.height = height;
-            iframeContainerDiv.style.border = "solid gray 1px";
+            iframeElem = containerElem.appendChild(document.createElement("div"));
+            iframeElem.style.width = width;
+            iframeElem.style.height = height;
+            iframeElem.style.border = "solid gray 1px";
             for (var i = 0, len = cssProperties.length; i < len; i++) {
-                iframeContainerDiv.style[cssProperties[i][0]] = cssProperties[i][1];
+                iframeElem.style[cssProperties[i][0]] = cssProperties[i][1];
             }
             var iframeSrc = _this.useDocumentWrite ? "" : " src='" + _this.getConsoleUrl() + "'";
             // Adding an iframe using the DOM would be preferable, but it doesn't work
             // in IE5 on Windows, or in Konqueror prior to version 3.5 - in Konqueror
             // it creates the iframe fine but I haven't been able to find a way to obtain
             // the iframe's window object
-            iframeContainerDiv.innerHTML = "<iframe id='" + iframeId + "' name='" + iframeId +
+            iframeElem.innerHTML = "<iframe id='" + iframeId + "' name='" + iframeId +
                 "' width='100%' height='100%' frameborder='0'" + iframeSrc +
                 " scrolling='no'></iframe>";
             _this.consoleClosed = false;
@@ -504,12 +505,12 @@ var ConsoleAppender = (function (_super) {
                 var pageLoadHandler = function () {
                     if (!_this.container) {
                         // Set up default container element
-                        containerElement = document.createElement("div");
-                        containerElement.style.position = "fixed";
-                        containerElement.style.left = "0";
-                        containerElement.style.right = "0";
-                        containerElement.style.bottom = "0";
-                        document.body.appendChild(containerElement);
+                        containerElem = document.createElement("div");
+                        containerElem.style.position = "fixed";
+                        containerElem.style.left = "0";
+                        containerElem.style.right = "0";
+                        containerElem.style.bottom = "0";
+                        document.body.appendChild(containerElem);
                         _this.addCssProperty("borderWidth", "1px 0 0 0");
                         _this.addCssProperty("zIndex", 1000000); // Can't find anything authoritative that says how big z-index can be
                         open();
@@ -518,7 +519,7 @@ var ConsoleAppender = (function (_super) {
                         try {
                             var el = document.getElementById(_this.container);
                             if (el.nodeType == 1) {
-                                containerElement = el;
+                                containerElem = el;
                             }
                             open();
                         }
@@ -529,7 +530,7 @@ var ConsoleAppender = (function (_super) {
                 };
                 // Test the type of the container supplied. First, check if it's an element
                 if (Globals.pageLoaded && _this.container && _this.container.appendChild) {
-                    containerElement = _this.container;
+                    containerElem = _this.container;
                     open();
                 }
                 else if (Globals.pageLoaded) {
@@ -662,7 +663,8 @@ var ConsoleAppender = (function (_super) {
                 _this.consoleWindowCreated = true;
                 if (popUp && popUp.document) {
                     if (_this.useDocumentWrite && _this.useOldPopUp && isLoaded(popUp)) {
-                        popUp.mainPageReloaded();
+                        // TODO need to inject functions into the page
+                        popUp["mainPageReloaded"]();
                         finalInit();
                     }
                     else {

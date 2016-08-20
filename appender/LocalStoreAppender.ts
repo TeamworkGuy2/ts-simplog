@@ -8,14 +8,15 @@ import NullLayout = require("../layout/NullLayout");
  * @since 2016-6-4
  */
 class LocalStoreAppender extends Appender {
+    public name = "LocalStoreAppender";
     private store: UniqueStore;
     private mergeGroups: boolean;
     private groupNames: string[] = [];
     private groupEvents: any[][] = [];
 
 
-    constructor(store: UniqueStore, mergeGroupEvents = false) {
-        super();
+    constructor(store: UniqueStore, mergeGroupEvents = false, opts?: Log4Ts.AppenderOptions) {
+        super(opts);
         this.layout = new NullLayout();
         this.threshold = Level.INFO;
         this.store = store;
@@ -59,7 +60,7 @@ class LocalStoreAppender extends Appender {
 
 
     public toString() {
-        return "LocalStoreAppender";
+        return this.name;
     }
 
 }

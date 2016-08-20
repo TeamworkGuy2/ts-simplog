@@ -102,14 +102,15 @@ abstract class Layout implements Log4Ts.Layout {
 
 
     public setKeys(loggerKey?: string, timeStampKey?: string, levelKey?: string, messageKey?: string, exceptionKey?: string, urlKey?: string, millisecondsKey?: string) {
-        var strOrDefault = Utils.stringOrDefault;
-        this.loggerKey = strOrDefault(loggerKey, this.defaults.loggerKey);
-        this.timeStampKey = strOrDefault(timeStampKey, this.defaults.timeStampKey);
-        this.levelKey = strOrDefault(levelKey, this.defaults.levelKey);
-        this.messageKey = strOrDefault(messageKey, this.defaults.messageKey);
-        this.exceptionKey = strOrDefault(exceptionKey, this.defaults.exceptionKey);
-        this.urlKey = strOrDefault(urlKey, this.defaults.urlKey);
-        this.millisecondsKey = strOrDefault(millisecondsKey, this.defaults.millisecondsKey);
+        var str = Utils.stringOrDefault;
+        var df = this.defaults;
+        this.loggerKey = str(loggerKey, df.loggerKey);
+        this.timeStampKey = str(timeStampKey, df.timeStampKey);
+        this.levelKey = str(levelKey, df.levelKey);
+        this.messageKey = str(messageKey, df.messageKey);
+        this.exceptionKey = str(exceptionKey, df.exceptionKey);
+        this.urlKey = str(urlKey, df.urlKey);
+        this.millisecondsKey = str(millisecondsKey, df.millisecondsKey);
     }
 
 

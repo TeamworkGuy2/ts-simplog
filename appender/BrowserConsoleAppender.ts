@@ -5,15 +5,16 @@ import NullLayout = require("../layout/NullLayout");
 /** BrowserConsoleAppender (only works in Opera and Safari and Firefox with Firebug extension)
  */
 class BrowserConsoleAppender extends Appender {
-    private name: string;
     private console: Console;
+    private customName: string;
+    public name = "BrowserConsoleAppender";
 
 
-    constructor(console: Console, name?: string) {
-        super();
+    constructor(console: Console, name?: string, opts?: Log4Ts.AppenderOptions) {
+        super(opts);
         this.layout = new NullLayout();
         this.threshold = Level.DEBUG;
-        this.name = name;
+        this.customName = name;
         this.console = console;
     }
 
@@ -60,7 +61,7 @@ class BrowserConsoleAppender extends Appender {
 
 
     public toString() {
-        return "BrowserConsoleAppender";
+        return this.name + ": " + this.customName;
     }
 
 

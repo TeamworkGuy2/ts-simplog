@@ -230,24 +230,27 @@ class Logger implements Log4Ts.Logger {
     }
 
 
-    public callAppenders(loggingEvent: Log4Ts.LoggingEvent) {
-        var options = this.options;
-
-        if (options.logLoggerName && loggingEvent.logger.name) {
-            loggingEvent.messages.unshift(loggingEvent.logger.name);
+    public callAppenders(evnt: Log4Ts.LoggingEvent) {
+        if (this.options.logOriginalLoggerName && evnt.logger.name) {
+            evnt.messages.unshift(evnt.logger.name);
+        }
+        if (this.options.logOutputLoggerName && this.name) {
+            evnt.messages.unshift(this.name);
         }
 
-        var doLogAppenderName = options.logAppenderName;
-        var effectiveAppenders = this.getEffectiveAppenders();
-        for (var i = 0, len = effectiveAppenders.length; i < len; i++) {
-            if (doLogAppenderName && this.name) {
-                loggingEvent.messages.unshift(this.name);
+        var appenders = this.getEffectiveAppenders();
+        for (var i = 0, len = appenders.length; i < len; i++) {
+            var appender = appenders[i];
+            var logName = appender.options.doLogName && appender.name;
+
+            if (logName) {
+                evnt.messages.unshift(appender.name);
             }
 
-            effectiveAppenders[i].doAppend(loggingEvent);
+            appender.doAppend(evnt);
 
-            if (doLogAppenderName && this.name) {
-                loggingEvent.messages.shift();
+            if (logName) {
+                evnt.messages.shift();
             }
         }
     }

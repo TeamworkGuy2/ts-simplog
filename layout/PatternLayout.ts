@@ -1,5 +1,6 @@
 ﻿import Globals = require("../log4ts/Globals");
 import Utils = require("../log-util/Utils");
+import DateUtil = require("../log-util/DateUtil");
 import LogLog = require("../log4ts/LogLog");
 import Layout = require("./Layout");
 import SimpleDateFormat = require("../log4ts/SimpleDateFormat");
@@ -27,14 +28,14 @@ class PatternLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
+    public format(logEvent: Log4Ts.LoggingEvent) {
         var regex = /%(-?[0-9]+)?(\.?[0-9]+)?([acdfmMnpr%])(\{([^\}]+)\})?|([^%]+)/;
         var formattedString = "";
-        var result;
-        var searchString = this.pattern;
+        var result: RegExpExecArray;
+        var searchStr = this.pattern;
 
         // Cannot use regex global flag since it doesn't work with exec in IE5
-        while ((result = regex.exec(searchString))) {
+        while ((result = regex.exec(searchStr))) {
             var matchedString = result[0];
             var padding = result[1];
             var truncation = result[2];
@@ -63,7 +64,7 @@ class PatternLayout extends Layout {
                                 depth = 0;
                             }
                         }
-                        var messages = (conversionCharacter === "a") ? loggingEvent.messages[0] : loggingEvent.messages;
+                        var messages = (conversionCharacter === "a") ? logEvent.messages[0] : logEvent.messages;
                         for (var i = 0, len = messages.length; i < len; i++) {
                             if (i > 0 && (replacement.charAt(replacement.length - 1) !== " ")) {
                                 replacement += " ";
@@ -76,10 +77,10 @@ class PatternLayout extends Layout {
                         }
                         break;
                     case "c": // Logger name
-                        var loggerName = loggingEvent.logger.name;
+                        var loggerName = logEvent.logger.name;
                         if (specifier) {
                             var precision = parseInt(specifier, 10);
-                            var loggerNameBits = loggingEvent.logger.name.split(".");
+                            var loggerNameBits = logEvent.logger.name.split(".");
                             if (precision >= loggerNameBits.length) {
                                 replacement = loggerName;
                             } else {
@@ -103,7 +104,7 @@ class PatternLayout extends Layout {
                             }
                         }
                         // Format the date
-                        replacement = (new SimpleDateFormat(dateFormat)).format(loggingEvent.timeStamp);
+                        replacement = (new SimpleDateFormat(dateFormat)).format(logEvent.timeStamp);
                         break;
                     case "f": // Custom field
                         if (this.hasCustomFields()) {
@@ -122,7 +123,7 @@ class PatternLayout extends Layout {
                             }
                             var val = this.customFields[fieldIndex].value;
                             if (typeof val == "function") {
-                                val = val(this, loggingEvent);
+                                val = val(this, logEvent);
                             }
                             replacement = val;
                         }
@@ -131,10 +132,10 @@ class PatternLayout extends Layout {
                         replacement = Globals.newLine;
                         break;
                     case "p": // Level
-                        replacement = loggingEvent.level.name;
+                        replacement = logEvent.level.name;
                         break;
                     case "r": // Milliseconds since app startup
-                        replacement = "" + SimpleDateFormat.getDifference(loggingEvent.timeStamp, Globals.applicationStartDate);
+                        replacement = "" + DateUtil.getDifference(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
                     case "%": // Literal % sign
                         replacement = "%";
@@ -143,9 +144,8 @@ class PatternLayout extends Layout {
                         replacement = matchedString;
                         break;
                 }
-                // Format the replacement according to any padding or
-                // truncation specified
-                var l;
+                // Format the replacement according to any padding or truncation specified
+                var l: number;
 
                 // First, truncation
                 if (truncation) {
@@ -173,7 +173,7 @@ class PatternLayout extends Layout {
                 }
                 formattedString += replacement;
             }
-            searchString = searchString.substr(result.index + result[0].length);
+            searchStr = searchStr.substr(result.index + result[0].length);
         }
         return formattedString;
     }

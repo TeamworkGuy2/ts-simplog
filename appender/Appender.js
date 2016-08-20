@@ -13,11 +13,14 @@ var PatternLayout = require("../layout/PatternLayout");
  */
 var Appender = (function (_super) {
     __extends(Appender, _super);
-    function Appender() {
+    function Appender(opts) {
         _super.call(this);
         this.layout = new PatternLayout();
         this.threshold = Level.ALL;
         this.loggers = [];
+        this.options = {};
+        this.name = "Appender";
+        this.options = opts || {};
     }
     Appender.prototype.group = function (groupTitle, initiallyExpanded) { };
     Appender.prototype.groupEnd = function (groupTitle) { };

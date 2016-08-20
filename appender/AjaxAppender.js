@@ -13,9 +13,9 @@ var HttpPostDataLayout = require("../layout/HttpPostDataLayout");
  */
 var AjaxAppender = (function (_super) {
     __extends(AjaxAppender, _super);
-    function AjaxAppender(url, withCredentials) {
+    function AjaxAppender(url, withCredentials, opts) {
         var _this = this;
-        _super.call(this);
+        _super.call(this, opts);
         this.defaults = {
             waitForResponse: false,
             timed: false,
@@ -27,6 +27,7 @@ var AjaxAppender = (function (_super) {
             postVarName: "data",
             contentType: "application/x-www-form-urlencoded"
         };
+        this.name = "AjaxAppender";
         this.layout = new HttpPostDataLayout();
         var appender = this;
         var isSupported = true;
@@ -324,7 +325,7 @@ var AjaxAppender = (function (_super) {
         }
     }
     AjaxAppender.prototype.toString = function () {
-        return "AjaxAppender";
+        return this.name;
     };
     return AjaxAppender;
 }(Appender));

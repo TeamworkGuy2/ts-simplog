@@ -23,8 +23,8 @@ class HttpPostDataLayout extends Layout {
         var dataValues = this.getDataValues(loggingEvent);
         var queryBits = [];
         for (var i = 0, len = dataValues.length; i < len; i++) {
-            var val = (dataValues[i][1] instanceof Date) ?
-                String(dataValues[i][1].getTime()) : dataValues[i][1];
+            var dataVal = dataValues[i][1];
+            var val = (dataVal instanceof Date) ? String(dataVal.getTime()) : dataVal;
             queryBits.push(Utils.urlEncode(dataValues[i][0]) + "=" + Utils.urlEncode(val));
         }
         return queryBits.join("&");

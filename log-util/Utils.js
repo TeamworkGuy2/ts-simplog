@@ -30,6 +30,13 @@ var Utils;
         return str.replace(/\r\n|\r|\n/g, "\\r\\n");
     }
     Utils.escapeNewLines = escapeNewLines;
+    function padWithZeroes(str, len) {
+        while (str.length < len) {
+            str = "0" + str;
+        }
+        return str;
+    }
+    Utils.padWithZeroes = padWithZeroes;
     function getExceptionMessage(ex) {
         if (ex.message) {
             return ex.message;

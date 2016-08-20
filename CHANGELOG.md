@@ -4,7 +4,21 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.1.1](N/A) - 2016-06-10
+### [0.2.0](N/A) - 2016-08-20
+#### Added
+* Appender options and name properties
+
+####Changed
+* Renamed EventSupport.eventListeners -> listeners
+* Changed Logger options
+  * logAppenderName moved to Appender options
+  * renamed options.logLoggerName -> logOriginalLoggerName
+  * added new options.logOutputLoggerName
+* Moved SimpleDateFormat constants and utility methods to new DateUtil class
+
+
+--------
+### [0.1.1](https://github.com/TeamworkGuy2/ts-simplog/commit/a021956657b4cce644c272c8cb7382dac687ab77) - 2016-06-10
 #### Added
 * Log4TsRoot.getLogger() options parameter
 * Logger.setOptions()

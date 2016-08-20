@@ -36,6 +36,14 @@ module Utils {
     }
 
 
+    export function padWithZeroes(str: string, len: number) {
+        while (str.length < len) {
+            str = "0" + str;
+        }
+        return str;
+    }
+
+
     export function getExceptionMessage(ex) {
         if (ex.message) {
             return ex.message;

@@ -1,12 +1,9 @@
 ﻿import Utils = require("../log-util/Utils");
+import DateUtil = require("../log-util/DateUtil");
 
 // Date-related stuff
 
 var regex = /('[^']*')|(G+|y+|M+|w+|W+|D+|d+|F+|E+|a+|H+|k+|K+|h+|m+|s+|S+|Z+)|([a-zA-Z]+)|([^a-zA-Z']+)/;
-
-var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 var TEXT2 = 0, TEXT3 = 1, NUMBER = 2, YEAR = 3, MONTH = 4, TIMEZONE = 5;
 
@@ -30,10 +27,6 @@ var types = {
     S: NUMBER,
     Z: TIMEZONE
 };
-
-var ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
-var ONE_WEEK_MILLIS = 7 * ONE_DAY_MILLIS;
-var DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK = 1;
 
 
 class SimpleDateFormat {
@@ -59,7 +52,7 @@ class SimpleDateFormat {
 
 
     public getMinimalDaysInFirstWeek() {
-        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
+        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
     }
 
 
@@ -71,15 +64,15 @@ class SimpleDateFormat {
     public formatNumber(data: number, numberOfLetters: number) {
         var dataString = "" + data;
         // Pad with 0s as necessary
-        return SimpleDateFormat.padWithZeroes(dataString, numberOfLetters);
+        return Utils.padWithZeroes(dataString, numberOfLetters);
     }
 
 
     public format(date: Date) {
         var formattedString = "";
         var result: RegExpExecArray & [string, string, "G"|"y"|"M"|"w"|"W"|"D"|"d"|"F"|"E"|"a"|"H"|"k"|"K"|"h"|"m"|"s"|"S"|"Z", string, string];
-        var searchString = this.formatString;
-        while ((result = <any>regex.exec(searchString))) {
+        var searchStr = this.formatString;
+        while ((result = <any>regex.exec(searchStr))) {
             var quotedString = result[1];
             var patternLetters = result[2];
             var otherLetters = result[3];
@@ -113,13 +106,13 @@ class SimpleDateFormat {
                         rawData = date.getMonth();
                         break;
                     case "w":
-                        rawData = SimpleDateFormat.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
+                        rawData = DateUtil.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
                         break;
                     case "W":
-                        rawData = SimpleDateFormat.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
+                        rawData = DateUtil.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
                         break;
                     case "D":
-                        rawData = SimpleDateFormat.getDayInYear(date);
+                        rawData = DateUtil.getDayInYear(date);
                         break;
                     case "d":
                         rawData = date.getDate();
@@ -128,7 +121,7 @@ class SimpleDateFormat {
                         rawData = 1 + Math.floor((date.getDate() - 1) / 7);
                         break;
                     case "E":
-                        rawData = dayNames[date.getDay()];
+                        rawData = DateUtil.dayNames[date.getDay()];
                         break;
                     case "a":
                         rawData = (date.getHours() >= 12) ? "PM" : "AM";
@@ -179,7 +172,7 @@ class SimpleDateFormat {
                         break;
                     case MONTH:
                         if (numberOfLetters >= 3) {
-                            formattedString += this.formatText(monthNames[rawData], numberOfLetters, numberOfLetters);
+                            formattedString += this.formatText(DateUtil.monthNames[rawData], numberOfLetters, numberOfLetters);
                         } else {
                             // NB. Months returned by getMonth are zero-based
                             formattedString += this.formatNumber(<number>rawData + 1, numberOfLetters);
@@ -193,104 +186,18 @@ class SimpleDateFormat {
 
                         // Hours
                         var hours = "" + Math.floor(absData / 60);
-                        hours = SimpleDateFormat.padWithZeroes(hours, 2);
+                        hours = Utils.padWithZeroes(hours, 2);
                         // Minutes
                         var minutes = "" + (absData % 60);
-                        minutes = SimpleDateFormat.padWithZeroes(minutes, 2);
+                        minutes = Utils.padWithZeroes(minutes, 2);
 
                         formattedString += prefix + hours + minutes;
                         break;
                 }
             }
-            searchString = searchString.substr(result.index + result[0].length);
+            searchStr = searchStr.substr(result.index + result[0].length);
         }
         return formattedString;
-    }
-
-}
-
-module SimpleDateFormat {
-
-    export function padWithZeroes(str: string, len: number) {
-        while (str.length < len) {
-            str = "0" + str;
-        }
-        return str;
-    }
-
-
-    export function newDateAtMidnight(year, month, day) {
-        var d = new Date(year, month, day, 0, 0, 0);
-        d.setMilliseconds(0);
-        return d;
-    }
-
-
-    export function getDifference(base: Date, date: Date) {
-        return base.getTime() - date.getTime();
-    }
-
-
-    export function isBefore(base: Date, date: Date) {
-        return base.getTime() < date.getTime();
-    }
-
-
-    export function getUtcTime(date: Date) {
-        return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-    }
-
-
-    export function getTimeSince(base: Date, date: Date) {
-        return getUtcTime(base) - getUtcTime(date);
-    }
-
-
-    export function getPreviousSunday(date: Date) {
-        // Using midday avoids any possibility of DST messing things up
-        var midday = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-        var previousSunday = new Date(midday.getTime() - date.getDay() * ONE_DAY_MILLIS);
-        return newDateAtMidnight(previousSunday.getFullYear(), previousSunday.getMonth(), previousSunday.getDate());
-    }
-
-
-    export function getWeekInYear(date: Date, minimalDaysInFirstWeek?: number) {
-        if (Utils.isUndefined(minimalDaysInFirstWeek)) {
-            minimalDaysInFirstWeek = DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
-        }
-        var previousSunday = getPreviousSunday(date);
-        var startOfYear = newDateAtMidnight(date.getFullYear(), 0, 1);
-        var weeksSinceSartOfYear = Math.floor(getTimeSince(previousSunday, startOfYear) / ONE_WEEK_MILLIS);
-        var numberOfSundays = isBefore(previousSunday, startOfYear) ? 0 : 1 + weeksSinceSartOfYear;
-        var numberOfDaysInFirstWeek = 7 - startOfYear.getDay();
-        var weekInYear = numberOfSundays;
-        if (numberOfDaysInFirstWeek < minimalDaysInFirstWeek) {
-            weekInYear--;
-        }
-        return weekInYear;
-    }
-
-
-    export function getWeekInMonth(date: Date, minimalDaysInFirstWeek?: number) {
-        if (Utils.isUndefined(minimalDaysInFirstWeek)) {
-            minimalDaysInFirstWeek = DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
-        }
-        var previousSunday = getPreviousSunday(date);
-        var startOfMonth = newDateAtMidnight(date.getFullYear(), date.getMonth(), 1);
-        var numberOfSundays = isBefore(previousSunday, startOfMonth) ?
-            0 : 1 + Math.floor(getTimeSince(previousSunday, startOfMonth) / ONE_WEEK_MILLIS);
-        var numberOfDaysInFirstWeek = 7 - startOfMonth.getDay();
-        var weekInMonth = numberOfSundays;
-        if (numberOfDaysInFirstWeek >= minimalDaysInFirstWeek) {
-            weekInMonth++;
-        }
-        return weekInMonth;
-    }
-
-
-    export function getDayInYear(date: Date) {
-        var startOfYear = newDateAtMidnight(date.getFullYear(), 0, 1);
-        return 1 + Math.floor(getTimeSince(date, startOfYear) / ONE_DAY_MILLIS);
     }
 
 }

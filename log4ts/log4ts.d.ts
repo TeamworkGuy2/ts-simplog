@@ -6,10 +6,17 @@ declare var log4ts_disabled: boolean;
 
 declare module Log4Ts {
 
+    export interface AppenderOptions {
+        doLogName?: boolean;
+    }
+
+
     export interface Appender {
         //protected layout: Layout;
         //protected threshold: Level;
         //protected loggers: Logger[];
+        name: string;
+        options: AppenderOptions;
 
         group(groupTitle: string, initiallyExpanded?: boolean): void;
         groupEnd(): void;
@@ -32,7 +39,7 @@ declare module Log4Ts {
 
     export interface EventSupport {
         eventTypes: string[];
-        eventListeners: { [type: string]: EventListener[] };
+        listeners: { [type: string]: EventListener[] };
 
         setEventTypes(eventTypesParam: string[]): void;
         addEventListener(eventType: string, listener: EventListener): void;
@@ -176,8 +183,8 @@ declare module Log4Ts {
 
 
     export interface LoggerOptions {
-        logLoggerName?: boolean;
-        logAppenderName?: boolean
+        logOriginalLoggerName?: boolean;
+        logOutputLoggerName?: boolean;
     }
 
 

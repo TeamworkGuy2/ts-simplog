@@ -5,9 +5,10 @@ import SimpleLayout = require("../layout/SimpleLayout");
  */
 class AlertAppender extends Appender {
     public layout = new SimpleLayout();
+    public name = "AlertAppender";
 
-    constructor() {
-        super();
+    constructor(opts?: Log4Ts.AppenderOptions) {
+        super(opts);
     }
 
 
@@ -17,7 +18,7 @@ class AlertAppender extends Appender {
 
 
     public toString() {
-        return "AlertAppender";
+        return this.name;
     }
 
 }

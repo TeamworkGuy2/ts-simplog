@@ -96,13 +96,14 @@ class ConsoleAppender extends Appender {
         complainAboutPopUpBlocking?: boolean;
         reopenWhenClosed?: boolean;
     };
+    public name = "ConsoleAppender";
 
-    constructor() {
-        super();
+    constructor(opts?: Log4Ts.AppenderOptions) {
+        super(opts);
     }
 
     public toString() {
-        return "ConsoleAppender";
+        return this.name;
     }
 
     public isNewestMessageAtTop: () => boolean;
@@ -571,7 +572,7 @@ class ConsoleAppender extends Appender {
 
     // InPageAppender
     public setupInPageAppender(consoleAppenderId: number, canConfigureFunc: (configOptionName: any) => boolean, width?: string | number, height?: string | number) {
-        var containerElement = null;
+        var containerElem: HTMLElement = null;
 
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
@@ -584,7 +585,7 @@ class ConsoleAppender extends Appender {
 
         // Define useful variables
         var windowCreationStarted = false;
-        var iframeContainerDiv;
+        var iframeElem;
         var iframeId = Globals.uniqueId + "_InPageAppender_" + consoleAppenderId;
 
         this.hide = () => {
@@ -592,7 +593,7 @@ class ConsoleAppender extends Appender {
                 if (this.consoleWindowExists()) {
                     this.getConsoleWindow().$("command").blur();
                 }
-                iframeContainerDiv.style.display = "none";
+                iframeElem.style.display = "none";
                 this.minimized = true;
             }
         };
@@ -600,7 +601,7 @@ class ConsoleAppender extends Appender {
         this.show = () => {
             if (this.initialized) {
                 if (this.consoleWindowCreated) {
-                    iframeContainerDiv.style.display = "block";
+                    iframeElem.style.display = "block";
                     this.setShowCommandLine(this.showCommandLine); // Force IE to update
                     this.minimized = false;
                 } else if (!windowCreationStarted) {
@@ -615,7 +616,7 @@ class ConsoleAppender extends Appender {
 
         this.close = (fromButton) => {
             if (!this.consoleClosed && (!fromButton || confirm("This will permanently remove the console from the page. No more messages will be logged. Do you wish to continue?"))) {
-                iframeContainerDiv.parentNode.removeChild(iframeContainerDiv);
+                iframeElem.parentNode.removeChild(iframeElem);
                 this.unload();
             }
         };
@@ -656,14 +657,14 @@ class ConsoleAppender extends Appender {
             }
 
             this.minimized = false;
-            iframeContainerDiv = containerElement.appendChild(document.createElement("div"));
+            iframeElem = containerElem.appendChild(document.createElement("div"));
 
-            iframeContainerDiv.style.width = width;
-            iframeContainerDiv.style.height = height;
-            iframeContainerDiv.style.border = "solid gray 1px";
+            iframeElem.style.width = width;
+            iframeElem.style.height = height;
+            iframeElem.style.border = "solid gray 1px";
 
             for (var i = 0, len = cssProperties.length; i < len; i++) {
-                iframeContainerDiv.style[cssProperties[i][0]] = cssProperties[i][1];
+                iframeElem.style[cssProperties[i][0]] = cssProperties[i][1];
             }
 
             var iframeSrc = this.useDocumentWrite ? "" : " src='" + this.getConsoleUrl() + "'";
@@ -672,7 +673,7 @@ class ConsoleAppender extends Appender {
             // in IE5 on Windows, or in Konqueror prior to version 3.5 - in Konqueror
             // it creates the iframe fine but I haven't been able to find a way to obtain
             // the iframe's window object
-            iframeContainerDiv.innerHTML = "<iframe id='" + iframeId + "' name='" + iframeId +
+            iframeElem.innerHTML = "<iframe id='" + iframeId + "' name='" + iframeId +
                 "' width='100%' height='100%' frameborder='0'" + iframeSrc +
                 " scrolling='no'></iframe>";
             this.consoleClosed = false;
@@ -698,12 +699,12 @@ class ConsoleAppender extends Appender {
                 var pageLoadHandler = () => {
                     if (!this.container) {
                         // Set up default container element
-                        containerElement = document.createElement("div");
-                        containerElement.style.position = "fixed";
-                        containerElement.style.left = "0";
-                        containerElement.style.right = "0";
-                        containerElement.style.bottom = "0";
-                        document.body.appendChild(containerElement);
+                        containerElem = document.createElement("div");
+                        containerElem.style.position = "fixed";
+                        containerElem.style.left = "0";
+                        containerElem.style.right = "0";
+                        containerElem.style.bottom = "0";
+                        document.body.appendChild(containerElem);
                         this.addCssProperty("borderWidth", "1px 0 0 0");
                         this.addCssProperty("zIndex", 1000000); // Can't find anything authoritative that says how big z-index can be
                         open();
@@ -711,7 +712,7 @@ class ConsoleAppender extends Appender {
                         try {
                             var el = document.getElementById(<string>this.container);
                             if (el.nodeType == 1) {
-                                containerElement = el;
+                                containerElem = el;
                             }
                             open();
                         } catch (ex) {
@@ -722,7 +723,7 @@ class ConsoleAppender extends Appender {
 
                 // Test the type of the container supplied. First, check if it's an element
                 if (Globals.pageLoaded && this.container && (<Node>this.container).appendChild) {
-                    containerElement = this.container;
+                    containerElem = <HTMLElement>this.container;
                     open();
                 } else if (Globals.pageLoaded) {
                     pageLoadHandler();
@@ -816,7 +817,7 @@ class ConsoleAppender extends Appender {
         };
 
         // Define useful variables
-        var popUp;
+        var popUp: Window;
 
         // Create open, init, getConsoleWindow and safeToAppend functions
         this.open = () => {
@@ -869,7 +870,8 @@ class ConsoleAppender extends Appender {
                 this.consoleWindowCreated = true;
                 if (popUp && popUp.document) {
                     if (this.useDocumentWrite && this.useOldPopUp && isLoaded(popUp)) {
-                        popUp.mainPageReloaded();
+                        // TODO need to inject functions into the page
+                        popUp["mainPageReloaded"]();
                         finalInit();
                     } else {
                         if (this.useDocumentWrite) {

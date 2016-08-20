@@ -5,31 +5,31 @@ var Utils = require("../log-util/Utils");
 var EventSupport = (function () {
     function EventSupport(handleError) {
         this.eventTypes = [];
-        this.eventListeners = {};
+        this.listeners = {};
         this.handleError = handleError;
     }
     EventSupport.prototype.setEventTypes = function (eventTypesParam) {
         this.eventTypes = eventTypesParam;
-        this.eventListeners = {};
+        this.listeners = {};
         for (var i = 0, len = this.eventTypes.length; i < len; i++) {
-            this.eventListeners[this.eventTypes[i]] = [];
+            this.listeners[this.eventTypes[i]] = [];
         }
     };
     EventSupport.prototype.addEventListener = function (eventType, listener) {
         if (!Utils.arrayContains(this.eventTypes, eventType)) {
             this.handleError("EventSupport [" + this + "]: addEventListener: no event called '" + eventType + "'");
         }
-        this.eventListeners[eventType].push(listener);
+        this.listeners[eventType].push(listener);
     };
     EventSupport.prototype.removeEventListener = function (eventType, listener) {
         if (!Utils.arrayContains(this.eventTypes, eventType)) {
             this.handleError("EventSupport [" + this + "]: removeEventListener: no event called '" + eventType + "'");
         }
-        Utils.arrayRemove(this.eventListeners[eventType], listener);
+        Utils.arrayRemove(this.listeners[eventType], listener);
     };
     EventSupport.prototype.dispatchEvent = function (eventType, eventArgs) {
         if (Utils.arrayContains(this.eventTypes, eventType)) {
-            var listeners = this.eventListeners[eventType];
+            var listeners = this.listeners[eventType];
             for (var i = 0, len = listeners.length; i < len; i++) {
                 listeners[i](this, eventType, eventArgs);
             }

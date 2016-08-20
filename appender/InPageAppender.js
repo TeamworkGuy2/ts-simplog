@@ -10,8 +10,8 @@ var PatternLayout = require("../layout/PatternLayout");
 */
 var InPageAppender = (function (_super) {
     __extends(InPageAppender, _super);
-    function InPageAppender(container, lazyInit, initiallyMinimized, useDocumentWrite, width, height) {
-        _super.call(this);
+    function InPageAppender(container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, opts) {
+        _super.call(this, opts);
         this.defaults = {
             layout: new PatternLayout("%d{HH:mm:ss} %-5p - %m{1}%n"),
             initiallyMinimized: false,
@@ -28,10 +28,11 @@ var InPageAppender = (function (_super) {
             showLogEntryDeleteButtons: true,
             useDocumentWrite: true
         };
+        this.name = "InPageAppender";
         this.create(true, container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, false);
     }
     InPageAppender.prototype.toString = function () {
-        return "InPageAppender";
+        return this.name;
     };
     return InPageAppender;
 }(ConsoleAppender));

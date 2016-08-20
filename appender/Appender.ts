@@ -11,10 +11,13 @@ abstract class Appender extends EventSupport implements Log4Ts.Appender {
     protected layout: Log4Ts.Layout = new PatternLayout();
     protected threshold = Level.ALL;
     protected loggers: Log4Ts.Logger[] = [];
+    public options: Log4Ts.AppenderOptions = {};
+    public name = "Appender";
 
 
-    constructor() {
+    constructor(opts: Log4Ts.AppenderOptions) {
         super();
+        this.options = opts || {};
     }
 
     public abstract toString();

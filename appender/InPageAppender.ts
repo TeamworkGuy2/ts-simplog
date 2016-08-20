@@ -20,17 +20,18 @@ class InPageAppender extends ConsoleAppender {
         showLogEntryDeleteButtons: true,
         useDocumentWrite: true
     };
+    public name = "InPageAppender";
 
 
-    constructor(container?: string | Node, lazyInit?: boolean, initiallyMinimized?: boolean, useDocumentWrite?: boolean, width?: string | number, height?: string | number) {
-        super();
+    constructor(container?: string | Node, lazyInit?: boolean, initiallyMinimized?: boolean, useDocumentWrite?: boolean, width?: string | number, height?: string | number, opts?: Log4Ts.AppenderOptions) {
+        super(opts);
 
         this.create(true, container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, false);
     }
 
 
     public toString() {
-        return "InPageAppender";
+        return this.name;
     }
 
 }

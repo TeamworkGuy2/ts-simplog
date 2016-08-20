@@ -166,20 +166,23 @@ var Logger = (function () {
             this.callAppenders(loggingEvent);
         }
     };
-    Logger.prototype.callAppenders = function (loggingEvent) {
-        var options = this.options;
-        if (options.logLoggerName && loggingEvent.logger.name) {
-            loggingEvent.messages.unshift(loggingEvent.logger.name);
+    Logger.prototype.callAppenders = function (evnt) {
+        if (this.options.logOriginalLoggerName && evnt.logger.name) {
+            evnt.messages.unshift(evnt.logger.name);
         }
-        var doLogAppenderName = options.logAppenderName;
-        var effectiveAppenders = this.getEffectiveAppenders();
-        for (var i = 0, len = effectiveAppenders.length; i < len; i++) {
-            if (doLogAppenderName && this.name) {
-                loggingEvent.messages.unshift(this.name);
+        if (this.options.logOutputLoggerName && this.name) {
+            evnt.messages.unshift(this.name);
+        }
+        var appenders = this.getEffectiveAppenders();
+        for (var i = 0, len = appenders.length; i < len; i++) {
+            var appender = appenders[i];
+            var logName = appender.options.doLogName && appender.name;
+            if (logName) {
+                evnt.messages.unshift(appender.name);
             }
-            effectiveAppenders[i].doAppend(loggingEvent);
-            if (doLogAppenderName && this.name) {
-                loggingEvent.messages.shift();
+            appender.doAppend(evnt);
+            if (logName) {
+                evnt.messages.shift();
             }
         }
     };
