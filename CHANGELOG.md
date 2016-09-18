@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.2.1](N/A) - 2016-09-17
+### [0.2.2](N/A) - 2016-09-17
+#### Changed
+* Fixed BrowserConsoleAppender constructor 'name' parameter to correctly default to the class name when no name is provided
+* LocalStoreAppender - added constructor 'name' parameter, defaults to the class name when no name is provided
+
+
+--------
+### [0.2.1](https://github.com/TeamworkGuy2/ts-simplog/commit/464ca23a394ed47291da275caa97f0fb0a2bf8d3) - 2016-09-17
 #### Changed
 * Added some (by default) redudant type casts so this library can work with ts-date-times if the built in Date class/methods are setup to return TimestampUtc instead of number
 * Utils refactoring, added some method parameter types
@@ -15,7 +22,7 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 #### Added
 * Appender options and name properties
 
-####Changed
+#### Changed
 * Renamed EventSupport.eventListeners -> listeners
 * Changed Logger options
   * logAppenderName moved to Appender options

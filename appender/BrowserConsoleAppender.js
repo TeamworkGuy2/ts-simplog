@@ -12,6 +12,7 @@ var NullLayout = require("../layout/NullLayout");
 var BrowserConsoleAppender = (function (_super) {
     __extends(BrowserConsoleAppender, _super);
     function BrowserConsoleAppender(console, name, opts) {
+        if (name === void 0) { name = "BrowserConsoleAppender"; }
         _super.call(this, opts);
         this.name = "BrowserConsoleAppender";
         this.layout = new NullLayout();

@@ -1,6 +1,6 @@
 {
   "name": "ts-simplog",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "TypeScript port of log4javascript with some additions and heavily interface based for easy customization.",
   "dependencies": {
   },

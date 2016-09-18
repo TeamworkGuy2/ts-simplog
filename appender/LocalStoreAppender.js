@@ -14,16 +14,18 @@ var NullLayout = require("../layout/NullLayout");
  */
 var LocalStoreAppender = (function (_super) {
     __extends(LocalStoreAppender, _super);
-    function LocalStoreAppender(store, mergeGroupEvents, opts) {
+    function LocalStoreAppender(store, name, mergeGroupEvents, opts) {
+        if (name === void 0) { name = "LocalStoreAppender"; }
         if (mergeGroupEvents === void 0) { mergeGroupEvents = false; }
         _super.call(this, opts);
-        this.name = "LocalStoreAppender";
         this.groupNames = [];
         this.groupEvents = [];
+        this.name = "LocalStoreAppender";
         this.layout = new NullLayout();
         this.threshold = Level.INFO;
         this.store = store;
         this.mergeGroups = mergeGroupEvents;
+        this.customName = name;
     }
     LocalStoreAppender.prototype.append = function (loggingEvent) {
         var msgs = loggingEvent.messages && loggingEvent.messages.length === 1 ? loggingEvent.messages[0] : loggingEvent.messages;
@@ -53,7 +55,7 @@ var LocalStoreAppender = (function (_super) {
         this.groupEvents.pop();
     };
     LocalStoreAppender.prototype.toString = function () {
-        return this.name;
+        return this.customName;
     };
     return LocalStoreAppender;
 }(Appender));

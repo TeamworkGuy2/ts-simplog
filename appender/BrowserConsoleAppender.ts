@@ -10,7 +10,7 @@ class BrowserConsoleAppender extends Appender {
     public name = "BrowserConsoleAppender";
 
 
-    constructor(console: Console, name?: string, opts?: Log4Ts.AppenderOptions) {
+    constructor(console: Console, name = "BrowserConsoleAppender", opts?: Log4Ts.AppenderOptions) {
         super(opts);
         this.layout = new NullLayout();
         this.threshold = Level.DEBUG;
