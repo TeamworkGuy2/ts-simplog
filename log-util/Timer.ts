@@ -15,14 +15,14 @@ module Timer {
             name: name,
             level: level,
             startDate: startDate,
-            startMillis: startDate.getTime(),
+            startMillis: <number>startDate.getTime(),
             endDate: null,
             endMillis: null,
             durationMillis: null,
             measure: () => {
                 var endDate = new Date();
-                var endMillis = endDate.getTime();
-                var durationMillis = endMillis - inst.startMillis;;
+                var endMillis = <number>endDate.getTime();
+                var durationMillis = endMillis - inst.startMillis;
                 inst.endDate = endDate;
                 inst.endMillis = endMillis;
                 inst.durationMillis = durationMillis;

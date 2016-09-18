@@ -3,6 +3,7 @@ var Globals = require("../log4ts/Globals");
 // Utility functions
 var Utils;
 (function (Utils) {
+    Utils.urlEncode = encodeURIComponent;
     function emptyFunction() { }
     Utils.emptyFunction = emptyFunction;
     function toStr(obj) {
@@ -75,18 +76,18 @@ var Utils;
     Utils.getExceptionStringRep = getExceptionStringRep;
     // formatObjectExpansion
     function formatObjectExpansion(obj, depth, indentation) {
-        var objectsExpanded = [];
+        var objsExpanded = [];
+        function formatString(text, indentation) {
+            var lines = Utils.splitIntoLines(text);
+            for (var j = 1, jLen = lines.length; j < jLen; j++) {
+                lines[j] = indentation + lines[j];
+            }
+            return lines.join(Globals.newLine);
+        }
         function doFormat(obj, depth, indentation) {
-            var i, len, childDepth, childIndentation, childLines, expansion, childExpansion;
+            var expansion;
             if (!indentation) {
                 indentation = "";
-            }
-            function formatString(text) {
-                var lines = Utils.splitIntoLines(text);
-                for (var j = 1, jLen = lines.length; j < jLen; j++) {
-                    lines[j] = indentation + lines[j];
-                }
-                return lines.join(Globals.newLine);
             }
             if (obj === null) {
                 return "null";
@@ -95,9 +96,9 @@ var Utils;
                 return "undefined";
             }
             else if (typeof obj == "string") {
-                return formatString(obj);
+                return formatString(obj, indentation);
             }
-            else if (typeof obj == "object" && Utils.arrayContains(objectsExpanded, obj)) {
+            else if (typeof obj == "object" && Utils.arrayContains(objsExpanded, obj)) {
                 try {
                     expansion = Utils.toStr(obj);
                 }
@@ -107,14 +108,14 @@ var Utils;
                 return expansion + " [already expanded]";
             }
             else if ((obj instanceof Array) && depth > 0) {
-                objectsExpanded.push(obj);
+                objsExpanded.push(obj);
                 expansion = "[" + Globals.newLine;
-                childDepth = depth - 1;
-                childIndentation = indentation + "  ";
-                childLines = [];
-                for (i = 0, len = obj.length; i < len; i++) {
+                var childDepth = depth - 1;
+                var childIndentation = indentation + "  ";
+                var childLines = [];
+                for (var i = 0, len = obj.length; i < len; i++) {
                     try {
-                        childExpansion = doFormat(obj[i], childDepth, childIndentation);
+                        var childExpansion = doFormat(obj[i], childDepth, childIndentation);
                         childLines.push(childIndentation + childExpansion);
                     }
                     catch (ex) {
@@ -128,25 +129,25 @@ var Utils;
                 return obj.toString();
             }
             else if (typeof obj == "object" && depth > 0) {
-                objectsExpanded.push(obj);
+                objsExpanded.push(obj);
                 expansion = "{" + Globals.newLine;
-                childDepth = depth - 1;
-                childIndentation = indentation + "  ";
-                childLines = [];
-                for (i in obj) {
+                var childDepth = depth - 1;
+                var childIndentation = indentation + "  ";
+                var childLines = [];
+                for (var key in obj) {
                     try {
-                        childExpansion = doFormat(obj[i], childDepth, childIndentation);
-                        childLines.push(childIndentation + i + ": " + childExpansion);
+                        var childExpansion = doFormat(obj[key], childDepth, childIndentation);
+                        childLines.push(childIndentation + key + ": " + childExpansion);
                     }
                     catch (ex) {
-                        childLines.push(childIndentation + i + ": Error formatting property. Details: " + Utils.getExceptionStringRep(ex));
+                        childLines.push(childIndentation + key + ": Error formatting property. Details: " + Utils.getExceptionStringRep(ex));
                     }
                 }
                 expansion += childLines.join("," + Globals.newLine) + Globals.newLine + indentation + "}";
                 return expansion;
             }
             else {
-                return formatString(Utils.toStr(obj));
+                return formatString(Utils.toStr(obj), indentation);
             }
         }
         return doFormat(obj, depth, indentation);
@@ -158,7 +159,6 @@ var Utils;
         return text2.split("\n");
     }
     Utils.splitIntoLines = splitIntoLines;
-    Utils.urlEncode = encodeURIComponent;
     function arrayRemove(arr, val) {
         var index = -1;
         for (var i = 0, len = arr.length; i < len; i++) {

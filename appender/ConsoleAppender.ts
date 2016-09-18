@@ -26,7 +26,7 @@ function setCookie(name: string, value: string, days?: number, path?: string) {
     path = path ? "; path=" + path : "";
     if (days) {
         var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        date.setTime(<number>date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     } else {
         expires = "";

@@ -17,7 +17,7 @@ class LoggingEvent implements Log4Ts.LoggingEvent {
     constructor(logger: Log4Ts.Logger, timeStamp: Date, level: Log4Ts.Level, messages: any[], exception: any) {
         this.logger = logger;
         this.timeStamp = timeStamp;
-        this.timeStampInMilliseconds = timeStamp.getTime();
+        this.timeStampInMilliseconds = <number>timeStamp.getTime();
         this.timeStampInSeconds = Math.floor(this.timeStampInMilliseconds / 1000);
         this.milliseconds = this.timeStamp.getMilliseconds();
         this.level = level;

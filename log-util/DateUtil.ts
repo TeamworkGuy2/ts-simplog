@@ -17,7 +17,7 @@ module DateUtil {
 
 
     export function getDifference(base: Date, date: Date) {
-        return base.getTime() - date.getTime();
+        return <number>base.getTime() - <number>date.getTime();
     }
 
 
@@ -39,7 +39,7 @@ module DateUtil {
     export function getPreviousSunday(date: Date) {
         // Using midday avoids any possibility of DST messing things up
         var midday = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-        var previousSunday = new Date(midday.getTime() - date.getDay() * ONE_DAY_MILLIS);
+        var previousSunday = new Date(<number>midday.getTime() - date.getDay() * ONE_DAY_MILLIS);
         return newMidnightDate(previousSunday.getFullYear(), previousSunday.getMonth(), previousSunday.getDate());
     }
 

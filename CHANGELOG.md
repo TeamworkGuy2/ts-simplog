@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.2.0](N/A) - 2016-08-20
+### [0.2.1](N/A) - 2016-09-17
+#### Changed
+* Added some (by default) redudant type casts so this library can work with ts-date-times if the built in Date class/methods are setup to return TimestampUtc instead of number
+* Utils refactoring, added some method parameter types
+
+
+--------
+### [0.2.0](https://github.com/TeamworkGuy2/ts-simplog/commit/b2fdc4c1e6a6749ea715670d6ad10e00d0af5c56) - 2016-08-20
 #### Added
 * Appender options and name properties
 

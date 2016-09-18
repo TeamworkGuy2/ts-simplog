@@ -4,10 +4,13 @@
 
 module Utils {
 
+    export var urlEncode = encodeURIComponent;
+
+
     export function emptyFunction() { }
 
 
-    export function toStr(obj) {
+    export function toStr(obj: any): string {
         if (obj && obj.toString) {
             return obj.toString();
         } else {
@@ -16,12 +19,12 @@ module Utils {
     }
 
 
-    export function isUndefined(obj) {
+    export function isUndefined(obj: any) {
         return typeof obj == "undefined";
     }
 
 
-    export function bool(obj) {
+    export function bool(obj: any) {
         return Boolean(obj);
     }
 
@@ -44,7 +47,7 @@ module Utils {
     }
 
 
-    export function getExceptionMessage(ex) {
+    export function getExceptionMessage(ex: { message?: string; description?: string; }) {
         if (ex.message) {
             return ex.message;
         } else if (ex.description) {
@@ -63,7 +66,7 @@ module Utils {
 
 
     // Returns a nicely formatted representation of an error
-    export function getExceptionStringRep(ex) {
+    export function getExceptionStringRep(ex: { message?: string; description?: string; lineNumber?: string | number; fileName?: string; stack?: string; }) {
         if (ex) {
             var exStr = "Exception: " + getExceptionMessage(ex);
             if (ex.lineNumber) {
@@ -83,46 +86,49 @@ module Utils {
 
     // formatObjectExpansion
     export function formatObjectExpansion(obj: any, depth: number, indentation?: string) {
-        var objectsExpanded = [];
+        var objsExpanded = [];
 
-        function doFormat(obj: any, depth: number, indentation?: string) {
-            var i, len, childDepth, childIndentation, childLines, expansion,
-                childExpansion;
+        function formatString(text: string, indentation: string) {
+            var lines = Utils.splitIntoLines(text);
+            for (var j = 1, jLen = lines.length; j < jLen; j++) {
+                lines[j] = indentation + lines[j];
+            }
+            return lines.join(Globals.newLine);
+        }
+
+        function doFormat(obj: any, depth: number, indentation?: string): string {
+            var expansion: string;
 
             if (!indentation) {
                 indentation = "";
             }
 
-            function formatString(text) {
-                var lines = Utils.splitIntoLines(text);
-                for (var j = 1, jLen = lines.length; j < jLen; j++) {
-                    lines[j] = indentation + lines[j];
-                }
-                return lines.join(Globals.newLine);
-            }
-
             if (obj === null) {
                 return "null";
-            } else if (typeof obj == "undefined") {
+            }
+            else if (typeof obj == "undefined") {
                 return "undefined";
-            } else if (typeof obj == "string") {
-                return formatString(obj);
-            } else if (typeof obj == "object" && Utils.arrayContains(objectsExpanded, obj)) {
+            }
+            else if (typeof obj == "string") {
+                return formatString(obj, indentation);
+            }
+            else if (typeof obj == "object" && Utils.arrayContains(objsExpanded, obj)) {
                 try {
                     expansion = Utils.toStr(obj);
                 } catch (ex) {
                     expansion = "Error formatting property. Details: " + Utils.getExceptionStringRep(ex);
                 }
                 return expansion + " [already expanded]";
-            } else if ((obj instanceof Array) && depth > 0) {
-                objectsExpanded.push(obj);
+            }
+            else if ((obj instanceof Array) && depth > 0) {
+                objsExpanded.push(obj);
                 expansion = "[" + Globals.newLine;
-                childDepth = depth - 1;
-                childIndentation = indentation + "  ";
-                childLines = [];
-                for (i = 0, len = obj.length; i < len; i++) {
+                var childDepth = depth - 1;
+                var childIndentation = indentation + "  ";
+                var childLines: string[] = [];
+                for (var i = 0, len = obj.length; i < len; i++) {
                     try {
-                        childExpansion = doFormat(obj[i], childDepth, childIndentation);
+                        var childExpansion = doFormat(obj[i], childDepth, childIndentation);
                         childLines.push(childIndentation + childExpansion);
                     } catch (ex) {
                         childLines.push(childIndentation + "Error formatting array member. Details: " + Utils.getExceptionStringRep(ex) + "");
@@ -130,28 +136,32 @@ module Utils {
                 }
                 expansion += childLines.join("," + Globals.newLine) + Globals.newLine + indentation + "]";
                 return expansion;
-            } else if (Object.prototype.toString.call(obj) == "[object Date]") {
+            }
+            else if (Object.prototype.toString.call(obj) == "[object Date]") {
                 return obj.toString();
-            } else if (typeof obj == "object" && depth > 0) {
-                objectsExpanded.push(obj);
+            }
+            else if (typeof obj == "object" && depth > 0) {
+                objsExpanded.push(obj);
                 expansion = "{" + Globals.newLine;
-                childDepth = depth - 1;
-                childIndentation = indentation + "  ";
-                childLines = [];
-                for (i in obj) {
+                var childDepth = depth - 1;
+                var childIndentation = indentation + "  ";
+                var childLines: string[] = [];
+                for (var key in obj) {
                     try {
-                        childExpansion = doFormat(obj[i], childDepth, childIndentation);
-                        childLines.push(childIndentation + i + ": " + childExpansion);
+                        var childExpansion = doFormat(obj[key], childDepth, childIndentation);
+                        childLines.push(childIndentation + key + ": " + childExpansion);
                     } catch (ex) {
-                        childLines.push(childIndentation + i + ": Error formatting property. Details: " + Utils.getExceptionStringRep(ex));
+                        childLines.push(childIndentation + key + ": Error formatting property. Details: " + Utils.getExceptionStringRep(ex));
                     }
                 }
                 expansion += childLines.join("," + Globals.newLine) + Globals.newLine + indentation + "}";
                 return expansion;
-            } else {
-                return formatString(Utils.toStr(obj));
+            }
+            else {
+                return formatString(Utils.toStr(obj), indentation);
             }
         }
+
         return doFormat(obj, depth, indentation);
     }
 
@@ -161,9 +171,6 @@ module Utils {
         var text2 = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
         return text2.split("\n");
     }
-
-
-    export var urlEncode = encodeURIComponent;
 
 
     export function arrayRemove<T>(arr: T[], val: T): boolean {

@@ -22,7 +22,6 @@ var Timer;
                 var endDate = new Date();
                 var endMillis = endDate.getTime();
                 var durationMillis = endMillis - inst.startMillis;
-                ;
                 inst.endDate = endDate;
                 inst.endMillis = endMillis;
                 inst.durationMillis = durationMillis;
