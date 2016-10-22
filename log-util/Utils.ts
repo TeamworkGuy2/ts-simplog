@@ -39,6 +39,19 @@ module Utils {
     }
 
 
+    export function padWithSpaces(str: string, len: number) {
+        if (str.length < len) {
+            var spaces = [];
+            var count = Math.max(0, len - str.length);
+            for (var i = 0; i < count; i++) {
+                spaces[i] = " ";
+            }
+            str += spaces.join("");
+        }
+        return str;
+    }
+
+
     export function padWithZeroes(str: string, len: number) {
         while (str.length < len) {
             str = "0" + str;

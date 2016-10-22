@@ -1,37 +1,31 @@
 "use strict";
 var DateUtil;
 (function (DateUtil) {
-    DateUtil.ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
-    DateUtil.ONE_WEEK_MILLIS = 7 * DateUtil.ONE_DAY_MILLIS;
+    /** Number of milliseconds in a 24 hour period */
+    DateUtil.MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
+    /** Number of milliseconds in a 7 x 24 hour period */
+    DateUtil.MILLIS_PER_WEEK = 7 * DateUtil.MILLIS_PER_DAY;
     DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK = 1;
-    DateUtil.monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    DateUtil.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    DateUtil.MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    DateUtil.DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     function newMidnightDate(year, month, day) {
         var d = new Date(year, month, day, 0, 0, 0);
         d.setMilliseconds(0);
         return d;
     }
     DateUtil.newMidnightDate = newMidnightDate;
-    function getDifference(base, date) {
-        return base.getTime() - date.getTime();
-    }
-    DateUtil.getDifference = getDifference;
     function isBefore(base, date) {
         return base.getTime() < date.getTime();
     }
     DateUtil.isBefore = isBefore;
-    function getUtcTime(date) {
-        return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
-    }
-    DateUtil.getUtcTime = getUtcTime;
     function getTimeSince(base, date) {
-        return getUtcTime(base) - getUtcTime(date);
+        return base.getTime() - date.getTime();
     }
     DateUtil.getTimeSince = getTimeSince;
     function getPreviousSunday(date) {
         // Using midday avoids any possibility of DST messing things up
         var midday = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
-        var previousSunday = new Date(midday.getTime() - date.getDay() * DateUtil.ONE_DAY_MILLIS);
+        var previousSunday = new Date(midday.getTime() - date.getDay() * DateUtil.MILLIS_PER_DAY);
         return newMidnightDate(previousSunday.getFullYear(), previousSunday.getMonth(), previousSunday.getDate());
     }
     DateUtil.getPreviousSunday = getPreviousSunday;
@@ -41,7 +35,7 @@ var DateUtil;
         }
         var previousSunday = getPreviousSunday(date);
         var startOfYear = newMidnightDate(date.getFullYear(), 0, 1);
-        var weeksSinceSartOfYear = Math.floor(getTimeSince(previousSunday, startOfYear) / DateUtil.ONE_WEEK_MILLIS);
+        var weeksSinceSartOfYear = Math.floor(getTimeSince(previousSunday, startOfYear) / DateUtil.MILLIS_PER_WEEK);
         var numberOfSundays = isBefore(previousSunday, startOfYear) ? 0 : 1 + weeksSinceSartOfYear;
         var numberOfDaysInFirstWeek = 7 - startOfYear.getDay();
         var weekInYear = numberOfSundays;
@@ -58,7 +52,7 @@ var DateUtil;
         var previousSunday = getPreviousSunday(date);
         var startOfMonth = newMidnightDate(date.getFullYear(), date.getMonth(), 1);
         var numberOfSundays = isBefore(previousSunday, startOfMonth) ?
-            0 : 1 + Math.floor(getTimeSince(previousSunday, startOfMonth) / DateUtil.ONE_WEEK_MILLIS);
+            0 : 1 + Math.floor(getTimeSince(previousSunday, startOfMonth) / DateUtil.MILLIS_PER_WEEK);
         var numberOfDaysInFirstWeek = 7 - startOfMonth.getDay();
         var weekInMonth = numberOfSundays;
         if (numberOfDaysInFirstWeek >= minimalDaysInFirstWeek) {
@@ -69,7 +63,7 @@ var DateUtil;
     DateUtil.getWeekInMonth = getWeekInMonth;
     function getDayInYear(date) {
         var startOfYear = newMidnightDate(date.getFullYear(), 0, 1);
-        return 1 + Math.floor(getTimeSince(date, startOfYear) / DateUtil.ONE_DAY_MILLIS);
+        return 1 + Math.floor(getTimeSince(date, startOfYear) / DateUtil.MILLIS_PER_DAY);
     }
     DateUtil.getDayInYear = getDayInYear;
 })(DateUtil || (DateUtil = {}));

@@ -4,7 +4,19 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.2.2](N/A) - 2016-09-17
+### [0.3.0](N/A) - 2016-10-22
+#### Added
+* Utils.padWithSpaces() - moved from ConsoleAppender
+
+#### Changed
+* DateUtil renamed ONE_DAY_MILLIS -> MILLIS_PER_DAY, ONE_WEEK_MILLIS -> MILLIS_PER_WEEK, monthNames -> MONTHS, dayNames -> DAYS_PER_WEEK
+
+#### Removed
+* DateUtil getDifference() and getUtcTime()
+
+
+--------
+### [0.2.2](https://github.com/TeamworkGuy2/ts-simplog/commit/66f7ef6202c07162b734eb2c80ce24b6f2ea3d49) - 2016-09-17
 #### Changed
 * Fixed BrowserConsoleAppender constructor 'name' parameter to correctly default to the class name when no name is provided
 * LocalStoreAppender - added constructor 'name' parameter, defaults to the class name when no name is provided

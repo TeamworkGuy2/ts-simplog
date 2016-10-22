@@ -10,18 +10,6 @@ var LogLog = require("../log4ts/LogLog");
 var Appender = require("./Appender");
 var ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 var PatternLayout = require("../layout/PatternLayout");
-// Console extension functions
-function padWithSpaces(str, len) {
-    if (str.length < len) {
-        var spaces = [];
-        var numberOfSpaces = Math.max(0, len - str.length);
-        for (var i = 0; i < numberOfSpaces; i++) {
-            spaces[i] = " ";
-        }
-        str += spaces.join("");
-    }
-    return str;
-}
 // PopUpAppender and InPageAppender related
 function setCookie(name, value, days, path) {
     var expires;
@@ -734,10 +722,10 @@ function dir(obj) {
     // Create the nicely formatted property list
     var propList = [];
     for (p in obj) {
-        var propNameStr = "  " + padWithSpaces(Utils.toStr(p), maxLen + 2);
+        var propNameStr = "  " + Utils.padWithSpaces(Utils.toStr(p), maxLen + 2);
         var propVal;
         try {
-            propVal = Utils.splitIntoLines(Utils.toStr(obj[p])).join(padWithSpaces(Globals.newLine, maxLen + 6));
+            propVal = Utils.splitIntoLines(Utils.toStr(obj[p])).join(Utils.padWithSpaces(Globals.newLine, maxLen + 6));
         }
         catch (ex) {
             propVal = "[Error obtaining property. Details: " + Utils.getExceptionMessage(ex) + "]";

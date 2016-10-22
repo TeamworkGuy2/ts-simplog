@@ -135,7 +135,7 @@ class PatternLayout extends Layout {
                         replacement = logEvent.level.name;
                         break;
                     case "r": // Milliseconds since app startup
-                        replacement = "" + DateUtil.getDifference(logEvent.timeStamp, Globals.applicationStartDate);
+                        replacement = "" + DateUtil.getTimeSince(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
                     case "%": // Literal % sign
                         replacement = "%";

@@ -104,7 +104,7 @@ var SimpleDateFormat = (function () {
                         rawData = 1 + Math.floor((date.getDate() - 1) / 7);
                         break;
                     case "E":
-                        rawData = DateUtil.dayNames[date.getDay()];
+                        rawData = DateUtil.DAYS_OF_WEEK[date.getDay()];
                         break;
                     case "a":
                         rawData = (date.getHours() >= 12) ? "PM" : "AM";
@@ -156,7 +156,7 @@ var SimpleDateFormat = (function () {
                         break;
                     case MONTH:
                         if (numberOfLetters >= 3) {
-                            formattedString += this.formatText(DateUtil.monthNames[rawData], numberOfLetters, numberOfLetters);
+                            formattedString += this.formatText(DateUtil.MONTHS[rawData], numberOfLetters, numberOfLetters);
                         }
                         else {
                             // NB. Months returned by getMonth are zero-based
