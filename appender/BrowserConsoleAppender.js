@@ -13,12 +13,13 @@ var BrowserConsoleAppender = (function (_super) {
     __extends(BrowserConsoleAppender, _super);
     function BrowserConsoleAppender(console, name, opts) {
         if (name === void 0) { name = "BrowserConsoleAppender"; }
-        _super.call(this, opts);
-        this.name = "BrowserConsoleAppender";
-        this.layout = new NullLayout();
-        this.threshold = Level.DEBUG;
-        this.customName = name;
-        this.console = console;
+        var _this = _super.call(this, opts) || this;
+        _this.name = "BrowserConsoleAppender";
+        _this.layout = new NullLayout();
+        _this.threshold = Level.DEBUG;
+        _this.customName = name;
+        _this.console = console;
+        return _this;
     }
     BrowserConsoleAppender.prototype.append = function (logEvent) {
         var console = this.console;

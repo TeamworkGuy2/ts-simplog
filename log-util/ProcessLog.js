@@ -205,11 +205,10 @@ var ProcessLog = (function () {
         simpleLog.deltaTime = ProcessLog.timestampGenerator() - simpleLog.timeStamp;
         return simpleLog;
     };
-    /** Millisecond precision timestamp generator */
-    ProcessLog.timestampGenerator = Date.now;
     return ProcessLog;
 }());
-var ProcessLog;
+/** Millisecond precision timestamp generator */
+ProcessLog.timestampGenerator = Date.now;
 (function (ProcessLog) {
     /** A Step in a process */
     var LogStep = (function () {

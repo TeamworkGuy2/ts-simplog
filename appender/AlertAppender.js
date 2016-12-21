@@ -11,9 +11,10 @@ var SimpleLayout = require("../layout/SimpleLayout");
 var AlertAppender = (function (_super) {
     __extends(AlertAppender, _super);
     function AlertAppender(opts) {
-        _super.call(this, opts);
-        this.layout = new SimpleLayout();
-        this.name = "AlertAppender";
+        var _this = _super.call(this, opts) || this;
+        _this.layout = new SimpleLayout();
+        _this.name = "AlertAppender";
+        return _this;
     }
     AlertAppender.prototype.append = function (loggingEvent) {
         alert(this.getLayout().formatWithException(loggingEvent));

@@ -10,7 +10,7 @@ var Layout = require("./Layout");
 var NullLayout = (function (_super) {
     __extends(NullLayout, _super);
     function NullLayout() {
-        _super.call(this);
+        return _super.call(this) || this;
     }
     NullLayout.prototype.format = function (loggingEvent) {
         return loggingEvent.messages;

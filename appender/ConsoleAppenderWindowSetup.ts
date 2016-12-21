@@ -717,7 +717,7 @@ function script() {
         loaded = true;
         $("command")["value"] = "";
         $("command")["autocomplete"] = "off";
-        $("command").onkeydown = function (evt) {
+        $("command").onkeydown = function (this: HTMLInputElement, evt) {
             evt = getEvent(evt);
             if (evt.keyCode == 10 || evt.keyCode == 13) { // Return/Enter
                 evalCommandLine();
@@ -1870,8 +1870,8 @@ function script() {
             input.focus();
             var length = input.value.length;
             input.setSelectionRange(length, length);
-        } else if (input.createTextRange) {
-            var range = input.createTextRange();
+        } else if (input["createTextRange"]) {
+            var range = input["createTextRange"]();
             range.collapse(false);
             range.select();
         }

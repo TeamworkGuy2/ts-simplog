@@ -11,8 +11,9 @@ var SimpleLayout = (function (_super) {
     __extends(SimpleLayout, _super);
     function SimpleLayout(ignoreThowable) {
         if (ignoreThowable === void 0) { ignoreThowable = true; }
-        _super.call(this);
-        this.ignoreThrowable = ignoreThowable;
+        var _this = _super.call(this) || this;
+        _this.ignoreThrowable = ignoreThowable;
+        return _this;
     }
     SimpleLayout.prototype.format = function (loggingEvent) {
         return loggingEvent.level.name + " - " + loggingEvent.getCombinedMessages();

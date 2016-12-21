@@ -4,7 +4,13 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.3.0](N/A) - 2016-10-22
+### [0.3.1](N/A) - 2016-12-21
+#### Changed
+Minor changes for TypeScript 2.0 compatibility
+
+
+--------
+### [0.3.0](https://github.com/TeamworkGuy2/ts-simplog/commit/4d25f9e35b7cdbd418a91cc3ed33fa2036fee76c) - 2016-10-22
 #### Added
 * Utils.padWithSpaces() - moved from ConsoleAppender
 

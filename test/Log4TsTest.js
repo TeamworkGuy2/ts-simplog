@@ -150,13 +150,14 @@ function testLayoutWithVariables(layout, tsLogger) {
 var ArrayAppender = (function (_super) {
     __extends(ArrayAppender, _super);
     function ArrayAppender(layout, opts) {
-        _super.call(this, opts);
-        this.layout = new NullLayout();
-        this.name = "[ArrayAppender]";
+        var _this = _super.call(this, opts) || this;
+        _this.layout = new NullLayout();
+        _this.name = "[ArrayAppender]";
         if (layout) {
-            this.setLayout(layout);
+            _this.setLayout(layout);
         }
-        this.logMessages = [];
+        _this.logMessages = [];
+        return _this;
     }
     ArrayAppender.prototype.append = function (loggingEvent) {
         var formattedMessage = this.getLayout().format(loggingEvent);

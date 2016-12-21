@@ -12,8 +12,9 @@ var Layout = require("./Layout");
 var XmlLayout = (function (_super) {
     __extends(XmlLayout, _super);
     function XmlLayout(combineMessages) {
-        _super.call(this);
-        this.combineMessages = Utils.booleanOrDefault(combineMessages, true);
+        var _this = _super.call(this) || this;
+        _this.combineMessages = Utils.booleanOrDefault(combineMessages, true);
+        return _this;
     }
     XmlLayout.prototype.isCombinedMessages = function () {
         return this.combineMessages;

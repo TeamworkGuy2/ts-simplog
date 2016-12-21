@@ -64,8 +64,9 @@ var consoleAppenderIdCounter = 1;
 var ConsoleAppender = (function (_super) {
     __extends(ConsoleAppender, _super);
     function ConsoleAppender(opts) {
-        _super.call(this, opts);
-        this.name = "ConsoleAppender";
+        var _this = _super.call(this, opts) || this;
+        _this.name = "ConsoleAppender";
+        return _this;
     }
     ConsoleAppender.prototype.toString = function () {
         return this.name;
@@ -368,7 +369,7 @@ var ConsoleAppender = (function (_super) {
                 this.name = name;
             }
             QueuedGroupEnd.prototype.append = function () {
-                getConsoleWindow().groupEnd(name);
+                getConsoleWindow().groupEnd(this.name);
             };
             return QueuedGroupEnd;
         }());
@@ -379,10 +380,10 @@ var ConsoleAppender = (function (_super) {
         var containerElem = null;
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
-        var cssProperties = [];
+        var cssProps = [];
         this.addCssProperty = function (name, value) {
             if (canConfigureFunc("cssProperties")) {
-                cssProperties.push([name, value]);
+                cssProps.push([name, value]);
             }
         };
         // Define useful variables
@@ -459,8 +460,8 @@ var ConsoleAppender = (function (_super) {
             iframeElem.style.width = width;
             iframeElem.style.height = height;
             iframeElem.style.border = "solid gray 1px";
-            for (var i = 0, len = cssProperties.length; i < len; i++) {
-                iframeElem.style[cssProperties[i][0]] = cssProperties[i][1];
+            for (var i = 0, len = cssProps.length; i < len; i++) {
+                iframeElem.style[cssProps[i][0]] = cssProps[i][1];
             }
             var iframeSrc = _this.useDocumentWrite ? "" : " src='" + _this.getConsoleUrl() + "'";
             // Adding an iframe using the DOM would be preferable, but it doesn't work
@@ -754,8 +755,8 @@ var emptyElements = ["br", "img", "hr", "param", "link", "area", "input", "col",
 var indentationUnit = "  ";
 // Create and return an XHTML string from the node specified
 function getXhtml(rootNode, includeRootNode, indentation, startNewLine, preformatted) {
-    includeRootNode = (typeof includeRootNode == "undefined") ? true : !!includeRootNode;
-    if (typeof indentation != "string") {
+    includeRootNode = (typeof includeRootNode === "undefined") ? true : !!includeRootNode;
+    if (typeof indentation !== "string") {
         indentation = "";
     }
     startNewLine = !!startNewLine;

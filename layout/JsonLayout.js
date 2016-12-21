@@ -12,17 +12,18 @@ var Layout = require("./Layout");
 var JsonLayout = (function (_super) {
     __extends(JsonLayout, _super);
     function JsonLayout(readable, combineMessages) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         var nwln = Globals.newLine;
-        this.readable = Utils.booleanOrDefault(readable, false);
-        this.combineMessages = Utils.booleanOrDefault(combineMessages, true);
-        this.batchHeader = this.readable ? "[" + nwln : "[";
-        this.batchFooter = this.readable ? "]" + nwln : "]";
-        this.batchSeparator = this.readable ? "," + nwln : ",";
-        this.setKeys();
-        this.colon = this.readable ? ": " : ":";
-        this.tab = this.readable ? "\t" : "";
-        this.lineBreak = this.readable ? nwln : "";
+        _this.readable = Utils.booleanOrDefault(readable, false);
+        _this.combineMessages = Utils.booleanOrDefault(combineMessages, true);
+        _this.batchHeader = _this.readable ? "[" + nwln : "[";
+        _this.batchFooter = _this.readable ? "]" + nwln : "]";
+        _this.batchSeparator = _this.readable ? "," + nwln : ",";
+        _this.setKeys();
+        _this.colon = _this.readable ? ": " : ":";
+        _this.tab = _this.readable ? "\t" : "";
+        _this.lineBreak = _this.readable ? nwln : "";
+        return _this;
     }
     JsonLayout.prototype.isReadable = function () {
         return this.readable;

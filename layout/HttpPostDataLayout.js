@@ -11,9 +11,10 @@ var Layout = require("./Layout");
 var HttpPostDataLayout = (function (_super) {
     __extends(HttpPostDataLayout, _super);
     function HttpPostDataLayout() {
-        _super.call(this);
-        this.setKeys();
-        this.returnsPostData = true;
+        var _this = _super.call(this) || this;
+        _this.setKeys();
+        _this.returnsPostData = true;
+        return _this;
     }
     // Disable batching
     HttpPostDataLayout.prototype.allowBatching = function () {

@@ -15,13 +15,14 @@ var SimpleDateFormat = require("../log4ts/SimpleDateFormat");
 var PatternLayout = (function (_super) {
     __extends(PatternLayout, _super);
     function PatternLayout(pattern) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (pattern) {
-            this.pattern = pattern;
+            _this.pattern = pattern;
         }
         else {
-            this.pattern = PatternLayout.DEFAULT_CONVERSION_PATTERN;
+            _this.pattern = PatternLayout.DEFAULT_CONVERSION_PATTERN;
         }
+        return _this;
     }
     PatternLayout.prototype.format = function (logEvent) {
         var regex = /%(-?[0-9]+)?(\.?[0-9]+)?([acdfmMnpr%])(\{([^\}]+)\})?|([^%]+)/;
@@ -184,11 +185,11 @@ var PatternLayout = (function (_super) {
     PatternLayout.prototype.toString = function () {
         return "PatternLayout";
     };
-    PatternLayout.TTCC_CONVERSION_PATTERN = "%r %p %c - %m%n";
-    PatternLayout.DEFAULT_CONVERSION_PATTERN = "%m%n";
-    PatternLayout.ISO8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss,SSS";
-    PatternLayout.DATETIME_DATEFORMAT = "dd MMM yyyy HH:mm:ss,SSS";
-    PatternLayout.ABSOLUTETIME_DATEFORMAT = "HH:mm:ss,SSS";
     return PatternLayout;
 }(Layout));
+PatternLayout.TTCC_CONVERSION_PATTERN = "%r %p %c - %m%n";
+PatternLayout.DEFAULT_CONVERSION_PATTERN = "%m%n";
+PatternLayout.ISO8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss,SSS";
+PatternLayout.DATETIME_DATEFORMAT = "dd MMM yyyy HH:mm:ss,SSS";
+PatternLayout.ABSOLUTETIME_DATEFORMAT = "HH:mm:ss,SSS";
 module.exports = PatternLayout;

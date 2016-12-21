@@ -17,15 +17,16 @@ var LocalStoreAppender = (function (_super) {
     function LocalStoreAppender(store, name, mergeGroupEvents, opts) {
         if (name === void 0) { name = "LocalStoreAppender"; }
         if (mergeGroupEvents === void 0) { mergeGroupEvents = false; }
-        _super.call(this, opts);
-        this.groupNames = [];
-        this.groupEvents = [];
-        this.name = "LocalStoreAppender";
-        this.layout = new NullLayout();
-        this.threshold = Level.INFO;
-        this.store = store;
-        this.mergeGroups = mergeGroupEvents;
-        this.customName = name;
+        var _this = _super.call(this, opts) || this;
+        _this.groupNames = [];
+        _this.groupEvents = [];
+        _this.name = "LocalStoreAppender";
+        _this.layout = new NullLayout();
+        _this.threshold = Level.INFO;
+        _this.store = store;
+        _this.mergeGroups = mergeGroupEvents;
+        _this.customName = name;
+        return _this;
     }
     LocalStoreAppender.prototype.append = function (loggingEvent) {
         var msgs = loggingEvent.messages && loggingEvent.messages.length === 1 ? loggingEvent.messages[0] : loggingEvent.messages;

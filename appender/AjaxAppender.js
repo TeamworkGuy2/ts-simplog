@@ -14,9 +14,8 @@ var HttpPostDataLayout = require("../layout/HttpPostDataLayout");
 var AjaxAppender = (function (_super) {
     __extends(AjaxAppender, _super);
     function AjaxAppender(url, withCredentials, opts) {
-        var _this = this;
-        _super.call(this, opts);
-        this.defaults = {
+        var _this = _super.call(this, opts) || this;
+        _this.defaults = {
             waitForResponse: false,
             timed: false,
             timerInterval: 1000,
@@ -27,23 +26,23 @@ var AjaxAppender = (function (_super) {
             postVarName: "data",
             contentType: "application/x-www-form-urlencoded"
         };
-        this.name = "AjaxAppender";
-        this.layout = new HttpPostDataLayout();
-        var appender = this;
+        _this.name = "AjaxAppender";
+        _this.layout = new HttpPostDataLayout();
+        var appender = _this;
         var isSupported = true;
         if (!url) {
             LogLog.handleError("AjaxAppender: URL must be specified in constructor");
             isSupported = false;
         }
-        var timed = this.defaults.timed;
-        var waitForResponse = this.defaults.waitForResponse;
-        var batchSize = this.defaults.batchSize;
-        var timerInterval = this.defaults.timerInterval;
-        var requestSuccessCallback = this.defaults.requestSuccessCallback;
-        var failCallback = this.defaults.failCallback;
-        var postVarName = this.defaults.postVarName;
-        var sendAllOnUnload = this.defaults.sendAllOnUnload;
-        var contentType = this.defaults.contentType;
+        var timed = _this.defaults.timed;
+        var waitForResponse = _this.defaults.waitForResponse;
+        var batchSize = _this.defaults.batchSize;
+        var timerInterval = _this.defaults.timerInterval;
+        var requestSuccessCallback = _this.defaults.requestSuccessCallback;
+        var failCallback = _this.defaults.failCallback;
+        var postVarName = _this.defaults.postVarName;
+        var sendAllOnUnload = _this.defaults.sendAllOnUnload;
+        var contentType = _this.defaults.contentType;
         var sessionId = null;
         var queuedLogEvents = [];
         var queuedRequests = [];
@@ -59,12 +58,12 @@ var AjaxAppender = (function (_super) {
             }
             return true;
         }
-        this.getSessionId = function () { return sessionId; };
-        this.setSessionId = function (sessionIdParam) {
+        _this.getSessionId = function () { return sessionId; };
+        _this.setSessionId = function (sessionIdParam) {
             sessionId = Utils.stringOrDefault(sessionIdParam, null);
             _this.layout.setCustomField("sessionid", sessionId);
         };
-        this.setLayout = function (layoutParam) {
+        _this.setLayout = function (layoutParam) {
             if (checkCanConfigure("layout")) {
                 _this.layout = layoutParam;
                 // Set the session id as a custom field on the layout, if not already present
@@ -73,50 +72,50 @@ var AjaxAppender = (function (_super) {
                 }
             }
         };
-        this.isTimed = function () { return timed; };
-        this.setTimed = function (timedParam) {
+        _this.isTimed = function () { return timed; };
+        _this.setTimed = function (timedParam) {
             if (checkCanConfigure("timed")) {
                 timed = Utils.bool(timedParam);
             }
         };
-        this.getTimerInterval = function () { return timerInterval; };
-        this.setTimerInterval = function (timerIntervalParam) {
+        _this.getTimerInterval = function () { return timerInterval; };
+        _this.setTimerInterval = function (timerIntervalParam) {
             if (checkCanConfigure("timerInterval")) {
                 timerInterval = Utils.intOrDefault(timerIntervalParam, timerInterval);
             }
         };
-        this.isWaitForResponse = function () { return waitForResponse; };
-        this.setWaitForResponse = function (waitForResponseParam) {
+        _this.isWaitForResponse = function () { return waitForResponse; };
+        _this.setWaitForResponse = function (waitForResponseParam) {
             if (checkCanConfigure("waitForResponse")) {
                 waitForResponse = Utils.bool(waitForResponseParam);
             }
         };
-        this.getBatchSize = function () { return batchSize; };
-        this.setBatchSize = function (batchSizeParam) {
+        _this.getBatchSize = function () { return batchSize; };
+        _this.setBatchSize = function (batchSizeParam) {
             if (checkCanConfigure("batchSize")) {
                 batchSize = Utils.intOrDefault(batchSizeParam, batchSize);
             }
         };
-        this.isSendAllOnUnload = function () { return sendAllOnUnload; };
-        this.setSendAllOnUnload = function (sendAllOnUnloadParam) {
+        _this.isSendAllOnUnload = function () { return sendAllOnUnload; };
+        _this.setSendAllOnUnload = function (sendAllOnUnloadParam) {
             if (checkCanConfigure("sendAllOnUnload")) {
                 sendAllOnUnload = Utils.booleanOrDefault(sendAllOnUnloadParam, sendAllOnUnload);
             }
         };
-        this.setRequestSuccessCallback = function (requestSuccessCallbackParam) {
+        _this.setRequestSuccessCallback = function (requestSuccessCallbackParam) {
             requestSuccessCallback = Utils.funcOrDefault(requestSuccessCallbackParam, requestSuccessCallback);
         };
-        this.setFailCallback = function (failCallbackParam) {
+        _this.setFailCallback = function (failCallbackParam) {
             failCallback = Utils.funcOrDefault(failCallbackParam, failCallback);
         };
-        this.getPostVarName = function () { return postVarName; };
-        this.setPostVarName = function (postVarNameParam) {
+        _this.getPostVarName = function () { return postVarName; };
+        _this.setPostVarName = function (postVarNameParam) {
             if (checkCanConfigure("postVarName")) {
                 postVarName = Utils.stringOrDefault(postVarNameParam, postVarName);
             }
         };
-        this.getHeaders = function () { return headers; };
-        this.addHeader = function (name, value) {
+        _this.getHeaders = function () { return headers; };
+        _this.addHeader = function (name, value) {
             if (name.toLowerCase() == "content-type") {
                 contentType = value;
             }
@@ -155,7 +154,7 @@ var AjaxAppender = (function (_super) {
                 }
             }
         }
-        this.sendAll = sendAll;
+        _this.sendAll = sendAll;
         // Called when the window unloads. At this point we're don't care about waiting
         // for responses or timers or incomplete batches - everything must go, now
         function sendAllRemaining() {
@@ -184,7 +183,7 @@ var AjaxAppender = (function (_super) {
             }
             return sendingAnything;
         }
-        this.sendAllRemaining = sendAllRemaining;
+        _this.sendAllRemaining = sendAllRemaining;
         function preparePostData(batchedLogEvents) {
             // Format the logging events
             var formattedMessages = [];
@@ -283,7 +282,7 @@ var AjaxAppender = (function (_super) {
                 }
             }
         }
-        this.append = function (logEvent) {
+        _this.append = function (logEvent) {
             if (isSupported) {
                 if (!initialized) {
                     init();
@@ -323,6 +322,7 @@ var AjaxAppender = (function (_super) {
                 scheduleSending();
             }
         }
+        return _this;
     }
     AjaxAppender.prototype.toString = function () {
         return this.name;
@@ -330,7 +330,6 @@ var AjaxAppender = (function (_super) {
     return AjaxAppender;
 }(Appender));
 // AjaxAppender related
-var AjaxAppender;
 (function (AjaxAppender) {
     var xhrFactory = function () { return new XMLHttpRequest(); };
     var xmlHttpFactories = [

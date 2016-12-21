@@ -91,9 +91,9 @@ function script() {
         LogItem.prototype.getMainDomContainer = function () {
             return this.group.mainElementContainer.contentDiv;
         };
-        LogItem.serializedItemKeys = { LOG_ENTRY: 0, GROUP_START: 1, GROUP_END: 2 };
         return LogItem;
     }());
+    LogItem.serializedItemKeys = { LOG_ENTRY: 0, GROUP_START: 1, GROUP_END: 2 };
     /*----------------------------------------------------------------*/
     var LogItemContainerElement = (function () {
         function LogItemContainerElement() {
@@ -113,11 +113,12 @@ function script() {
     var SeparatorElementContainer = (function (_super) {
         __extends(SeparatorElementContainer, _super);
         function SeparatorElementContainer(containerDomNode) {
-            _super.call(this);
-            this.containerDomNode = containerDomNode;
-            this.mainDiv = document.createElement("div");
-            this.mainDiv.className = "separator";
-            this.mainDiv.innerHTML = "&nbsp;";
+            var _this = _super.call(this) || this;
+            _this.containerDomNode = containerDomNode;
+            _this.mainDiv = document.createElement("div");
+            _this.mainDiv.className = "separator";
+            _this.mainDiv.innerHTML = "&nbsp;";
+            return _this;
         }
         SeparatorElementContainer.prototype.remove = function () {
             this.mainDiv.parentNode.removeChild(this.mainDiv);
@@ -129,8 +130,9 @@ function script() {
     var Separator = (function (_super) {
         __extends(Separator, _super);
         function Separator() {
-            _super.call(this);
-            this.rendered = false;
+            var _this = _super.call(this) || this;
+            _this.rendered = false;
+            return _this;
         }
         Separator.prototype.render = function () {
             var containerDomNode = this.group.contentDiv;
@@ -359,7 +361,7 @@ function script() {
     var LogEntryElementContainer = (function (_super) {
         __extends(LogEntryElementContainer, _super);
         function LogEntryElementContainer() {
-            _super.call(this);
+            return _super.call(this) || this;
         }
         LogEntryElementContainer.prototype.remove = function () {
             this.doRemove();
@@ -394,13 +396,14 @@ function script() {
     var LogEntryWrappedElementContainer = (function (_super) {
         __extends(LogEntryWrappedElementContainer, _super);
         function LogEntryWrappedElementContainer(logEntry, containerDomNode) {
-            _super.call(this);
-            this.logEntry = logEntry;
-            this.containerDomNode = containerDomNode;
-            this.mainDiv = document.createElement("div");
-            this.mainDiv.appendChild(document.createTextNode(this.logEntry.formattedMessage));
-            this.mainDiv.className = "logentry wrapped " + this.logEntry.level;
-            this.contentElement = this.mainDiv;
+            var _this = _super.call(this) || this;
+            _this.logEntry = logEntry;
+            _this.containerDomNode = containerDomNode;
+            _this.mainDiv = document.createElement("div");
+            _this.mainDiv.appendChild(document.createTextNode(_this.logEntry.formattedMessage));
+            _this.mainDiv.className = "logentry wrapped " + _this.logEntry.level;
+            _this.contentElement = _this.mainDiv;
+            return _this;
         }
         LogEntryWrappedElementContainer.prototype.setContent = function (content, wrappedContent) {
             if (content === this.formattedMessage) {
@@ -443,10 +446,11 @@ function script() {
     var LogEntry = (function (_super) {
         __extends(LogEntry, _super);
         function LogEntry(level, formattedMessage) {
-            _super.call(this);
-            this.level = level;
-            this.formattedMessage = formattedMessage;
-            this.rendered = false;
+            var _this = _super.call(this) || this;
+            _this.level = level;
+            _this.formattedMessage = formattedMessage;
+            _this.rendered = false;
+            return _this;
         }
         LogEntry.prototype.render = function () {
             var logEntry = this;
@@ -1654,8 +1658,8 @@ function script() {
             var length = input.value.length;
             input.setSelectionRange(length, length);
         }
-        else if (input.createTextRange) {
-            var range = input.createTextRange();
+        else if (input["createTextRange"]) {
+            var range = input["createTextRange"]();
             range.collapse(false);
             range.select();
         }

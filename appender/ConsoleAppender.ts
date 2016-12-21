@@ -550,7 +550,7 @@ class ConsoleAppender extends Appender {
             }
 
             public append() {
-                getConsoleWindow().groupEnd(name);
+                getConsoleWindow().groupEnd(this.name);
             }
         }
 
@@ -563,10 +563,10 @@ class ConsoleAppender extends Appender {
 
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
-        var cssProperties: [string, string | number][] = [];
+        var cssProps: [string, string | number][] = [];
         this.addCssProperty = (name: string, value: string | number) => {
             if (canConfigureFunc("cssProperties")) {
-                cssProperties.push([name, value]);
+                cssProps.push([name, value]);
             }
         };
 
@@ -641,7 +641,7 @@ class ConsoleAppender extends Appender {
                     this.isSupported = false;
                     LogLog.handleError(initErrorMessage, ex);
                 }
-            }
+            };
 
             this.minimized = false;
             iframeElem = containerElem.appendChild(document.createElement("div"));
@@ -650,8 +650,8 @@ class ConsoleAppender extends Appender {
             iframeElem.style.height = height;
             iframeElem.style.border = "solid gray 1px";
 
-            for (var i = 0, len = cssProperties.length; i < len; i++) {
-                iframeElem.style[cssProperties[i][0]] = cssProperties[i][1];
+            for (var i = 0, len = cssProps.length; i < len; i++) {
+                iframeElem.style[cssProps[i][0]] = cssProps[i][1];
             }
 
             var iframeSrc = this.useDocumentWrite ? "" : " src='" + this.getConsoleUrl() + "'";
@@ -970,13 +970,13 @@ var indentationUnit = "  ";
 
 // Create and return an XHTML string from the node specified
 function getXhtml(rootNode: Node, includeRootNode?: boolean, indentation?: string, startNewLine?: boolean, preformatted?: boolean) {
-    includeRootNode = (typeof includeRootNode == "undefined") ? true : !!includeRootNode;
-    if (typeof indentation != "string") {
+    includeRootNode = (typeof includeRootNode === "undefined") ? true : !!includeRootNode;
+    if (typeof indentation !== "string") {
         indentation = "";
     }
     startNewLine = !!startNewLine;
     preformatted = !!preformatted;
-    var xhtml;
+    var xhtml: string;
 
     function isWhitespace(node: Node) {
         return ((node.nodeType == nodeTypes.TEXT_NODE) && /^[ \t\r\n]*$/.test(node.nodeValue));
