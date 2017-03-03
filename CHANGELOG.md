@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.3.1](N/A) - 2016-12-21
+### [0.4.0](N/A) - 2017-02-02
+#### Changed
+* Renamed `LoggingEvent` -> `LogEvent`
+* Renamed `DateUtil.getTimeSince()` -> `getMillisSince()`
+
+
+--------
+### [0.3.1](https://github.com/TeamworkGuy2/ts-simplog/commit/bc7981994afe7112f4b4cc94e17cf1d96c805ad9) - 2016-12-21
 #### Changed
 Minor changes for TypeScript 2.0 compatibility
 

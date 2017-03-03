@@ -26,8 +26,8 @@ class LocalStoreAppender extends Appender {
     }
 
 
-    public append(loggingEvent: Log4Ts.LoggingEvent) {
-        var msgs = loggingEvent.messages && loggingEvent.messages.length === 1 ? loggingEvent.messages[0] : loggingEvent.messages;
+    public append(logEvent: Log4Ts.LogEvent) {
+        var msgs = logEvent.messages && logEvent.messages.length === 1 ? logEvent.messages[0] : logEvent.messages;
 
         if (this.groupNames.length > 0 && this.mergeGroups === true) {
             this.groupEvents[this.groupEvents.length - 1].push(msgs);

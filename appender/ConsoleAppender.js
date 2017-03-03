@@ -192,11 +192,11 @@ var ConsoleAppender = (function (_super) {
                 _this.appendQueuedLoggingEvents();
             }
         };
-        this.append = function (loggingEvent) {
+        this.append = function (logEvent) {
             if (_this.isSupported) {
                 // Format the message
-                var formattedMessage = _this.getLayout().formatWithException(loggingEvent);
-                queuedLoggingEvents.push(new QueuedLoggingEvent(loggingEvent, formattedMessage));
+                var formattedMessage = _this.getLayout().formatWithException(logEvent);
+                queuedLoggingEvents.push(new QueuedLoggingEvent(logEvent, formattedMessage));
                 checkAndAppend();
             }
         };
@@ -344,9 +344,9 @@ var ConsoleAppender = (function (_super) {
         var getConsoleWindow = this.getConsoleWindow;
         // Common methods
         var QueuedLoggingEvent = (function () {
-            function QueuedLoggingEvent(loggingEvent, formattedMessage) {
-                this.loggingEvent = loggingEvent;
-                this.levelName = loggingEvent.level.name;
+            function QueuedLoggingEvent(logEvent, formattedMessage) {
+                this.logEvent = logEvent;
+                this.levelName = logEvent.level.name;
                 this.formattedMessage = formattedMessage;
             }
             QueuedLoggingEvent.prototype.append = function () {

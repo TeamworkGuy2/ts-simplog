@@ -28,7 +28,7 @@ class PatternLayout extends Layout {
     }
 
 
-    public format(logEvent: Log4Ts.LoggingEvent) {
+    public format(logEvent: Log4Ts.LogEvent) {
         var regex = /%(-?[0-9]+)?(\.?[0-9]+)?([acdfmMnpr%])(\{([^\}]+)\})?|([^%]+)/;
         var formattedString = "";
         var result: RegExpExecArray;
@@ -135,7 +135,7 @@ class PatternLayout extends Layout {
                         replacement = logEvent.level.name;
                         break;
                     case "r": // Milliseconds since app startup
-                        replacement = "" + DateUtil.getTimeSince(logEvent.timeStamp, Globals.applicationStartDate);
+                        replacement = "" + DateUtil.getMillisSince(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
                     case "%": // Literal % sign
                         replacement = "%";

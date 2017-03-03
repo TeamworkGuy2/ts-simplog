@@ -87,14 +87,6 @@ class Log4TsRoot {
     }
 
 
-    /** This evaluates the given expression in the current scope, thus allowing
-     * scripts to access private variables. Particularly useful for testing
-     */
-    public evalInScope(expr: string) {
-        return eval(expr);
-    }
-
-
     public setShowStackTraces(show: boolean) {
         Globals.showStackTraces = Utils.bool(show);
     }

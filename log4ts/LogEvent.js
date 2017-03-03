@@ -3,8 +3,8 @@ var Globals = require("./Globals");
 var Utils = require("../log-util/Utils");
 /** Logging events
  */
-var LoggingEvent = (function () {
-    function LoggingEvent(logger, timeStamp, level, messages, exception) {
+var LogEvent = (function () {
+    function LogEvent(logger, timeStamp, level, messages, exception) {
         this.logger = logger;
         this.timeStamp = timeStamp;
         this.timeStampInMilliseconds = timeStamp.getTime();
@@ -14,15 +14,15 @@ var LoggingEvent = (function () {
         this.messages = messages;
         this.exception = exception;
     }
-    LoggingEvent.prototype.getThrowableStrRep = function () {
+    LogEvent.prototype.getThrowableStrRep = function () {
         return this.exception ? Utils.getExceptionStringRep(this.exception) : "";
     };
-    LoggingEvent.prototype.getCombinedMessages = function () {
+    LogEvent.prototype.getCombinedMessages = function () {
         return (this.messages.length == 1) ? this.messages[0] : this.messages.join(Globals.newLine);
     };
-    LoggingEvent.prototype.toString = function () {
-        return "LoggingEvent[" + this.level + "]";
+    LogEvent.prototype.toString = function () {
+        return "LogEvent[" + this.level + "]";
     };
-    return LoggingEvent;
+    return LogEvent;
 }());
-module.exports = LoggingEvent;
+module.exports = LogEvent;

@@ -13,8 +13,8 @@ class SimpleLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
-        return loggingEvent.level.name + " - " + loggingEvent.getCombinedMessages();
+    public format(logEvent: Log4Ts.LogEvent) {
+        return logEvent.level.name + " - " + logEvent.getCombinedMessages();
     }
 
 

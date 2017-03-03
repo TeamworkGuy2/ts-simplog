@@ -46,27 +46,26 @@ var Layout = (function () {
     Layout.prototype.getTimeStampValue = function (logEvent) {
         return this.isTimeStampsInMilliseconds() ? logEvent.timeStampInMilliseconds : logEvent.timeStampInSeconds;
     };
-    Layout.prototype.getDataValues = function (loggingEvent, combineMessages) {
+    Layout.prototype.getDataValues = function (logEvent, combineMessages) {
         var dataValues = [
-            [this.loggerKey, loggingEvent.logger.name],
-            [this.timeStampKey, this.getTimeStampValue(loggingEvent)],
-            [this.levelKey, loggingEvent.level.name],
+            [this.loggerKey, logEvent.logger.name],
+            [this.timeStampKey, this.getTimeStampValue(logEvent)],
+            [this.levelKey, logEvent.level.name],
             [this.urlKey, this.hasWindow ? window.location.href : "no-window-url"],
-            [this.messageKey, combineMessages ? loggingEvent.getCombinedMessages() : loggingEvent.messages]
+            [this.messageKey, combineMessages ? logEvent.getCombinedMessages() : logEvent.messages]
         ];
         if (!this.isTimeStampsInMilliseconds()) {
-            dataValues.push([this.millisecondsKey, loggingEvent.milliseconds]);
+            dataValues.push([this.millisecondsKey, logEvent.milliseconds]);
         }
-        if (loggingEvent.exception) {
-            dataValues.push([this.exceptionKey, Utils.getExceptionStringRep(loggingEvent.exception)]);
+        if (logEvent.exception) {
+            dataValues.push([this.exceptionKey, Utils.getExceptionStringRep(logEvent.exception)]);
         }
         if (this.hasCustomFields()) {
             for (var i = 0, len = this.customFields.length; i < len; i++) {
                 var val = this.customFields[i].value;
-                // Check if the value is a function. If so, execute it, passing it the
-                // current layout and the logging event
+                // Check if the value is a function. If so, execute it, passing it the current layout and the logging event
                 if (typeof val === "function") {
-                    val = val(this, loggingEvent);
+                    val = val(this, logEvent);
                 }
                 dataValues.push([this.customFields[i].name, val]);
             }
@@ -99,10 +98,10 @@ var Layout = (function () {
     Layout.prototype.hasCustomFields = function () {
         return (this.customFields.length > 0);
     };
-    Layout.prototype.formatWithException = function (loggingEvent) {
-        var formatted = this.format(loggingEvent);
-        if (loggingEvent.exception && this.ignoresThrowable()) {
-            formatted += loggingEvent.getThrowableStrRep();
+    Layout.prototype.formatWithException = function (logEvent) {
+        var formatted = this.format(logEvent);
+        if (logEvent.exception && this.ignoresThrowable()) {
+            formatted += logEvent.getThrowableStrRep();
         }
         return formatted;
     };

@@ -16,8 +16,8 @@ var AlertAppender = (function (_super) {
         _this.name = "AlertAppender";
         return _this;
     }
-    AlertAppender.prototype.append = function (loggingEvent) {
-        alert(this.getLayout().formatWithException(loggingEvent));
+    AlertAppender.prototype.append = function (logEvent) {
+        alert(this.getLayout().formatWithException(logEvent));
     };
     AlertAppender.prototype.toString = function () {
         return this.name;

@@ -28,7 +28,7 @@ class XmlLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
+    public format(logEvent: Log4Ts.LogEvent) {
         var nwln = Globals.newLine;
         var layout = this;
 
@@ -37,19 +37,19 @@ class XmlLayout extends Layout {
             return "<log4ts:message><![CDATA[" + layout.escapeCdata(message) + "]]></log4ts:message>";
         }
 
-        var str = "<log4ts:event logger=\"" + loggingEvent.logger.name + "\" timestamp=\"" + this.getTimeStampValue(loggingEvent) + "\"";
+        var str = "<log4ts:event logger=\"" + logEvent.logger.name + "\" timestamp=\"" + this.getTimeStampValue(logEvent) + "\"";
 
         if (!this.isTimeStampsInMilliseconds()) {
-            str += " milliseconds=\"" + loggingEvent.milliseconds + "\"";
+            str += " milliseconds=\"" + logEvent.milliseconds + "\"";
         }
-        str += " level=\"" + loggingEvent.level.name + "\">" + nwln;
+        str += " level=\"" + logEvent.level.name + "\">" + nwln;
 
         if (this.combineMessages) {
-            str += formatMessage(loggingEvent.getCombinedMessages());
+            str += formatMessage(logEvent.getCombinedMessages());
         } else {
             str += "<log4ts:messages>" + nwln;
-            for (var i = 0, len = loggingEvent.messages.length; i < len; i++) {
-                str += formatMessage(loggingEvent.messages[i]) + nwln;
+            for (var i = 0, len = logEvent.messages.length; i < len; i++) {
+                str += formatMessage(logEvent.messages[i]) + nwln;
             }
             str += "</log4ts:messages>" + nwln;
         }
@@ -63,9 +63,9 @@ class XmlLayout extends Layout {
             }
         }
 
-        if (loggingEvent.exception) {
+        if (logEvent.exception) {
             str += "<log4ts:exception><![CDATA[" +
-                Utils.getExceptionStringRep(loggingEvent.exception) +
+                Utils.getExceptionStringRep(logEvent.exception) +
                 "]]></log4ts:exception>" + nwln;
         }
         str += "</log4ts:event>" + nwln + nwln;

@@ -24,7 +24,7 @@ module DateUtil {
     }
 
 
-    export function getTimeSince(base: Date, date: Date) {
+    export function getMillisSince(base: Date, date: Date) {
         return <number>base.getTime() - <number>date.getTime();
     }
 
@@ -43,7 +43,7 @@ module DateUtil {
         }
         var previousSunday = getPreviousSunday(date);
         var startOfYear = newMidnightDate(date.getFullYear(), 0, 1);
-        var weeksSinceSartOfYear = Math.floor(getTimeSince(previousSunday, startOfYear) / MILLIS_PER_WEEK);
+        var weeksSinceSartOfYear = Math.floor(getMillisSince(previousSunday, startOfYear) / MILLIS_PER_WEEK);
         var numberOfSundays = isBefore(previousSunday, startOfYear) ? 0 : 1 + weeksSinceSartOfYear;
         var numberOfDaysInFirstWeek = 7 - startOfYear.getDay();
         var weekInYear = numberOfSundays;
@@ -61,7 +61,7 @@ module DateUtil {
         var previousSunday = getPreviousSunday(date);
         var startOfMonth = newMidnightDate(date.getFullYear(), date.getMonth(), 1);
         var numberOfSundays = isBefore(previousSunday, startOfMonth) ?
-            0 : 1 + Math.floor(getTimeSince(previousSunday, startOfMonth) / MILLIS_PER_WEEK);
+            0 : 1 + Math.floor(getMillisSince(previousSunday, startOfMonth) / MILLIS_PER_WEEK);
         var numberOfDaysInFirstWeek = 7 - startOfMonth.getDay();
         var weekInMonth = numberOfSundays;
         if (numberOfDaysInFirstWeek >= minimalDaysInFirstWeek) {
@@ -73,7 +73,7 @@ module DateUtil {
 
     export function getDayInYear(date: Date) {
         var startOfYear = newMidnightDate(date.getFullYear(), 0, 1);
-        return 1 + Math.floor(getTimeSince(date, startOfYear) / MILLIS_PER_DAY);
+        return 1 + Math.floor(getMillisSince(date, startOfYear) / MILLIS_PER_DAY);
     }
 
 }

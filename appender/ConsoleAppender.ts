@@ -332,11 +332,11 @@ class ConsoleAppender extends Appender {
             }
         };
 
-        this.append = (loggingEvent) => {
+        this.append = (logEvent) => {
             if (this.isSupported) {
                 // Format the message
-                var formattedMessage = this.getLayout().formatWithException(loggingEvent);
-                queuedLoggingEvents.push(new QueuedLoggingEvent(loggingEvent, formattedMessage));
+                var formattedMessage = this.getLayout().formatWithException(logEvent);
+                queuedLoggingEvents.push(new QueuedLoggingEvent(logEvent, formattedMessage));
                 checkAndAppend();
             }
         };
@@ -511,13 +511,13 @@ class ConsoleAppender extends Appender {
 
         // Common methods
         class QueuedLoggingEvent {
-            loggingEvent: Log4Ts.LoggingEvent;
+            logEvent: Log4Ts.LogEvent;
             levelName: string;
             formattedMessage: any[] | string;
 
-            constructor(loggingEvent: Log4Ts.LoggingEvent, formattedMessage: any[] | string) {
-                this.loggingEvent = loggingEvent;
-                this.levelName = loggingEvent.level.name;
+            constructor(logEvent: Log4Ts.LogEvent, formattedMessage: any[] | string) {
+                this.logEvent = logEvent;
+                this.levelName = logEvent.level.name;
                 this.formattedMessage = formattedMessage;
             }
 

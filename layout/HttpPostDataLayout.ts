@@ -19,8 +19,8 @@ class HttpPostDataLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
-        var dataValues = this.getDataValues(loggingEvent);
+    public format(logEvent: Log4Ts.LogEvent) {
+        var dataValues = this.getDataValues(logEvent);
         var queryBits = [];
         for (var i = 0, len = dataValues.length; i < len; i++) {
             var dataVal = dataValues[i][1];

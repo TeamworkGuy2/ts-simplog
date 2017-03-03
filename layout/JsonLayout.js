@@ -31,9 +31,9 @@ var JsonLayout = (function (_super) {
     JsonLayout.prototype.isCombinedMessages = function () {
         return this.combineMessages;
     };
-    JsonLayout.prototype.format = function (loggingEvent) {
+    JsonLayout.prototype.format = function (logEvent) {
         var layout = this;
-        var dataValues = this.getDataValues(loggingEvent, this.combineMessages);
+        var dataValues = this.getDataValues(logEvent, this.combineMessages);
         var str = "{" + this.lineBreak;
         function formatValue(val, prefix, expand) {
             // Check the type of the data value to decide whether quotation marks

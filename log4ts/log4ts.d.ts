@@ -20,8 +20,8 @@ declare module Log4Ts {
 
         group(groupTitle: string, initiallyExpanded?: boolean): void;
         groupEnd(): void;
-        append(loggingEvent: LoggingEvent): void;
-        doAppend(loggingEvent: LoggingEvent): void;
+        append(logEvent: LogEvent): void;
+        doAppend(logEvent: LogEvent): void;
         setLayout(layout: Layout): void;
         getLayout(): Layout;
         setThreshold(threshold: Level): void;
@@ -88,18 +88,18 @@ declare module Log4Ts {
         combineMessages: boolean;
         customFields: { name: string; value: any }[];
 
-        format(loggingEvent: LoggingEvent): any[] | string;
+        format(logEvent: LogEvent): any[] | string;
         ignoresThrowable(): boolean;
         toString(): string;
         allowBatching(): boolean;
         setTimeStampsInMilliseconds(timeStampsInMilliseconds: boolean): void;
         isTimeStampsInMilliseconds(): boolean;
-        getTimeStampValue(logEvent: LoggingEvent): number;
-        getDataValues(loggingEvent: LoggingEvent, combineMessages?: boolean): [string, any][];
+        getTimeStampValue(logEvent: LogEvent): number;
+        getDataValues(logEvent: LogEvent, combineMessages?: boolean): [string, any][];
         setKeys(loggerKey?: string, timeStampKey?: string, levelKey?: string, messageKey?: string, exceptionKey?: string, urlKey?: string, millisecondsKey?: string): void;
         setCustomField(name: string, value: any): void;
         hasCustomFields(): boolean;
-        formatWithException(loggingEvent: LoggingEvent): any[] | string
+        formatWithException(logEvent: LogEvent): any[] | string
     }
 
 
@@ -144,7 +144,7 @@ declare module Log4Ts {
 
         log(level: Level, params: any[] | IArguments): void;
 
-        callAppenders(loggingEvent: LoggingEvent): void;
+        callAppenders(logEvent: LogEvent): void;
 
         setLevel(level: Level): void;
 
@@ -166,7 +166,7 @@ declare module Log4Ts {
     }
 
 
-    export interface LoggingEvent {
+    export interface LogEvent {
         logger: Logger;
         timeStamp: Date;
         level: Level;

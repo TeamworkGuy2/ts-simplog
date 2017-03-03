@@ -137,7 +137,7 @@ var PatternLayout = (function (_super) {
                         replacement = logEvent.level.name;
                         break;
                     case "r":
-                        replacement = "" + DateUtil.getTimeSince(logEvent.timeStamp, Globals.applicationStartDate);
+                        replacement = "" + DateUtil.getMillisSince(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
                     case "%":
                         replacement = "%";

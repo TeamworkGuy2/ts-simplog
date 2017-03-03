@@ -3,7 +3,7 @@ var Globals = require("./Globals");
 var Utils = require("../log-util/Utils");
 var LogLog = require("./LogLog");
 var Level = require("./Level");
-var LoggingEvent = require("./LoggingEvent");
+var LogEvent = require("./LogEvent");
 var Timer = require("../log-util/Timer");
 /** Loggers
  */
@@ -162,8 +162,8 @@ var Logger = (function () {
             for (var i = 0; i <= finalParamIndex; i++) {
                 messages[i] = params[i];
             }
-            var loggingEvent = new LoggingEvent(this, new Date(), level, messages, exception);
-            this.callAppenders(loggingEvent);
+            var logEvent = new LogEvent(this, new Date(), level, messages, exception);
+            this.callAppenders(logEvent);
         }
     };
     Logger.prototype.callAppenders = function (evnt) {

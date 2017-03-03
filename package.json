@@ -1,13 +1,13 @@
 {
   "name": "ts-simplog",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "TypeScript port of log4javascript with some additions and heavily interface based for easy customization.",
   "dependencies": {
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "~3.0.2",
-    "typescript": "~1.8.9"
+    "mocha": "~3.2.0",
+    "typescript": "~2.2.1"
   },
   "scripts": {
     "test": "mocha -u tdd"

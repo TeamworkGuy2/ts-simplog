@@ -12,7 +12,7 @@ import JsonLayout = require("../layout/JsonLayout");
 import PopUpAppender = require("../appender/PopUpAppender");
 import Level = require("../log4ts/Level");
 import Log4TsRoot = require("../log4ts/Log4TsRoot");
-import LoggingEvent = require("../log4ts/LoggingEvent");
+import LogEvent = require("../log4ts/LogEvent");
 import NullLayout = require("../layout/NullLayout");
 import PatternLayout = require("../layout/PatternLayout");
 import SimpleLayout = require("../layout/SimpleLayout");
@@ -150,13 +150,13 @@ function testLayoutWithVariables(layout: Log4Ts.Layout, tsLogger: Log4Ts.Logger)
     for (var i = 0; i < arrayOfTestItems.length; i++) {
         var testItem = arrayOfTestItems[i];
         var ex = new Error("Test error");
-        var loggingEvent = new LoggingEvent(tsLogger, new Date(), Level.INFO, [testItem], null);
+        var logEvent = new LogEvent(tsLogger, new Date(), Level.INFO, [testItem], null);
         tsLogger.info("Formatting", testItem, result);
-        var result = layout.format(loggingEvent);
+        var result = layout.format(logEvent);
         // Now try with an exception
-        loggingEvent.exception = ex;
+        logEvent.exception = ex;
         tsLogger.info("Formatting with exception", testItem, result);
-        result = layout.format(loggingEvent);
+        result = layout.format(logEvent);
     }
 }
 
@@ -175,10 +175,10 @@ class ArrayAppender extends Appender {
         this.logMessages = [];
     }
 
-    public append(loggingEvent: Log4Ts.LoggingEvent) {
-        var formattedMessage = this.getLayout().format(loggingEvent);
+    public append(logEvent: Log4Ts.LogEvent) {
+        var formattedMessage = this.getLayout().format(logEvent);
         if (this.getLayout().ignoresThrowable()) {
-            formattedMessage += loggingEvent.getThrowableStrRep();
+            formattedMessage += logEvent.getThrowableStrRep();
         }
         this.logMessages.push(formattedMessage);
     }
@@ -391,7 +391,7 @@ suite("log4ts test", function log4tsTest() {
         timeInMilliseconds: number;
         timeInSeconds: number;
         milliseconds: number;
-        loggingEvent: LoggingEvent;
+        logEvent: LogEvent;
         layout: XmlLayout;
     } = <any>{};
 
@@ -401,7 +401,7 @@ suite("log4ts test", function log4tsTest() {
         xmlParams.timeInSeconds = Math.floor(xmlParams.timeInMilliseconds / 1000);
         xmlParams.milliseconds = xmlParams.date.getMilliseconds();
 
-        xmlParams.loggingEvent = new LoggingEvent(tsLogger, xmlParams.date, Level.DEBUG, ["TEST"], null);
+        xmlParams.logEvent = new LogEvent(tsLogger, xmlParams.date, Level.DEBUG, ["TEST"], null);
         xmlParams.layout = new XmlLayout();
     }
 
@@ -410,7 +410,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Test default (i.e. timestamps in milliseconds) first
         var regex = new RegExp('^<log4ts:event logger="test" timestamp="' + xmlParams.timeInMilliseconds + '" level="DEBUG">\\s*<log4ts:message><!\\[CDATA\\[TEST\\]\\]></log4ts:message>\\s*</log4ts:event>\\s*$');
-        asr.match(xmlParams.layout.format(xmlParams.loggingEvent), regex);
+        asr.match(xmlParams.layout.format(xmlParams.logEvent), regex);
     });
 
     test("XmlLayout seconds/milliseconds test 2", function () {
@@ -418,7 +418,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Change the global setting
         Log4TsRoot.defaultInst.setTimeStampsInMilliseconds(false);
-        var formatted = xmlParams.layout.format(xmlParams.loggingEvent);
+        var formatted = xmlParams.layout.format(xmlParams.logEvent);
         Log4TsRoot.defaultInst.setTimeStampsInMilliseconds(true);
         var regex = new RegExp('^<log4ts:event logger="test" timestamp="' + xmlParams.timeInSeconds + '" milliseconds="' + xmlParams.milliseconds + '" level="DEBUG">\\s*<log4ts:message><!\\[CDATA\\[TEST\\]\\]></log4ts:message>\\s*</log4ts:event>\\s*$');
         asr.match(formatted, regex);
@@ -429,7 +429,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Change the layout setting
         xmlParams.layout.setTimeStampsInMilliseconds(false);
-        var formatted = xmlParams.layout.format(xmlParams.loggingEvent);
+        var formatted = xmlParams.layout.format(xmlParams.logEvent);
         var regex = new RegExp('^<log4ts:event logger="test" timestamp="' + xmlParams.timeInSeconds + '" milliseconds="' + xmlParams.milliseconds + '" level="DEBUG">\\s*<log4ts:message><!\\[CDATA\\[TEST\\]\\]></log4ts:message>\\s*</log4ts:event>\\s*$');
         asr.match(formatted, regex);
     });
@@ -452,9 +452,7 @@ suite("log4ts test", function log4tsTest() {
     test("JsonLayout JSON validity test", function () {
         tsAppender.setLayout(new JsonLayout());
         tsLogger.debug("TEST");
-        var o;
-        eval("o = " + tsAppender.logMessages[0]);
-        asr.equal(o.message, "TEST");
+        asr.equal(JSON.parse(tsAppender.logMessages[0]).message, "TEST");
     });
 
     test("JsonLayout with number type message test", function () {
@@ -493,7 +491,7 @@ suite("log4ts test", function log4tsTest() {
         timeInMilliseconds: number;
         timeInSeconds: number;
         milliseconds: number;
-        loggingEvent: LoggingEvent;
+        logEvent: LogEvent;
         layout: JsonLayout;
     } = <any>{};
 
@@ -503,7 +501,7 @@ suite("log4ts test", function log4tsTest() {
         jsonParams.timeInSeconds = Math.floor(jsonParams.timeInMilliseconds / 1000);
         jsonParams.milliseconds = jsonParams.date.getMilliseconds();
 
-        jsonParams.loggingEvent = new LoggingEvent(tsLogger, jsonParams.date, Level.DEBUG, ["TEST"], null);
+        jsonParams.logEvent = new LogEvent(tsLogger, jsonParams.date, Level.DEBUG, ["TEST"], null);
         jsonParams.layout = new JsonLayout();
     };
 
@@ -512,7 +510,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Test default (i.e. timestamps in milliseconds) first
         var regex = new RegExp('^{"logger":"test","timestamp":' + jsonParams.timeInMilliseconds + ',"level":"DEBUG","url":".*","message":"TEST"}$');
-        asr.match(jsonParams.layout.format(jsonParams.loggingEvent), regex);
+        asr.match(jsonParams.layout.format(jsonParams.logEvent), regex);
     });
 
     test("JsonLayout seconds/milliseconds test 2", function () {
@@ -520,7 +518,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Change the global setting
         Log4TsRoot.defaultInst.setTimeStampsInMilliseconds(false);
-        var formatted = jsonParams.layout.format(jsonParams.loggingEvent);
+        var formatted = jsonParams.layout.format(jsonParams.logEvent);
         Log4TsRoot.defaultInst.setTimeStampsInMilliseconds(true);
         var regex = new RegExp('^{"logger":"test","timestamp":' + jsonParams.timeInSeconds + ',"level":"DEBUG","url":".*","message":"TEST","milliseconds":' + jsonParams.milliseconds + '}$');
         asr.match(formatted, regex);
@@ -531,7 +529,7 @@ suite("log4ts test", function log4tsTest() {
 
         // Change the layout setting
         jsonParams.layout.setTimeStampsInMilliseconds(false);
-        var formatted = jsonParams.layout.format(jsonParams.loggingEvent);
+        var formatted = jsonParams.layout.format(jsonParams.logEvent);
         var regex = new RegExp('^{"logger":"test","timestamp":' + jsonParams.timeInSeconds + ',"level":"DEBUG","url":".*","message":"TEST","milliseconds":' + jsonParams.milliseconds + '}$');
         asr.match(formatted, regex);
     });

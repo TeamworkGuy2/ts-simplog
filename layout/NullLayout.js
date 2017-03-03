@@ -12,14 +12,14 @@ var NullLayout = (function (_super) {
     function NullLayout() {
         return _super.call(this) || this;
     }
-    NullLayout.prototype.format = function (loggingEvent) {
-        return loggingEvent.messages;
+    NullLayout.prototype.format = function (logEvent) {
+        return logEvent.messages;
     };
     NullLayout.prototype.ignoresThrowable = function () {
         return true;
     };
-    NullLayout.prototype.formatWithException = function (loggingEvent) {
-        var messages = loggingEvent.messages, ex = loggingEvent.exception;
+    NullLayout.prototype.formatWithException = function (logEvent) {
+        var messages = logEvent.messages, ex = logEvent.exception;
         return ex ? messages.concat([ex]) : messages;
     };
     NullLayout.prototype.toString = function () {

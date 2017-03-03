@@ -12,8 +12,8 @@ class AlertAppender extends Appender {
     }
 
 
-    public append(loggingEvent: Log4Ts.LoggingEvent) {
-        alert(this.getLayout().formatWithException(loggingEvent));
+    public append(logEvent: Log4Ts.LogEvent) {
+        alert(this.getLayout().formatWithException(logEvent));
     }
 
 

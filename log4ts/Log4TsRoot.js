@@ -42,12 +42,6 @@ var Log4TsRoot = (function () {
     Log4TsRoot.prototype.isTimeStampsInMilliseconds = function () {
         return Globals.useTimeStampsInMilliseconds;
     };
-    /** This evaluates the given expression in the current scope, thus allowing
-     * scripts to access private variables. Particularly useful for testing
-     */
-    Log4TsRoot.prototype.evalInScope = function (expr) {
-        return eval(expr);
-    };
     Log4TsRoot.prototype.setShowStackTraces = function (show) {
         Globals.showStackTraces = Utils.bool(show);
     };

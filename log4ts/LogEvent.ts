@@ -3,7 +3,7 @@ import Utils = require("../log-util/Utils");
 
 /** Logging events
  */
-class LoggingEvent implements Log4Ts.LoggingEvent {
+class LogEvent implements Log4Ts.LogEvent {
     public logger: Log4Ts.Logger;
     public timeStamp: Date;
     public level: Log4Ts.Level;
@@ -37,9 +37,9 @@ class LoggingEvent implements Log4Ts.LoggingEvent {
 
 
     public toString() {
-        return "LoggingEvent[" + this.level + "]";
+        return "LogEvent[" + this.level + "]";
     }
 
 }
 
-export = LoggingEvent;
+export = LogEvent;

@@ -9,8 +9,8 @@ class NullLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
-        return loggingEvent.messages;
+    public format(logEvent: Log4Ts.LogEvent) {
+        return logEvent.messages;
     }
 
 
@@ -19,8 +19,8 @@ class NullLayout extends Layout {
     }
 
 
-    public formatWithException(loggingEvent: Log4Ts.LoggingEvent) {
-        var messages = loggingEvent.messages, ex = loggingEvent.exception;
+    public formatWithException(logEvent: Log4Ts.LogEvent) {
+        var messages = logEvent.messages, ex = logEvent.exception;
         return ex ? messages.concat([ex]) : messages;
     }
 

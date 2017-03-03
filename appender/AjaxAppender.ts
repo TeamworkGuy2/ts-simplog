@@ -74,8 +74,8 @@ class AjaxAppender extends Appender {
         var contentType = this.defaults.contentType;
         var sessionId: string = null;
 
-        var queuedLogEvents: Log4Ts.LoggingEvent[] = [];
-        var queuedRequests: Log4Ts.LoggingEvent[][] = [];
+        var queuedLogEvents: Log4Ts.LogEvent[] = [];
+        var queuedRequests: Log4Ts.LogEvent[][] = [];
         var headers: { name: string; value: string }[] = [];
         var sending = false;
         var initialized = false;
@@ -169,7 +169,7 @@ class AjaxAppender extends Appender {
         function sendAll() {
             if (isSupported && Globals.enabled) {
                 sending = true;
-                var currentRequestBatch: Log4Ts.LoggingEvent[];
+                var currentRequestBatch: Log4Ts.LogEvent[];
                 if (waitForResponse) {
                     // Send the first request then use this function as the callback once
                     // the response comes back
@@ -204,8 +204,8 @@ class AjaxAppender extends Appender {
             if (isSupported && Globals.enabled) {
                 // Create requests for everything left over, batched as normal
                 var actualBatchSize = appender.getLayout().allowBatching() ? batchSize : 1;
-                var currentLogEvent: Log4Ts.LoggingEvent;
-                var batchedLogEvents: Log4Ts.LoggingEvent[] = [];
+                var currentLogEvent: Log4Ts.LogEvent;
+                var batchedLogEvents: Log4Ts.LogEvent[] = [];
                 while ((currentLogEvent = queuedLogEvents.shift())) {
                     batchedLogEvents.push(currentLogEvent);
                     if (queuedLogEvents.length >= actualBatchSize) {
@@ -228,11 +228,11 @@ class AjaxAppender extends Appender {
 
         this.sendAllRemaining = sendAllRemaining;
 
-        function preparePostData(batchedLogEvents: Log4Ts.LoggingEvent[]) {
+        function preparePostData(batchedLogEvents: Log4Ts.LogEvent[]) {
             // Format the logging events
             var formattedMessages = [];
             var postData = "";
-            var currentLogEvent: Log4Ts.LoggingEvent;
+            var currentLogEvent: Log4Ts.LogEvent;
             while ((currentLogEvent = batchedLogEvents.shift())) {
                 formattedMessages.push(appender.getLayout().formatWithException(currentLogEvent));
             }
@@ -326,7 +326,7 @@ class AjaxAppender extends Appender {
             }
         }
 
-        this.append = (logEvent: Log4Ts.LoggingEvent) => {
+        this.append = (logEvent: Log4Ts.LogEvent) => {
             if (isSupported) {
                 if (!initialized) {
                     init();

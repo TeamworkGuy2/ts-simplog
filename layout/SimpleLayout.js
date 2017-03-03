@@ -15,8 +15,8 @@ var SimpleLayout = (function (_super) {
         _this.ignoreThrowable = ignoreThowable;
         return _this;
     }
-    SimpleLayout.prototype.format = function (loggingEvent) {
-        return loggingEvent.level.name + " - " + loggingEvent.getCombinedMessages();
+    SimpleLayout.prototype.format = function (logEvent) {
+        return logEvent.level.name + " - " + logEvent.getCombinedMessages();
     };
     SimpleLayout.prototype.ignoresThrowable = function () {
         return this.ignoreThrowable;

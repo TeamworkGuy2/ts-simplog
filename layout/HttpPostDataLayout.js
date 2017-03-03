@@ -20,8 +20,8 @@ var HttpPostDataLayout = (function (_super) {
     HttpPostDataLayout.prototype.allowBatching = function () {
         return false;
     };
-    HttpPostDataLayout.prototype.format = function (loggingEvent) {
-        var dataValues = this.getDataValues(loggingEvent);
+    HttpPostDataLayout.prototype.format = function (logEvent) {
+        var dataValues = this.getDataValues(logEvent);
         var queryBits = [];
         for (var i = 0, len = dataValues.length; i < len; i++) {
             var dataVal = dataValues[i][1];

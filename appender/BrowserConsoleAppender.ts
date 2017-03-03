@@ -19,7 +19,7 @@ class BrowserConsoleAppender extends Appender {
     }
 
 
-    public append(logEvent: Log4Ts.LoggingEvent) {
+    public append(logEvent: Log4Ts.LogEvent) {
         var console = this.console;
 
         if (console && console.log) {
@@ -65,7 +65,7 @@ class BrowserConsoleAppender extends Appender {
     }
 
 
-    private getFormattedMessage(logEvent: Log4Ts.LoggingEvent, concatenate?: boolean) {
+    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate?: boolean) {
         var formattedMessage = this.getLayout().formatWithException(logEvent);
         return (typeof formattedMessage === "string") ?
             (concatenate ? formattedMessage : [formattedMessage]) :

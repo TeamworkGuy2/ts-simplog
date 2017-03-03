@@ -37,9 +37,9 @@ class JsonLayout extends Layout {
     }
 
 
-    public format(loggingEvent: Log4Ts.LoggingEvent) {
+    public format(logEvent: Log4Ts.LogEvent) {
         var layout = this;
-        var dataValues = this.getDataValues(loggingEvent, this.combineMessages);
+        var dataValues = this.getDataValues(logEvent, this.combineMessages);
         var str = "{" + this.lineBreak;
 
         function formatValue(val, prefix: string, expand: boolean) {

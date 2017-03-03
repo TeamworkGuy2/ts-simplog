@@ -77,63 +77,7 @@ var SimpleDateFormat = (function () {
                 // Replace pattern letters
                 var patternLetter = patternLetters.charAt(0);
                 var numberOfLetters = patternLetters.length;
-                var rawData = "";
-                switch (patternLetter) {
-                    case "G":
-                        rawData = "AD";
-                        break;
-                    case "y":
-                        rawData = date.getFullYear();
-                        break;
-                    case "M":
-                        rawData = date.getMonth();
-                        break;
-                    case "w":
-                        rawData = DateUtil.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
-                        break;
-                    case "W":
-                        rawData = DateUtil.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
-                        break;
-                    case "D":
-                        rawData = DateUtil.getDayInYear(date);
-                        break;
-                    case "d":
-                        rawData = date.getDate();
-                        break;
-                    case "F":
-                        rawData = 1 + Math.floor((date.getDate() - 1) / 7);
-                        break;
-                    case "E":
-                        rawData = DateUtil.DAYS_OF_WEEK[date.getDay()];
-                        break;
-                    case "a":
-                        rawData = (date.getHours() >= 12) ? "PM" : "AM";
-                        break;
-                    case "H":
-                        rawData = date.getHours();
-                        break;
-                    case "k":
-                        rawData = date.getHours() || 24;
-                        break;
-                    case "K":
-                        rawData = date.getHours() % 12;
-                        break;
-                    case "h":
-                        rawData = (date.getHours() % 12) || 12;
-                        break;
-                    case "m":
-                        rawData = date.getMinutes();
-                        break;
-                    case "s":
-                        rawData = date.getSeconds();
-                        break;
-                    case "S":
-                        rawData = date.getMilliseconds();
-                        break;
-                    case "Z":
-                        rawData = date.getTimezoneOffset(); // This returns the number of minutes since GMT was this time.
-                        break;
-                }
+                var rawData = this.extractPattern(patternLetter, date);
                 // Format the raw data depending on the type
                 switch (types[patternLetter]) {
                     case TEXT2:
@@ -181,6 +125,49 @@ var SimpleDateFormat = (function () {
             searchStr = searchStr.substr(result.index + result[0].length);
         }
         return formattedString;
+    };
+    SimpleDateFormat.prototype.extractPattern = function (patternLetter, date, defaultValue) {
+        if (defaultValue === void 0) { defaultValue = ""; }
+        switch (patternLetter) {
+            case "G":
+                return "AD";
+            case "y":
+                return date.getFullYear();
+            case "M":
+                return date.getMonth();
+            case "w":
+                return DateUtil.getWeekInYear(date, this.getMinimalDaysInFirstWeek());
+            case "W":
+                return DateUtil.getWeekInMonth(date, this.getMinimalDaysInFirstWeek());
+            case "D":
+                return DateUtil.getDayInYear(date);
+            case "d":
+                return date.getDate();
+            case "F":
+                return 1 + Math.floor((date.getDate() - 1) / 7);
+            case "E":
+                return DateUtil.DAYS_OF_WEEK[date.getDay()];
+            case "a":
+                return (date.getHours() >= 12) ? "PM" : "AM";
+            case "H":
+                return date.getHours();
+            case "k":
+                return date.getHours() || 24;
+            case "K":
+                return date.getHours() % 12;
+            case "h":
+                return (date.getHours() % 12) || 12;
+            case "m":
+                return date.getMinutes();
+            case "s":
+                return date.getSeconds();
+            case "S":
+                return date.getMilliseconds();
+            case "Z":
+                return date.getTimezoneOffset(); // This returns the number of minutes since GMT was this time.
+            default:
+                return defaultValue;
+        }
     };
     return SimpleDateFormat;
 }());

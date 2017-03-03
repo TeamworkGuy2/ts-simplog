@@ -26,13 +26,13 @@ abstract class Appender extends EventSupport implements Log4Ts.Appender {
 
     public groupEnd(groupTitle?: string): void { }
 
-    public append(logEvent: Log4Ts.LoggingEvent): void { }
+    public append(logEvent: Log4Ts.LogEvent): void { }
 
 
     /** Performs threshold checks before delegating actual logging to the
      * subclass's specific append method.
      */
-    public doAppend(logEvent: Log4Ts.LoggingEvent) {
+    public doAppend(logEvent: Log4Ts.LogEvent) {
         if (Globals.enabled && logEvent.level.level >= this.threshold.level) {
             this.append(logEvent);
         }

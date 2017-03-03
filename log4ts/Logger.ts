@@ -2,7 +2,7 @@
 import Utils = require("../log-util/Utils");
 import LogLog = require("./LogLog");
 import Level = require("./Level");
-import LoggingEvent = require("./LoggingEvent");
+import LogEvent = require("./LogEvent");
 import Timer = require("../log-util/Timer");
 
 /** Loggers
@@ -223,14 +223,14 @@ class Logger implements Log4Ts.Logger {
                 messages[i] = params[i];
             }
 
-            var loggingEvent = new LoggingEvent(this, new Date(), level, messages, exception);
+            var logEvent = new LogEvent(this, new Date(), level, messages, exception);
 
-            this.callAppenders(loggingEvent);
+            this.callAppenders(logEvent);
         }
     }
 
 
-    public callAppenders(evnt: Log4Ts.LoggingEvent) {
+    public callAppenders(evnt: Log4Ts.LogEvent) {
         if (this.options.logOriginalLoggerName && evnt.logger.name) {
             evnt.messages.unshift(evnt.logger.name);
         }
