@@ -68,6 +68,7 @@ var SimpleDateFormat = (function () {
                 }
             }
             else if (otherLetters) {
+                // Swallow non-pattern letters by doing nothing here
             }
             else if (otherCharacters) {
                 // Simply output other characters

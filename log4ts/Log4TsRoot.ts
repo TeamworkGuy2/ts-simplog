@@ -1,4 +1,4 @@
-﻿/// <reference path="log4ts.d.ts" />
+﻿/// <reference path="./log4ts.d.ts" />
 /// <reference path="../../ts-local-storage-manager/local-store/local-store.d.ts" />
 import Globals = require("./Globals");
 import Utils = require("../log-util/Utils");

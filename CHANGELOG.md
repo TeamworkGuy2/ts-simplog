@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.4.0](N/A) - 2017-02-02
+### [0.4.1](N/A) - 2017-05-09
+#### Changed
+* Update to TypeScript 2.3, added tsconfig.json, use @types/ definitions
+* Update documentation for easier Visual Studio use
+
+
+--------
+### [0.4.0](https://github.com/TeamworkGuy2/ts-simplog/commit/fa7ea77c3cc96059058b31e66d1f5252e88a9a5c) - 2017-03-02
 #### Changed
 * Renamed `LoggingEvent` -> `LogEvent`
 * Renamed `DateUtil.getTimeSince()` -> `getMillisSince()`
@@ -69,7 +76,7 @@ Minor changes for TypeScript 2.0 compatibility
 --------
 ### [0.1.0](https://github.com/TeamworkGuy2/ts-simplog/commit/191565b983a870e5b2c2758a7d21de960f7d00bb) - 2016-06-08
 #### Added
-Initial port of log4javascript with major API changes to make it more module and interface based to work with TypeScript. 
+Rewrite of [log4javascript@1.4.13](http://log4javascript.org/) with major API changes to make it more module and interface based to work with TypeScript.
 ConsoleAppender doesn't fully work yet. 
 log4javascript global variable partially moved to Log4Ts.ts, but most of the properties have been moved to separate files which you have to import (this allows build tools to detect which files your using and only include those in your compiled javascript). 
 Added ProcessLog.ts and heavily modified Timer.ts. 

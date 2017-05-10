@@ -1,11 +1,15 @@
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-/// <reference path="../../definitions/chai/chai.d.ts" />
-/// <reference path="../../definitions/mocha/mocha.d.ts" />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var chai = require("chai");
 var Globals = require("../log4ts/Globals");
 var Utils = require("../log-util/Utils");
@@ -78,6 +82,7 @@ function compareObjectInterface(obj1, obj1_name, obj2, obj2_name, namePrefix) {
         }
     }
     if (obj1 && obj1.prototype && !array_contains(obj1PropertyNames, "prototype")) {
+        //obj1PropertyNames.push("prototype");
     }
     for (var j = 0; j < obj1PropertyNames.length; j++) {
         var propertyName = obj1PropertyNames[j];

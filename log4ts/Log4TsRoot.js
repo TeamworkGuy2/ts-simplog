@@ -1,5 +1,5 @@
 "use strict";
-/// <reference path="log4ts.d.ts" />
+/// <reference path="./log4ts.d.ts" />
 /// <reference path="../../ts-local-storage-manager/local-store/local-store.d.ts" />
 var Globals = require("./Globals");
 var Utils = require("../log-util/Utils");

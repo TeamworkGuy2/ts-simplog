@@ -1,6 +1,4 @@
-﻿/// <reference path="../../definitions/chai/chai.d.ts" />
-/// <reference path="../../definitions/mocha/mocha.d.ts" />
-import chai = require("chai");
+﻿import chai = require("chai");
 import mocha = require("mocha");
 import Globals = require("../log4ts/Globals");
 import Utils = require("../log-util/Utils");
