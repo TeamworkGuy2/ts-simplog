@@ -382,28 +382,19 @@ class AjaxAppender extends Appender {
 // AjaxAppender related
 module AjaxAppender {
     var xhrFactory = function () { return new XMLHttpRequest(); };
-    var xmlHttpFactories: (() => XMLHttpRequest)[] = [
-        xhrFactory,
-        function () { return new ActiveXObject("Msxml2.XMLHTTP"); },
-        function () { return new ActiveXObject("Microsoft.XMLHTTP"); }
-    ];
 
     export var withCredentialsSupported = false;
 
     export function getXmlHttp(errorHandler?: () => void) {
-        // This is only run the first time; the value of getXmlHttp gets
-        // replaced with the factory that succeeds on the first run
-        for (var i = 0, len = xmlHttpFactories.length; i < len; i++) {
-            var factory = xmlHttpFactories[i];
-            try {
-                var xmlHttp = factory();
-                withCredentialsSupported = (factory == xhrFactory && ("withCredentials" in xmlHttp));
-                AjaxAppender.getXmlHttp = factory;
-                return xmlHttp;
-            } catch (e) {
-            }
+        // This is only run the first time; the value of getXmlHttp gets replaced with the factory that succeeds on the first run
+        try {
+            var xmlHttp = xhrFactory();
+            withCredentialsSupported = ("withCredentials" in xmlHttp);
+            AjaxAppender.getXmlHttp = xhrFactory;
+            return xmlHttp;
+        } catch (e) {
         }
-        // If we're here, all factories have failed, so throw an error
+        // If we're here, factory failed, so throw an error
         if (errorHandler) {
             errorHandler();
         } else {

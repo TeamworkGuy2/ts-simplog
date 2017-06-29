@@ -337,27 +337,18 @@ var AjaxAppender = (function (_super) {
 // AjaxAppender related
 (function (AjaxAppender) {
     var xhrFactory = function () { return new XMLHttpRequest(); };
-    var xmlHttpFactories = [
-        xhrFactory,
-        function () { return new ActiveXObject("Msxml2.XMLHTTP"); },
-        function () { return new ActiveXObject("Microsoft.XMLHTTP"); }
-    ];
     AjaxAppender.withCredentialsSupported = false;
     function getXmlHttp(errorHandler) {
-        // This is only run the first time; the value of getXmlHttp gets
-        // replaced with the factory that succeeds on the first run
-        for (var i = 0, len = xmlHttpFactories.length; i < len; i++) {
-            var factory = xmlHttpFactories[i];
-            try {
-                var xmlHttp = factory();
-                AjaxAppender.withCredentialsSupported = (factory == xhrFactory && ("withCredentials" in xmlHttp));
-                AjaxAppender.getXmlHttp = factory;
-                return xmlHttp;
-            }
-            catch (e) {
-            }
+        // This is only run the first time; the value of getXmlHttp gets replaced with the factory that succeeds on the first run
+        try {
+            var xmlHttp = xhrFactory();
+            AjaxAppender.withCredentialsSupported = ("withCredentials" in xmlHttp);
+            AjaxAppender.getXmlHttp = xhrFactory;
+            return xmlHttp;
         }
-        // If we're here, all factories have failed, so throw an error
+        catch (e) {
+        }
+        // If we're here, factory failed, so throw an error
         if (errorHandler) {
             errorHandler();
         }

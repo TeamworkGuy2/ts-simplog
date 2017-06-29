@@ -7,7 +7,7 @@ var Utils;
     function emptyFunction() { }
     Utils.emptyFunction = emptyFunction;
     function toStr(obj) {
-        if (obj && obj.toString) {
+        if (obj != null && obj.toString != null) {
             return obj.toString();
         }
         else {

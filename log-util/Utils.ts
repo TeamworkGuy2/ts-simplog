@@ -11,7 +11,7 @@ module Utils {
 
 
     export function toStr(obj: any): string {
-        if (obj && obj.toString) {
+        if (obj != null && obj.toString != null) {
             return obj.toString();
         } else {
             return String(obj);
@@ -19,7 +19,7 @@ module Utils {
     }
 
 
-    export function isUndefined(obj: any) {
+    export function isUndefined(obj: any): obj is undefined {
         return typeof obj == "undefined";
     }
 
@@ -99,7 +99,7 @@ module Utils {
 
     // formatObjectExpansion
     export function formatObjectExpansion(obj: any, depth: number, indentation?: string) {
-        var objsExpanded = [];
+        var objsExpanded: any[] = [];
 
         function formatString(text: string, indentation: string) {
             var lines = Utils.splitIntoLines(text);
@@ -213,7 +213,7 @@ module Utils {
     }
 
 
-    export function booleanOrDefault(param, defaultValue) {
+    export function booleanOrDefault(param: boolean | null | undefined, defaultValue: boolean): boolean {
         if (isUndefined(param)) {
             return defaultValue;
         } else {
@@ -222,7 +222,7 @@ module Utils {
     }
 
 
-    export function stringOrDefault(param, defaultValue) {
+    export function stringOrDefault(param: string | number | null | undefined, defaultValue: string): string {
         if (isUndefined(param)) {
             return defaultValue;
         } else {
@@ -231,17 +231,17 @@ module Utils {
     }
 
 
-    export function intOrDefault(param, defaultValue) {
+    export function intOrDefault(param: string | number | null | undefined, defaultValue: number): number {
         if (isUndefined(param)) {
             return defaultValue;
         } else {
-            var value = parseInt(param, 10);
+            var value = parseInt(<string>param, 10);
             return isNaN(value) ? defaultValue : value;
         }
     }
 
 
-    export function funcOrDefault(param, defaultValue) {
+    export function funcOrDefault<T extends Function | null | undefined>(param: T, defaultValue: T): T {
         if (typeof param == "function") {
             return param;
         } else {
@@ -250,7 +250,7 @@ module Utils {
     }
 
 
-    export function isError(err: Error | any) {
+    export function isError(err: Error | any): err is Error {
         return (err instanceof Error);
     }
 

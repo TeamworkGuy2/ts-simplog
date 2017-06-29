@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.4.1](N/A) - 2017-05-09
+### [0.5.0](N/A) - 2017-06-29
+#### Changed
+* Removed old ActiveXObject("Msxml2.XMLHTTP") and ActiveXObject("Microsoft.XMLHTTP") fallbacks since all modern browsers support XMLHttpRequest()
+* Improved Utils types and added some missing types in various spots
+
+
+--------
+### [0.4.1](https://github.com/TeamworkGuy2/ts-simplog/commit/46aba384be056252f2289ebcf9dda4344848419e) - 2017-05-09
 #### Changed
 * Update to TypeScript 2.3, added tsconfig.json, use @types/ definitions
 * Update documentation for easier Visual Studio use

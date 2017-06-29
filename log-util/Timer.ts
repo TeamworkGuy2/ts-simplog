@@ -16,7 +16,7 @@ module Timer {
     export function newDateInst(name: string, level: Log4Ts.Level = Level.INFO): Log4Ts.Timer {
         var startDate = new Date();
 
-        var inst = {
+        var inst: Log4Ts.Timer = {
             name: name,
             level: level,
             startDate: startDate,
@@ -44,9 +44,9 @@ module Timer {
      * @return a new Log4Ts.Timer instance
      */
     export function newPerformanceNowInst(name: string, level: Log4Ts.Level = Level.INFO): Log4Ts.Timer {
-        var startMillis = window.performance.now();
+        var startMillis = <number>window.performance.now();
 
-        var inst = {
+        var inst: Log4Ts.Timer = {
             name: name,
             level: level,
             startDate: new Date(),
@@ -55,7 +55,7 @@ module Timer {
             endMillis: null,
             durationMillis: null,
             measure: () => {
-                var endMillis = window.performance.now();
+                var endMillis = <number>window.performance.now();
                 var durationMillis = endMillis - startMillis;
                 inst.endDate = new Date();
                 inst.endMillis = endMillis;
@@ -83,9 +83,9 @@ module Timer {
         var measureName = (measureSuffix != null ? (typeof measureSuffix === "string" ? name + measureSuffix : measureSuffix(name)) : name + Timer.PERFORMANCE_MARK_MEASURE_SUFFIX);
 
         window.performance.mark(startName);
-        var startMillis = window.performance.now();
+        var startMillis = <number>window.performance.now();
 
-        var inst = {
+        var inst: Log4Ts.Timer = {
             name: name,
             level: level,
             startDate: new Date(),
@@ -96,7 +96,7 @@ module Timer {
             measure: () => {
                 window.performance.mark(endName);
                 window.performance.measure(measureName, startName, endName);
-                var endMillis = window.performance.now();
+                var endMillis = <number>window.performance.now();
                 var durationMillis = (<PerformanceEntry>window.performance.getEntriesByName(measureName)[0]).duration;
                 inst.endDate = new Date();
                 inst.endMillis = endMillis;

@@ -224,7 +224,7 @@ class ConsoleAppender extends Appender {
 
         // Configuration methods. The function scope is used to prevent direct alteration to the appender configuration properties.
         var appenderName = inPage ? "InPageAppender" : "PopUpAppender";
-        var checkCanConfigure = (configOptionName) => {
+        var checkCanConfigure = (configOptionName: string) => {
             if (this.consoleWindowCreated) {
                 LogLog.handleError(appenderName + ": configuration option '" + configOptionName + "' may not be set after the appender has been initialized");
                 return false;
@@ -255,14 +255,14 @@ class ConsoleAppender extends Appender {
         this.getWidth = () => width;
         this.setWidth = (widthParam) => {
             if (checkCanConfigure("width")) {
-                width = Utils.stringOrDefault(widthParam, width);
+                width = Utils.stringOrDefault(widthParam, <string>width);
             }
         };
 
         this.getHeight = () => height;
         this.setHeight = (heightParam) => {
             if (checkCanConfigure("height")) {
-                height = Utils.stringOrDefault(heightParam, height);
+                height = Utils.stringOrDefault(heightParam, <string>height);
             }
         };
 
@@ -572,7 +572,7 @@ class ConsoleAppender extends Appender {
 
         // Define useful variables
         var windowCreationStarted = false;
-        var iframeElem;
+        var iframeElem: HTMLElement;
         var iframeId = Globals.uniqueId + "_InPageAppender_" + consoleAppenderId;
 
         this.hide = () => {
@@ -628,7 +628,7 @@ class ConsoleAppender extends Appender {
 
             var writeToDocument = () => {
                 try {
-                    var windowTest = (win) => isLoaded(win);
+                    var windowTest = (win: any) => isLoaded(win);
                     if (this.useDocumentWrite) {
                         this.writeHtml(this.getConsoleWindow().document);
                     }
@@ -646,8 +646,8 @@ class ConsoleAppender extends Appender {
             this.minimized = false;
             iframeElem = containerElem.appendChild(document.createElement("div"));
 
-            iframeElem.style.width = width;
-            iframeElem.style.height = height;
+            iframeElem.style.width = <string>width;
+            iframeElem.style.height = <string>height;
             iframeElem.style.border = "solid gray 1px";
 
             for (var i = 0, len = cssProps.length; i < len; i++) {
@@ -865,7 +865,7 @@ class ConsoleAppender extends Appender {
                             this.writeHtml(popUp.document);
                         }
                         // Check if the pop-up window object is available
-                        var popUpLoadedTest = (win) => Utils.bool(win) && isLoaded(win);
+                        var popUpLoadedTest = (win: any) => Utils.bool(win) && isLoaded(win);
                         if (isLoaded(popUp)) {
                             finalInit();
                         } else {
@@ -982,7 +982,7 @@ function getXhtml(rootNode: Node, includeRootNode?: boolean, indentation?: strin
         return ((node.nodeType == nodeTypes.TEXT_NODE) && /^[ \t\r\n]*$/.test(node.nodeValue));
     }
 
-    function fixAttributeValue(attrValue) {
+    function fixAttributeValue(attrValue: any) {
         return attrValue.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
     }
 
