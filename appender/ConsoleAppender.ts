@@ -49,7 +49,7 @@ function getBaseUrl() {
     return null;
 }
 
-function isLoaded(wnd: { loaded?: boolean }) {
+function isLoaded(wnd: { loaded?: boolean; close?(): void; }) {
     try {
         return Utils.bool(wnd.loaded);
     } catch (ex) {

@@ -96,9 +96,9 @@ function script() {
         LogItem.prototype.getMainDomContainer = function () {
             return this.group.mainElementContainer.contentDiv;
         };
+        LogItem.serializedItemKeys = { LOG_ENTRY: 0, GROUP_START: 1, GROUP_END: 2 };
         return LogItem;
     }());
-    LogItem.serializedItemKeys = { LOG_ENTRY: 0, GROUP_START: 1, GROUP_END: 2 };
     /*----------------------------------------------------------------*/
     var LogItemContainerElement = (function () {
         function LogItemContainerElement() {
@@ -155,7 +155,6 @@ function script() {
         };
         return Separator;
     }(LogItem));
-    /*----------------------------------------------------------------*/
     function GroupElementContainer(group, containerDomNode, isRoot, isWrapped) {
         this.group = group;
         this.containerDomNode = containerDomNode;
@@ -254,7 +253,6 @@ function script() {
             }
         }
     });
-    /*----------------------------------------------------------------*/
     function Group(name, isRoot, initiallyExpanded) {
         this.name = name;
         this.group = null;
@@ -267,7 +265,7 @@ function script() {
         this.expandable = false;
     }
     Group.prototype = new LogItem();
-    copyProperties(Group.prototype, {
+    var groupMethods = {
         addChild: function addChild(logItem) {
             this.children.push(logItem);
             logItem.group = this;
@@ -361,7 +359,8 @@ function script() {
                 this.elementContainers[i].clear();
             }
         }
-    });
+    };
+    copyProperties(Group.prototype, groupMethods);
     /*----------------------------------------------------------------*/
     var LogEntryElementContainer = (function (_super) {
         __extends(LogEntryElementContainer, _super);
@@ -421,7 +420,6 @@ function script() {
         };
         return LogEntryWrappedElementContainer;
     }(LogEntryElementContainer));
-    /*----------------------------------------------------------------*/
     function LogEntryUnwrappedElementContainer(logEntry, containerDomNode) {
         this.logEntry = logEntry;
         this.containerDomNode = containerDomNode;
@@ -437,7 +435,6 @@ function script() {
         this.doRemove();
         this.pre = null;
     };
-    /*----------------------------------------------------------------*/
     function LogEntryMainElementContainer(logEntry, containerDomNode) {
         this.logEntry = logEntry;
         this.containerDomNode = containerDomNode;
@@ -549,7 +546,6 @@ function script() {
             this.visit(group);
         }
     };
-    /*----------------------------------------------------------------*/
     function GroupFlattener() {
         this.logEntriesAndSeparators = [];
     }
@@ -639,14 +635,14 @@ function script() {
         document.onkeydown = function keyEventHandler(evt) {
             evt = getEvent(evt);
             switch (evt.keyCode) {
-                case 69:
+                case 69:// Ctrl + shift + E: re-execute last command
                     if (evt.shiftKey && (evt.ctrlKey || evt.metaKey)) {
                         evalLastCommand();
                         cancelKeyEvent(evt);
                         return false;
                     }
                     break;
-                case 75:
+                case 75:// Ctrl + shift + K: focus search
                     if (evt.shiftKey && (evt.ctrlKey || evt.metaKey)) {
                         focusSearch();
                         cancelKeyEvent(evt);
@@ -654,7 +650,7 @@ function script() {
                     }
                     break;
                 case 40: // Ctrl + shift + down arrow: focus command line
-                case 76:
+                case 76:// Ctrl + shift + L: focus command line
                     if (evt.shiftKey && (evt.ctrlKey || evt.metaKey)) {
                         focusCommandLine();
                         cancelKeyEvent(evt);

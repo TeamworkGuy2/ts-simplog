@@ -266,10 +266,10 @@ var Logger = (function () {
     Logger.prototype.toString = function () {
         return "Logger[" + this.name + "]";
     };
+    Logger.anonymousLoggerName = "[anonymous]";
+    Logger.defaultLoggerName = "[default]";
+    Logger.nullLoggerName = "[null]";
+    Logger.rootLoggerName = "root";
     return Logger;
 }());
-Logger.anonymousLoggerName = "[anonymous]";
-Logger.defaultLoggerName = "[default]";
-Logger.nullLoggerName = "[null]";
-Logger.rootLoggerName = "root";
 module.exports = Logger;

@@ -105,26 +105,26 @@ var Log4TsRoot = (function () {
         logger.addAppender(defaultAppender);
         return logger;
     };
-    return Log4TsRoot;
-}());
-Log4TsRoot.Cctor = (function () {
-    var defaultInst = new Log4TsRoot("log4ts", "1.4.13");
-    Log4TsRoot.defaultInst = defaultInst;
-    // Main load
-    var logOnLoad = defaultInst.setDocumentReady;
-    if (typeof window !== "undefined") {
-        if (window.addEventListener) {
-            window.addEventListener("load", logOnLoad, false);
-        }
-        else if (window.attachEvent) {
-            window.attachEvent("onload", logOnLoad);
+    Log4TsRoot.Cctor = (function () {
+        var defaultInst = new Log4TsRoot("log4ts", "1.4.13");
+        Log4TsRoot.defaultInst = defaultInst;
+        // Main load
+        var logOnLoad = defaultInst.setDocumentReady;
+        if (typeof window !== "undefined") {
+            if (window.addEventListener) {
+                window.addEventListener("load", logOnLoad, false);
+            }
+            else if (window.attachEvent) {
+                window.attachEvent("onload", logOnLoad);
+            }
+            else {
+                LogLog.handleError("window 'load' event not supported");
+            }
         }
         else {
-            LogLog.handleError("window 'load' event not supported");
+            logOnLoad();
         }
-    }
-    else {
-        logOnLoad();
-    }
+    }());
+    return Log4TsRoot;
 }());
 module.exports = Log4TsRoot;

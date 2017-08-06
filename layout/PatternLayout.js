@@ -52,7 +52,7 @@ var PatternLayout = (function (_super) {
                 var replacement = "";
                 switch (conversionCharacter) {
                     case "a": // Array of messages
-                    case "m":
+                    case "m":// Message
                         var depth = 0;
                         if (specifier) {
                             depth = parseInt(specifier, 10);
@@ -76,7 +76,7 @@ var PatternLayout = (function (_super) {
                             }
                         }
                         break;
-                    case "c":
+                    case "c":// Logger name
                         var loggerName = logEvent.logger.name;
                         if (specifier) {
                             var precision = parseInt(specifier, 10);
@@ -92,7 +92,7 @@ var PatternLayout = (function (_super) {
                             replacement = loggerName;
                         }
                         break;
-                    case "d":
+                    case "d":// Date
                         var dateFormat = PatternLayout.ISO8601_DATEFORMAT;
                         if (specifier) {
                             dateFormat = specifier;
@@ -110,7 +110,7 @@ var PatternLayout = (function (_super) {
                         // Format the date
                         replacement = (new SimpleDateFormat(dateFormat)).format(logEvent.timeStamp);
                         break;
-                    case "f":
+                    case "f":// Custom field
                         if (this.hasCustomFields()) {
                             var fieldIndex = 0;
                             if (specifier) {
@@ -135,16 +135,16 @@ var PatternLayout = (function (_super) {
                             replacement = val;
                         }
                         break;
-                    case "n":
+                    case "n":// New line
                         replacement = Globals.newLine;
                         break;
-                    case "p":
+                    case "p":// Level
                         replacement = logEvent.level.name;
                         break;
-                    case "r":
+                    case "r":// Milliseconds since app startup
                         replacement = "" + DateUtil.getMillisSince(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
-                    case "%":
+                    case "%":// Literal % sign
                         replacement = "%";
                         break;
                     default:
@@ -190,11 +190,11 @@ var PatternLayout = (function (_super) {
     PatternLayout.prototype.toString = function () {
         return "PatternLayout";
     };
+    PatternLayout.TTCC_CONVERSION_PATTERN = "%r %p %c - %m%n";
+    PatternLayout.DEFAULT_CONVERSION_PATTERN = "%m%n";
+    PatternLayout.ISO8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss,SSS";
+    PatternLayout.DATETIME_DATEFORMAT = "dd MMM yyyy HH:mm:ss,SSS";
+    PatternLayout.ABSOLUTETIME_DATEFORMAT = "HH:mm:ss,SSS";
     return PatternLayout;
 }(Layout));
-PatternLayout.TTCC_CONVERSION_PATTERN = "%r %p %c - %m%n";
-PatternLayout.DEFAULT_CONVERSION_PATTERN = "%m%n";
-PatternLayout.ISO8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss,SSS";
-PatternLayout.DATETIME_DATEFORMAT = "dd MMM yyyy HH:mm:ss,SSS";
-PatternLayout.ABSOLUTETIME_DATEFORMAT = "HH:mm:ss,SSS";
 module.exports = PatternLayout;

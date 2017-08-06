@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.5.0](N/A) - 2017-06-29
+### [0.5.1](N/A) - 2017-08-06
+#### Changed
+* Update to TypeScript 2.4
+* Add better types in ConsoleAppenderWindowSetup
+
+
+--------
+### [0.5.0](https://github.com/TeamworkGuy2/ts-simplog/commit/bdff35522c8eb8a8efe7367c45b8a5f05c73ea99) - 2017-06-29
 #### Changed
 * Removed old ActiveXObject("Msxml2.XMLHTTP") and ActiveXObject("Microsoft.XMLHTTP") fallbacks since all modern browsers support XMLHttpRequest()
 * Improved Utils types and added some missing types in various spots

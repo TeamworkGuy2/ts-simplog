@@ -37,7 +37,7 @@ function script() {
     var currentGroup = null;
     var loaded = false;
     var currentLogItem = null;
-    var logMainContainer;
+    var logMainContainer: HTMLElement;
 
     var logLevels = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"];
 
@@ -123,7 +123,7 @@ function script() {
 
     class LogItemContainerElement {
         containerDomNode: Node;
-        mainDiv: Element;
+        mainDiv: HTMLDivElement;
 
         constructor() {
         }
@@ -196,8 +196,19 @@ function script() {
 
 
     /*----------------------------------------------------------------*/
+    interface GroupElementContainerType extends LogItemContainerElement {
+        group: GroupType;
+        containerDomNode: any;
+        isRoot: boolean;
+        isWrapped: boolean;
+        expandable: boolean;
+        contentDiv: HTMLElement;
+        headingDiv: HTMLDivElement;
+        expander: HTMLElement & { unselectable: boolean };
+        expanderTextNode: Text;
+    }
 
-    function GroupElementContainer(group, containerDomNode, isRoot, isWrapped) {
+    function GroupElementContainer(this: GroupElementContainerType, group: GroupType, containerDomNode, isRoot, isWrapped) {
         this.group = group;
         this.containerDomNode = containerDomNode;
         this.isRoot = isRoot;
@@ -220,7 +231,7 @@ function script() {
             this.headingDiv = this.mainDiv.appendChild(document.createElement("div"));
             this.headingDiv.className = "groupheading";
 
-            this.expander = this.headingDiv.appendChild(document.createElement("span"));
+            this.expander = <any>this.headingDiv.appendChild(document.createElement("span"));
             this.expander.className = "expander unselectable greyedout";
             this.expander.unselectable = true;
             var expanderText = this.group.expanded ? "-" : "+";
@@ -309,8 +320,21 @@ function script() {
 
 
     /*----------------------------------------------------------------*/
+    type GroupTypeBase = LogItem & {
+        name: string;
+        group: any;
+        isRoot: boolean;
+        initiallyExpanded: boolean;
+        elementContainers: any[];
+        children: any[];
+        expanded: boolean;
+        rendered: boolean;
+        expandable: boolean;
+    };
 
-    function Group(name: string, isRoot: boolean, initiallyExpanded?: boolean) {
+    type GroupType = GroupTypeBase & typeof groupMethods;
+
+    function Group(this: GroupType, name: string, isRoot: boolean, initiallyExpanded?: boolean) {
         this.name = name;
         this.group = null;
         this.isRoot = isRoot;
@@ -324,13 +348,13 @@ function script() {
 
     Group.prototype = new LogItem();
 
-    copyProperties(Group.prototype, {
-        addChild: function addChild(logItem) {
+    var groupMethods = {
+        addChild: function addChild(this: GroupTypeBase & typeof groupMethods, logItem) {
             this.children.push(logItem);
             logItem.group = this;
         },
 
-        render: function render() {
+        render: function render(this: GroupTypeBase & typeof groupMethods) {
             if (isIe) {
                 var unwrappedDomContainer, wrappedDomContainer;
                 if (this.isRoot) {
@@ -351,24 +375,24 @@ function script() {
             this.rendered = true;
         },
 
-        toggleExpanded: function toggleExpanded() {
+        toggleExpanded: function toggleExpanded(this: GroupTypeBase & typeof groupMethods) {
             this.expanded = !this.expanded;
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].toggleExpanded();
             }
         },
 
-        expand: function expand() {
+        expand: function expand(this: GroupTypeBase & typeof groupMethods) {
             if (!this.expanded) {
                 this.toggleExpanded();
             }
         },
 
-        accept: function accept(visitor) {
+        accept: function accept(this: GroupTypeBase & typeof groupMethods, visitor) {
             visitor.visitGroup(this);
         },
 
-        reverseChildren: function reverseChildren() {
+        reverseChildren: function reverseChildren(this: GroupTypeBase & typeof groupMethods) {
             if (this.rendered) {
                 for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                     this.elementContainers[i].reverseChildren();
@@ -376,7 +400,7 @@ function script() {
             }
         },
 
-        update: function update() {
+        update: function update(this: GroupTypeBase & typeof groupMethods) {
             var previouslyExpandable = this.expandable;
             this.expandable = (this.children.length !== 0);
             if (this.expandable !== previouslyExpandable) {
@@ -386,13 +410,13 @@ function script() {
             }
         },
 
-        flatten: function flatten() {
+        flatten: function flatten(this: GroupTypeBase & typeof groupMethods) {
             var visitor = new GroupFlattener();
             this.accept(visitor);
             return visitor.logEntriesAndSeparators;
         },
 
-        removeChild: function removeChild(child, doUpdate) {
+        removeChild: function removeChild(this: GroupTypeBase & typeof groupMethods, child, doUpdate) {
             array_remove(this.children, child);
             child.group = null;
             if (doUpdate) {
@@ -400,7 +424,7 @@ function script() {
             }
         },
 
-        remove: function remove(doUpdate, removeFromGroup) {
+        remove: function remove(this: GroupTypeBase & typeof groupMethods, doUpdate, removeFromGroup) {
             for (var i = 0, len = this.children.length; i < len; i++) {
                 this.children[i].remove(false, false);
             }
@@ -412,7 +436,7 @@ function script() {
             this.doRemove(doUpdate, removeFromGroup);
         },
 
-        serialize: function serialize(items) {
+        serialize: function serialize(this: GroupTypeBase & typeof groupMethods, items) {
             items.push([LogItem.serializedItemKeys.GROUP_START, this.name]);
             for (var i = 0, len = this.children.length; i < len; i++) {
                 this.children[i].serialize(items);
@@ -422,12 +446,14 @@ function script() {
             }
         },
 
-        clear: function clear() {
+        clear: function clear(this: GroupTypeBase & typeof groupMethods) {
             for (var i = 0, len = this.elementContainers.length; i < len; i++) {
                 this.elementContainers[i].clear();
             }
         }
-    });
+    };
+
+    copyProperties(Group.prototype, groupMethods);
 
 
     /*----------------------------------------------------------------*/
@@ -501,8 +527,14 @@ function script() {
 
 
     /*----------------------------------------------------------------*/
+    interface LogEntryUnwrappedElementContainerType extends LogEntryElementContainer {
+        logEntry: LogEntry;
+        containerDomNode: HTMLElement;
+        mainDiv: HTMLDivElement;
+        pre: HTMLElement;
+    }
 
-    function LogEntryUnwrappedElementContainer(logEntry, containerDomNode) {
+    function LogEntryUnwrappedElementContainer(this: LogEntryUnwrappedElementContainerType, logEntry: LogEntry, containerDomNode: HTMLElement) {
         this.logEntry = logEntry;
         this.containerDomNode = containerDomNode;
         this.mainDiv = document.createElement("div");
@@ -522,8 +554,14 @@ function script() {
 
 
     /*----------------------------------------------------------------*/
+    interface LogEntryMainElementContainerType extends LogEntryElementContainer {
+        logEntry: LogEntry;
+        containerDomNode: HTMLElement;
+        mainDiv: HTMLDivElement;
+        pre: HTMLElement;
+    }
 
-    function LogEntryMainElementContainer(logEntry, containerDomNode) {
+    function LogEntryMainElementContainer(this: LogEntryMainElementContainerType, logEntry: LogEntry, containerDomNode: HTMLElement) {
         this.logEntry = logEntry;
         this.containerDomNode = containerDomNode;
         this.mainDiv = document.createElement("div");
@@ -538,11 +576,11 @@ function script() {
     /*----------------------------------------------------------------*/
 
     class LogEntry extends LogItem {
-        level: any;
-        formattedMessage: any;
-        content: any;
+        level: string;
+        formattedMessage: string;
+        content: string;
 
-        constructor(level, formattedMessage) {
+        constructor(level: string, formattedMessage: string) {
             super();
             this.level = level;
             this.formattedMessage = formattedMessage;
@@ -569,7 +607,7 @@ function script() {
             this.rendered = true;
         }
 
-        public setContent(content, wrappedContent) {
+        public setContent(content: string, wrappedContent) {
             if (content != this.content) {
                 if (isIe && (content !== this.formattedMessage)) {
                     content = content.replace(/\\r\\n/g, "\\r"); // Workaround for IE\'s treatment of white space
@@ -657,8 +695,11 @@ function script() {
 
 
     /*----------------------------------------------------------------*/
+    interface GroupFlattenerType {
+        logEntriesAndSeparators: any[];
+    }
 
-    function GroupFlattener() {
+    function GroupFlattener(this: GroupFlattenerType) {
         this.logEntriesAndSeparators = [];
     }
 
@@ -979,7 +1020,7 @@ function script() {
         loggingEnabled = loggingReallyEnabled;
     }
 
-    function log(logLevel, formattedMessage) {
+    function log(logLevel: string, formattedMessage: string) {
         if (loggingEnabled) {
             var logEntry = new LogEntry(logLevel, formattedMessage);
             logEntries.push(logEntry);
@@ -1209,7 +1250,15 @@ function script() {
     }
 
 
-    function Search(searchTerm, isRegex, searchRegex, isCaseSensitive) {
+    interface SearchType {
+        searchTerm: string;
+        isRegex: boolean;
+        searchRegex: RegExp;
+        isCaseSensitive: boolean;
+        matches: LogEntry[];
+    }
+
+    function Search(this: SearchType, searchTerm: string, isRegex: boolean, searchRegex: RegExp, isCaseSensitive: boolean) {
         this.searchTerm = searchTerm;
         this.isRegex = isRegex;
         this.searchRegex = searchRegex;
@@ -1233,7 +1282,7 @@ function script() {
             return false;
         },
 
-        match: function match(logEntry) {
+        match: function match(logEntry: LogEntry) {
             var entryText = String(logEntry.formattedMessage);
             var matchesSearch = false;
             if (this.isRegex) {
@@ -1276,7 +1325,7 @@ function script() {
             return -1;
         },
 
-        applyTo: function applyTo(logEntry) {
+        applyTo: function applyTo(logEntry: LogEntry) {
             var doesMatch = this.match(logEntry);
             if (doesMatch) {
                 logEntry.group.expand();
@@ -1456,7 +1505,15 @@ function script() {
     }
 
 
-    function Match(logEntryLevel, spanInMainDiv, spanInUnwrappedPre?, spanInWrappedDiv?) {
+    interface MatchType {
+        logEntryLevel: any;
+        spanInMainDiv: HTMLElement;
+        spanInUnwrappedPre: HTMLElement;
+        spanInWrappedDiv: HTMLElement;
+        mainSpan: HTMLElement;
+    }
+
+    function Match(this: MatchType, logEntryLevel: string, spanInMainDiv: HTMLElement, spanInUnwrappedPre?: HTMLElement, spanInWrappedDiv?: HTMLElement) {
         this.logEntryLevel = logEntryLevel;
         this.spanInMainDiv = spanInMainDiv;
         if (isIe) {
@@ -1545,7 +1602,7 @@ function script() {
         } else {
             $input("searchReset").disabled = false;
             $("searchNav").style.display = "block";
-            var searchRegex;
+            var searchRegex: RegExp;
             var regexValid;
             if (isRegex) {
                 try {
@@ -1705,7 +1762,7 @@ function script() {
         }
     }
 
-    function setCurrentMatchIndex(index) {
+    function setCurrentMatchIndex(index: number) {
         currentMatchIndex = index;
         currentSearch.matches[currentMatchIndex].setCurrent();
     }
@@ -1755,9 +1812,9 @@ function script() {
     /* ------------------------------------------------------------------------- */
     // Other utility functions
 
-    function getElementsByClass(el: Element, cssClass: string, tagName: string) {
-        var elements = el.getElementsByTagName(tagName);
-        var matches = [];
+    function getElementsByClass<E extends Element>(el: E, cssClass: string, tagName: string) {
+        var elements = <NodeListOf<E>>el.getElementsByTagName(tagName);
+        var matches: E[] = [];
         for (var i = 0, len = elements.length; i < len; i++) {
             if (hasClass(elements[i], cssClass)) {
                 matches.push(elements[i]);
