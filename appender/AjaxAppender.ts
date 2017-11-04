@@ -13,14 +13,14 @@ class AjaxAppender extends Appender {
         timerInterval: 1000,
         batchSize: 1,
         sendAllOnUnload: false,
-        requestSuccessCallback: <(xhr: XMLHttpRequest) => void>null,
-        failCallback: <(msg: string) => void>null,
+        requestSuccessCallback: <(xhr: XMLHttpRequest) => void><any>null,
+        failCallback: <(msg: string) => void><any>null,
         postVarName: "data",
         contentType: "application/x-www-form-urlencoded"
     };
     public name = "AjaxAppender";
 
-    public getSessionId: () => string;
+    public getSessionId: () => string | null;
     public setSessionId: (sessionId: string) => void;
 
     public isTimed: () => boolean;
@@ -72,7 +72,7 @@ class AjaxAppender extends Appender {
         var postVarName = this.defaults.postVarName;
         var sendAllOnUnload = this.defaults.sendAllOnUnload;
         var contentType = this.defaults.contentType;
-        var sessionId: string = null;
+        var sessionId: string | null = null;
 
         var queuedLogEvents: Log4Ts.LogEvent[] = [];
         var queuedRequests: Log4Ts.LogEvent[][] = [];
@@ -169,12 +169,12 @@ class AjaxAppender extends Appender {
         function sendAll() {
             if (isSupported && Globals.enabled) {
                 sending = true;
-                var currentRequestBatch: Log4Ts.LogEvent[];
+                var currentRequestBatch: Log4Ts.LogEvent[] | undefined;
                 if (waitForResponse) {
                     // Send the first request then use this function as the callback once
                     // the response comes back
                     if (queuedRequests.length > 0) {
-                        currentRequestBatch = queuedRequests.shift();
+                        currentRequestBatch = <Log4Ts.LogEvent[]>queuedRequests.shift();
                         sendRequest(preparePostData(currentRequestBatch), sendAll);
                     } else {
                         sending = false;
@@ -204,10 +204,10 @@ class AjaxAppender extends Appender {
             if (isSupported && Globals.enabled) {
                 // Create requests for everything left over, batched as normal
                 var actualBatchSize = appender.getLayout().allowBatching() ? batchSize : 1;
-                var currentLogEvent: Log4Ts.LogEvent;
+                var curEvent: Log4Ts.LogEvent | undefined;
                 var batchedLogEvents: Log4Ts.LogEvent[] = [];
-                while ((currentLogEvent = queuedLogEvents.shift())) {
-                    batchedLogEvents.push(currentLogEvent);
+                while ((curEvent = queuedLogEvents.shift())) {
+                    batchedLogEvents.push(curEvent);
                     if (queuedLogEvents.length >= actualBatchSize) {
                         // Queue this batch of log entries
                         queuedRequests.push(batchedLogEvents);
@@ -230,11 +230,11 @@ class AjaxAppender extends Appender {
 
         function preparePostData(batchedLogEvents: Log4Ts.LogEvent[]) {
             // Format the logging events
-            var formattedMessages = [];
+            var formattedMessages: (string | any[])[] = [];
             var postData = "";
-            var currentLogEvent: Log4Ts.LogEvent;
-            while ((currentLogEvent = batchedLogEvents.shift())) {
-                formattedMessages.push(appender.getLayout().formatWithException(currentLogEvent));
+            var curEvent: Log4Ts.LogEvent | undefined;
+            while ((curEvent = batchedLogEvents.shift())) {
+                formattedMessages.push(appender.getLayout().formatWithException(curEvent));
             }
             // Create the post data string
             if (batchedLogEvents.length == 1) {
@@ -291,7 +291,7 @@ class AjaxAppender extends Appender {
                                 }
                             }
                             xmlHttp.onreadystatechange = Utils.emptyFunction;
-                            xmlHttp = null;
+                            xmlHttp = <never><any>null;
                         }
                     };
                     xmlHttp.open("POST", url, true);
@@ -335,10 +335,10 @@ class AjaxAppender extends Appender {
                 var actualBatchSize = this.getLayout().allowBatching() ? batchSize : 1;
 
                 if (queuedLogEvents.length >= actualBatchSize) {
-                    var currentLogEvent;
-                    var batchedLogEvents = [];
-                    while ((currentLogEvent = queuedLogEvents.shift())) {
-                        batchedLogEvents.push(currentLogEvent);
+                    var curEvent: Log4Ts.LogEvent | undefined;
+                    var batchedLogEvents: Log4Ts.LogEvent[] = [];
+                    while ((curEvent = queuedLogEvents.shift())) {
+                        batchedLogEvents.push(curEvent);
                     }
                     // Queue this batch of log entries
                     queuedRequests.push(batchedLogEvents);
@@ -385,7 +385,7 @@ module AjaxAppender {
 
     export var withCredentialsSupported = false;
 
-    export function getXmlHttp(errorHandler?: () => void) {
+    export function getXmlHttp(errorHandler?: () => void): XMLHttpRequest {
         // This is only run the first time; the value of getXmlHttp gets replaced with the factory that succeeds on the first run
         try {
             var xmlHttp = xhrFactory();
@@ -400,6 +400,7 @@ module AjaxAppender {
         } else {
             LogLog.handleError("getXmlHttp: unable to obtain XMLHttpRequest object");
         }
+        return <never>undefined;
     }
 
     export function isHttpRequestSuccessful(xmlHttp: XMLHttpRequest) {

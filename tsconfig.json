@@ -9,6 +9,7 @@
     "noImplicitThis": true,
     "removeComments": false,
     "sourceMap": false,
+    "strictNullChecks": true,
     "target": "es5"
   }
 }

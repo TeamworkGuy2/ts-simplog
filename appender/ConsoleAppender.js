@@ -12,9 +12,9 @@ var __extends = (this && this.__extends) || (function () {
 var Globals = require("../log4ts/Globals");
 var Utils = require("../log-util/Utils");
 var LogLog = require("../log4ts/LogLog");
-var Appender = require("./Appender");
-var ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 var PatternLayout = require("../layout/PatternLayout");
+var Appender = require("./Appender");
+//import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 // PopUpAppender and InPageAppender related
 function setCookie(name, value, days, path) {
     var expires;
@@ -276,12 +276,13 @@ var ConsoleAppender = (function (_super) {
             setCookie(commandHistoryCookieName, commandHistory.join(","));
         };
         this.writeHtml = function (doc) {
-            var lines = ConsoleAppenderWindowSetup.htmlDocString;
+            throw new Error("currently not supported, please use ts-simplog ConsoleAppender as a normal commonjs require() import");
+            /*var lines = ConsoleAppenderWindowSetup.htmlDocString;
             doc.open();
             for (var i = 0, len = lines.length; i < len; i++) {
                 doc.writeln(lines[i]);
             }
-            doc.close();
+            doc.close();*/
         };
         // Set up event listeners
         this.setEventTypes(["load", "unload"]);
@@ -512,7 +513,7 @@ var ConsoleAppender = (function (_super) {
                     else {
                         try {
                             var el = document.getElementById(_this.container);
-                            if (el.nodeType == 1) {
+                            if (el != null && el.nodeType == 1) {
                                 containerElem = el;
                             }
                             open();
@@ -545,6 +546,7 @@ var ConsoleAppender = (function (_super) {
             if (iframe) {
                 return iframe;
             }
+            return undefined;
         };
         this.safeToAppend = function () {
             if (_this.isSupported && !_this.consoleClosed) {

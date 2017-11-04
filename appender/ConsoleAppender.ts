@@ -1,9 +1,9 @@
 ﻿import Globals = require("../log4ts/Globals");
 import Utils = require("../log-util/Utils");
 import LogLog = require("../log4ts/LogLog");
-import Appender = require("./Appender");
-import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 import PatternLayout = require("../layout/PatternLayout");
+import Appender = require("./Appender");
+//import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 
 
 // PopUpAppender and InPageAppender related
@@ -193,7 +193,7 @@ class ConsoleAppender extends Appender {
     public open: () => void;
 
 
-    public create(inPage: boolean, container?: string | Node, lazyInit?: boolean, initiallyMinimized?: boolean,
+    public create(inPage: boolean, container?: string | Node | null, lazyInit?: boolean, initiallyMinimized?: boolean,
         useDocumentWrite?: boolean, width?: string | number, height?: string | number, focusConsoleWindow?: boolean) {
 
         var queuedLoggingEvents: (QueuedLoggingEvent | QueuedGroup | QueuedGroupEnd)[] = [];
@@ -205,20 +205,20 @@ class ConsoleAppender extends Appender {
         height = height ? height : this.defaults.height;
 
         this.commandLineObjectExpansionDepth = this.defaults.commandLineObjectExpansionDepth;
-        this.complainAboutPopUpBlocking = this.defaults.complainAboutPopUpBlocking;
-        this.container = container;
-        this.focusConsoleWindow = focusConsoleWindow;
+        this.complainAboutPopUpBlocking = <boolean>this.defaults.complainAboutPopUpBlocking;
+        this.container = <string | Node>container;
+        this.focusConsoleWindow = <boolean>focusConsoleWindow;
         this.initiallyMinimized = Utils.booleanOrDefault(initiallyMinimized, this.defaults.initiallyMinimized);
         this.isSupported = true;
         this.maxMessages = this.defaults.maxMessages;
         this.newestMessageAtTop = this.defaults.newestMessageAtTop;
-        this.reopenWhenClosed = this.defaults.reopenWhenClosed;
+        this.reopenWhenClosed = <boolean>this.defaults.reopenWhenClosed;
         this.scrollToLatestMessage = this.defaults.scrollToLatestMessage;
         this.showCommandLine = this.defaults.showCommandLine;
         this.showCloseButton = this.defaults.showCloseButton;
         this.showHideButton = this.defaults.showHideButton;
         this.useDocumentWrite = Utils.booleanOrDefault(useDocumentWrite, this.defaults.useDocumentWrite);
-        this.useOldPopUp = this.defaults.useOldPopUp;
+        this.useOldPopUp = <boolean>this.defaults.useOldPopUp;
 
         this.setLayout(this.defaults.layout);
 
@@ -252,14 +252,14 @@ class ConsoleAppender extends Appender {
             }
         };
 
-        this.getWidth = () => width;
+        this.getWidth = () => <string | number>width;
         this.setWidth = (widthParam) => {
             if (checkCanConfigure("width")) {
                 width = Utils.stringOrDefault(widthParam, <string>width);
             }
         };
 
-        this.getHeight = () => height;
+        this.getHeight = () => <string | number>height;
         this.setHeight = (heightParam) => {
             if (checkCanConfigure("height")) {
                 height = Utils.stringOrDefault(heightParam, <string>height);
@@ -303,8 +303,8 @@ class ConsoleAppender extends Appender {
             this.commandLineObjectExpansionDepth = Utils.intOrDefault(commandLineObjectExpansionDepthParam, this.commandLineObjectExpansionDepth);
         };
 
-        this.minimized = initiallyMinimized;
-        this.isInitiallyMinimized = () => initiallyMinimized;
+        this.minimized = <boolean>initiallyMinimized;
+        this.isInitiallyMinimized = () => <boolean>initiallyMinimized;
         this.setInitiallyMinimized = (initiallyMinimizedParam) => {
             if (checkCanConfigure("initiallyMinimized")) {
                 initiallyMinimized = Utils.bool(initiallyMinimizedParam);
@@ -312,7 +312,7 @@ class ConsoleAppender extends Appender {
             }
         };
 
-        this.isUseDocumentWrite = () => useDocumentWrite;
+        this.isUseDocumentWrite = () => <boolean>useDocumentWrite;
         this.setUseDocumentWrite = (useDocumentWriteParam) => {
             if (checkCanConfigure("useDocumentWrite")) {
                 useDocumentWrite = Utils.bool(useDocumentWriteParam);
@@ -350,14 +350,14 @@ class ConsoleAppender extends Appender {
 
         this.groupEnd = (name) => {
             if (this.isSupported) {
-                queuedLoggingEvents.push(new QueuedGroupEnd(name));
+                queuedLoggingEvents.push(new QueuedGroupEnd(<string><any>name));
                 checkAndAppend();
             }
         };
 
         this.appendQueuedLoggingEvents = () => {
             while (queuedLoggingEvents.length > 0) {
-                queuedLoggingEvents.shift().append();
+                (<(QueuedLoggingEvent | QueuedGroup | QueuedGroupEnd)>queuedLoggingEvents.shift()).append();
             }
             if (this.focusConsoleWindow) {
                 this.getConsoleWindow().focus();
@@ -398,7 +398,7 @@ class ConsoleAppender extends Appender {
 
         var cmdWnd = typeof window === "object" ? window : null;
 
-        this.getCommandWindow = () => cmdWnd;
+        this.getCommandWindow = () => <Window>cmdWnd;
         this.setCommandWindow = (commandWindowParam) => {
             cmdWnd = commandWindowParam;
         };
@@ -427,12 +427,13 @@ class ConsoleAppender extends Appender {
         };
 
         this.writeHtml = (doc: { open(): void; close(): void; writeln(str: string): void; }) => {
-            var lines = ConsoleAppenderWindowSetup.htmlDocString;
+            throw new Error("currently not supported, please use ts-simplog ConsoleAppender as a normal commonjs require() import");
+            /*var lines = ConsoleAppenderWindowSetup.htmlDocString;
             doc.open();
             for (var i = 0, len = lines.length; i < len; i++) {
                 doc.writeln(lines[i]);
             }
-            doc.close();
+            doc.close();*/
         };
 
         // Set up event listeners
@@ -533,7 +534,7 @@ class ConsoleAppender extends Appender {
 
             constructor(name: string, initiallyExpanded?: boolean) {
                 this.name = name;
-                this.initiallyExpanded = initiallyExpanded;
+                this.initiallyExpanded = <boolean>initiallyExpanded;
             }
 
             public append() {
@@ -559,7 +560,7 @@ class ConsoleAppender extends Appender {
 
     // InPageAppender
     public setupInPageAppender(consoleAppenderId: number, canConfigureFunc: (configOptionName: any) => boolean, width?: string | number, height?: string | number) {
-        var containerElem: HTMLElement = null;
+        var containerElem: HTMLElement = <never>null;
 
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
@@ -603,7 +604,7 @@ class ConsoleAppender extends Appender {
 
         this.close = (fromButton) => {
             if (!this.consoleClosed && (!fromButton || confirm("This will permanently remove the console from the page. No more messages will be logged. Do you wish to continue?"))) {
-                iframeElem.parentNode.removeChild(iframeElem);
+                (<Node>iframeElem.parentNode).removeChild(iframeElem);
                 this.unload();
             }
         };
@@ -698,7 +699,7 @@ class ConsoleAppender extends Appender {
                     } else {
                         try {
                             var el = document.getElementById(<string>this.container);
-                            if (el.nodeType == 1) {
+                            if (el != null && el.nodeType == 1) {
                                 containerElem = el;
                             }
                             open();
@@ -731,6 +732,7 @@ class ConsoleAppender extends Appender {
             if (iframe) {
                 return iframe;
             }
+            return <never>undefined;
         };
 
         this.safeToAppend = () => {
@@ -933,7 +935,7 @@ function dir(obj: any) {
         maxLen = Math.max(Utils.toStr(p).length, maxLen);
     }
     // Create the nicely formatted property list
-    var propList = [];
+    var propList: string[] = [];
     for (p in obj) {
         var propNameStr = "  " + Utils.padWithSpaces(Utils.toStr(p), maxLen + 2);
         var propVal;
@@ -979,7 +981,7 @@ function getXhtml(rootNode: Node, includeRootNode?: boolean, indentation?: strin
     var xhtml: string;
 
     function isWhitespace(node: Node) {
-        return ((node.nodeType == nodeTypes.TEXT_NODE) && /^[ \t\r\n]*$/.test(node.nodeValue));
+        return ((node.nodeType == nodeTypes.TEXT_NODE) && /^[ \t\r\n]*$/.test(<string>node.nodeValue));
     }
 
     function fixAttributeValue(attrValue: any) {
@@ -991,7 +993,7 @@ function getXhtml(rootNode: Node, includeRootNode?: boolean, indentation?: strin
         var styleValue = "";
         for (var j = 0, len = stylePairs.length; j < len; j++) {
             var nameValueBits = stylePairs[j].split(":");
-            var props = [];
+            var props: string[] = [];
             var nameVal0Trim: string;
             if ((nameVal0Trim = nameValueBits[0].trim()).length !== 0) {
                 props.push(nameVal0Trim.toLowerCase() + ":" + nameValueBits[1].trim());
@@ -1076,11 +1078,11 @@ function getXhtml(rootNode: Node, includeRootNode?: boolean, indentation?: strin
                     xhtml = "";
                 } else {
                     if (preformatted) {
-                        xhtml = rootElem.nodeValue;
+                        xhtml = <string>rootElem.nodeValue;
                     } else {
                         // Trim whitespace from each line of the text node
-                        var lines = Utils.splitIntoLines(rootElem.nodeValue.trim());
-                        var trimmedLines = [];
+                        var lines = Utils.splitIntoLines((<string>rootElem.nodeValue).trim());
+                        var trimmedLines: string[] = [];
                         for (var i = 0, len = lines.length; i < len; i++) {
                             trimmedLines[i] = lines[i].trim();
                         }
@@ -1120,7 +1122,7 @@ function createCommandLineFunctions() {
     });
 
     ConsoleAppender.addGlobalCommandLineFunction("dir", function (appender, args, returnValue) {
-        var lines = [];
+        var lines: string[] = [];
         for (var i = 0, len = args.length; i < len; i++) {
             lines[i] = dir(args[i]);
         }
@@ -1128,7 +1130,7 @@ function createCommandLineFunctions() {
     });
 
     ConsoleAppender.addGlobalCommandLineFunction("dirxml", function (appender, args, returnValue) {
-        var lines = [];
+        var lines: string[] = [];
         for (var i = 0, len = args.length; i < len; i++) {
             lines[i] = getXhtml(args[i]);
         }
@@ -1165,7 +1167,7 @@ function createCommandLineFunctions() {
     });
 
     ConsoleAppender.addGlobalCommandLineFunction("keys", function (appender, args, returnValue) {
-        var keys = [];
+        var keys: string[] = [];
         for (var k in args[0]) {
             keys.push(k);
         }
@@ -1173,7 +1175,7 @@ function createCommandLineFunctions() {
     });
 
     ConsoleAppender.addGlobalCommandLineFunction("values", function (appender, args, returnValue) {
-        var values = [];
+        var values: any[] = [];
         for (var k in args[0]) {
             try {
                 values.push(args[0][k]);

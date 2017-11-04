@@ -15,7 +15,7 @@ abstract class Appender extends EventSupport implements Log4Ts.Appender {
     public name = "Appender";
 
 
-    constructor(opts: Log4Ts.AppenderOptions) {
+    constructor(opts: Log4Ts.AppenderOptions | null | undefined) {
         super();
         this.options = opts || {};
     }

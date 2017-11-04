@@ -14,15 +14,15 @@ class Logger implements Log4Ts.Logger {
     static rootLoggerName = "root";
 
     public name: string;
-    public parent: Log4Ts.Logger;
+    public parent: Log4Ts.Logger | null;
     public children: any[];
     public appenders: Log4Ts.Appender[];
-    public loggerLevel: Log4Ts.Level;
+    public loggerLevel: Log4Ts.Level | null;
     private additive: boolean;
     private isRoot: boolean;
     private isNull: boolean;
     private timers: { [name: string]: Log4Ts.Timer };
-    private appenderCache: Log4Ts.Appender[] = null;
+    private appenderCache: Log4Ts.Appender[] | null;
     private appenderCacheInvalidated: boolean;
     private options: Log4Ts.LoggerOptions;
 
@@ -129,7 +129,7 @@ class Logger implements Log4Ts.Logger {
     }
 
 
-    public addChild(childLogger: Logger) {
+    public addChild(childLogger: Log4Ts.Logger) {
         this.children.push(childLogger);
         childLogger.parent = this;
         childLogger.invalidateAppenderCache();
@@ -190,7 +190,7 @@ class Logger implements Log4Ts.Logger {
     public getEffectiveAppenders() {
         if (this.appenderCache === null || this.appenderCacheInvalidated) {
             // Build appender cache
-            var parentEffectiveAppenders: Log4Ts.Appender[] = (this.isRoot || !this.getAdditivity()) ? [] : this.parent.getEffectiveAppenders();
+            var parentEffectiveAppenders: Log4Ts.Appender[] = (this.isRoot || !this.getAdditivity()) ? [] : (<Log4Ts.Logger>this.parent).getEffectiveAppenders();
             this.appenderCache = parentEffectiveAppenders.concat(this.appenders);
             this.appenderCacheInvalidated = false;
         }
@@ -209,7 +209,7 @@ class Logger implements Log4Ts.Logger {
     public log(level: Log4Ts.Level, params: (any | Error)[] | IArguments) {
         if (Globals.enabled && level.isGreaterOrEqual(this.getEffectiveLevel())) {
             // Check whether last param is an exception
-            var exception: Error;
+            var exception: Error | undefined;
             var finalParamIndex = params.length - 1;
             var lastParam = params[finalParamIndex];
             if (params.length > 1 && Utils.isError(lastParam)) {
@@ -218,7 +218,7 @@ class Logger implements Log4Ts.Logger {
             }
 
             // Construct genuine array for the params
-            var messages = [];
+            var messages: any[] = [];
             for (var i = 0; i <= finalParamIndex; i++) {
                 messages[i] = params[i];
             }
@@ -256,7 +256,7 @@ class Logger implements Log4Ts.Logger {
     }
 
 
-    public setLevel(level: Log4Ts.Level) {
+    public setLevel(level: Log4Ts.Level | null) {
         // Having a level of null on the root logger would be very bad.
         if (this.isRoot && level === null) {
             LogLog.handleError("Logger.setLevel: you cannot set the level of the root logger to null");
@@ -271,13 +271,14 @@ class Logger implements Log4Ts.Logger {
     }
 
 
-    public getEffectiveLevel() {
-        for (var logger: Log4Ts.Logger = this; logger !== null; logger = logger.parent) {
+    public getEffectiveLevel(): Log4Ts.Level {
+        for (var logger: Log4Ts.Logger | null = this; logger !== null; logger = logger.parent) {
             var level = logger.getLevel();
             if (level !== null) {
                 return level;
             }
         }
+        return <never>null;
     }
 
 
@@ -336,7 +337,7 @@ class Logger implements Log4Ts.Logger {
 
     public assert(expr: boolean) {
         if (Globals.enabled && !expr) {
-            var args = [];
+            var args: any[] = [];
             for (var i = 1, len = arguments.length; i < len; i++) {
                 args.push(arguments[i]);
             }

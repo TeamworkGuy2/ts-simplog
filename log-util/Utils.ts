@@ -41,11 +41,7 @@ module Utils {
 
     export function padWithSpaces(str: string, len: number) {
         if (str.length < len) {
-            var spaces = [];
-            var count = Math.max(0, len - str.length);
-            for (var i = 0; i < count; i++) {
-                spaces[i] = " ";
-            }
+            var spaces: string[] = new Array(Math.max(0, len - str.length));
             str += spaces.join("");
         }
         return str;
@@ -79,8 +75,10 @@ module Utils {
 
 
     // Returns a nicely formatted representation of an error
-    export function getExceptionStringRep(ex: { message?: string; description?: string; lineNumber?: string | number; fileName?: string; stack?: string; }) {
-        if (ex) {
+    export function getExceptionStringRep(ex: { message?: string; description?: string; lineNumber?: string | number; fileName?: string; stack?: string; }): string;
+    export function getExceptionStringRep(ex: { message?: string; description?: string; lineNumber?: string | number; fileName?: string; stack?: string; } | null | undefined): string | null;
+    export function getExceptionStringRep(ex: { message?: string; description?: string; lineNumber?: string | number; fileName?: string; stack?: string; } | null | undefined): string | null {
+        if (ex != null) {
             var exStr = "Exception: " + getExceptionMessage(ex);
             if (ex.lineNumber) {
                 exStr += " on line number " + ex.lineNumber;
@@ -222,7 +220,9 @@ module Utils {
     }
 
 
-    export function stringOrDefault(param: string | number | null | undefined, defaultValue: string): string {
+    export function stringOrDefault(param: string | number | null | undefined, defaultValue: string): string;
+    export function stringOrDefault(param: string | number | null | undefined, defaultValue: string | null): string | null;
+    export function stringOrDefault(param: string | number | null | undefined, defaultValue: string | null): string | null {
         if (isUndefined(param)) {
             return defaultValue;
         } else {

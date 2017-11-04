@@ -4,7 +4,15 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.5.1](N/A) - 2017-08-06
+### [0.6.0](N/A) - 2017-11-04
+#### Changed
+* Added `strictNullChecks` to `tsconfig.json` and updated code to handle null types
+* Dropped ConsoleAppenderWindowSetup support, file still exists, but returns null exports
+* `ConsoleAppender`, `InPageAppender`, and `PopUpAppender` no longer works correctly due to ConsoleAppenderWindowSetup being removed
+
+
+--------
+### [0.5.1](https://github.com/TeamworkGuy2/ts-simplog/commit/b606482051b7b7a0740d8754141f7a89f6675c3d) - 2017-08-06
 #### Changed
 * Update to TypeScript 2.4
 * Add better types in ConsoleAppenderWindowSetup

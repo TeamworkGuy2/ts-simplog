@@ -10,7 +10,6 @@ var Timer = require("../log-util/Timer");
 var Logger = (function () {
     function Logger(name, options) {
         if (options === void 0) { options = {}; }
-        this.appenderCache = null;
         this.name = name;
         this.parent = null;
         this.children = [];
@@ -205,6 +204,7 @@ var Logger = (function () {
                 return level;
             }
         }
+        return null;
     };
     Logger.prototype.group = function (name, initiallyExpanded) {
         if (Globals.enabled) {

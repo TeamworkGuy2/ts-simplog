@@ -27,7 +27,7 @@ abstract class Layout implements Log4Ts.Layout {
     public batchSeparator = "";
     public returnsPostData = false;
     public overrideTimeStampsSetting = false;
-    public useTimeStampsInMilliseconds: boolean = null;
+    public useTimeStampsInMilliseconds: boolean = <never>null;
     public combineMessages: boolean;
     public customFields: { name: string; value: any }[];
     private hasWindow: boolean;

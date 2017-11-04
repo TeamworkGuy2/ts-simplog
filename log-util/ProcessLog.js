@@ -122,7 +122,8 @@ var ProcessLog = (function () {
         var deltaTime = null;
         var timeStamp = ProcessLog.timestampGenerator();
         if (this.steps.length > 0) {
-            deltaTime = timeStamp - this.steps[this.steps.length - 1].timeStamp;
+            var step = this.steps[this.steps.length - 1];
+            deltaTime = timeStamp - step.timeStamp;
         }
         else if (this.startTime != null) {
             deltaTime = timeStamp - this.startTime;

@@ -9,7 +9,7 @@ class EventSupport implements Log4Ts.EventSupport {
 
 
     constructor(handleError?: (msg, exception?) => void) {
-        this.handleError = handleError;
+        this.handleError = <(msg, exception?) => void>handleError;
     }
 
 

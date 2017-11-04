@@ -16,18 +16,18 @@ class ProcessLog {
     public static timestampGenerator: () => number = Date.now;
 
     private name: string;
-    private startTime: number;
-    private endTime: number;
+    private startTime: number | null;
+    private endTime: number | null;
     private errorStop: boolean;
     private error: any;
     private errorMsg: string;
     private initialStepCount: number;
     private stepCount: number;
     private steps: ProcessLog.LogStep[];
-    private stepCompletedCallback: (step: ProcessLog.LogStep) => void;
-    private processStoppedCallback: () => void;
-    private processCompletedCallback: () => void;
-    private processErrorCallback: (err: any, errMsg: string) => void;
+    private stepCompletedCallback: ((step: ProcessLog.LogStep) => void) | null;
+    private processStoppedCallback: (() => void) | null;
+    private processCompletedCallback: (() => void) | null;
+    private processErrorCallback: ((err: any, errMsg: string) => void) | null;
     // functions that are called when a step is completed or all steps are completed
     private stepDone: (step: ProcessLog.LogStep) => void;
     private processStopped: () => void;
@@ -41,7 +41,7 @@ class ProcessLog {
         this.endTime = null;
         this.errorStop = false;
         this.error = null;
-        this.errorMsg = null;
+        this.errorMsg = <never>null;
         this.initialStepCount = steps;
         this.stepCount = 0;
         this.steps = [];
@@ -136,7 +136,7 @@ class ProcessLog {
     public errorLog(error?: any, errorMsg?: string): void {
         this.errorStop = true;
         this.error = error;
-        this.errorMsg = errorMsg;
+        this.errorMsg = <string>errorMsg;
         this.stopLog();
     }
 
@@ -145,10 +145,11 @@ class ProcessLog {
         if (this.stepCount === this.initialStepCount) { throw new Error("cannot complete any more steps, all steps have already been completed"); }
         if (this.errorStop === true) { throw new Error("cannot complete any more steps, process threw error"); }
         this.stepCount++;
-        var deltaTime = null;
+        var deltaTime: number = <never>null;
         var timeStamp = ProcessLog.timestampGenerator();
         if (this.steps.length > 0) {
-            deltaTime = timeStamp - this.steps[this.steps.length - 1].timeStamp;
+            var step = this.steps[this.steps.length - 1];
+            deltaTime = timeStamp - <number>step.timeStamp;
         }
         else if (this.startTime != null) {
             deltaTime = timeStamp - this.startTime;
@@ -201,7 +202,7 @@ class ProcessLog {
 
     public getTotalLogTime(): number {
         if (this.endTime == null) { throw new Error("cannot get total log time before process has finished"); }
-        return this.endTime - this.startTime;
+        return this.endTime - <number>this.startTime;
     }
 
 
@@ -259,7 +260,7 @@ class ProcessLog {
 
     static stopSimpleLog(simpleLog: ProcessLog.LogStep): ProcessLog.LogStep {
         if (!simpleLog.hasOwnProperty("deltaTime") || !simpleLog.hasOwnProperty("timeStamp")) { throw new Error("invalid parameter '" + simpleLog + "', signature is ProcessLog.stopSimpleLog(LogStep step)"); }
-        simpleLog.deltaTime = ProcessLog.timestampGenerator() - simpleLog.timeStamp;
+        simpleLog.deltaTime = ProcessLog.timestampGenerator() - <number>simpleLog.timeStamp;
         return simpleLog;
     }
 
@@ -270,18 +271,18 @@ module ProcessLog {
     /** A Step in a process */
     export class LogStep {
         /** Millisecond precision timestamp when the log step was create */
-        timeStamp: number;
+        timeStamp: number | null;
         /** [optional] millisecond delta time between this step and another event */
-        deltaTime: number;
+        deltaTime: number | null;
         /** the message related to this step */
         stepMessage: string;
         /** this step number in reference to the parent process */
-        stepNumber: number;
+        stepNumber: number | null;
         /** the total number of steps in the parent process */
-        totalSteps: number;
+        totalSteps: number | null;
 
 
-        constructor(timeStamp: number, deltaTime?: number, message?: string, stepNumber?: number, totalSteps?: number) {
+        constructor(timeStamp: number, deltaTime?: number | null, message?: string, stepNumber?: number, totalSteps?: number | null) {
             this.timeStamp = timeStamp != null ? timeStamp : null;
             this.deltaTime = deltaTime != null ? deltaTime : null;
             this.stepMessage = message ? message : "";

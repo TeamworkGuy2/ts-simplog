@@ -31,7 +31,7 @@ class PatternLayout extends Layout {
     public format(logEvent: Log4Ts.LogEvent) {
         var regex = /%(-?[0-9]+)?(\.?[0-9]+)?([acdfmMnpr%])(\{([^\}]+)\})?|([^%]+)/;
         var formattedString = "";
-        var result: RegExpExecArray;
+        var result: RegExpExecArray | null;
         var searchStr = this.pattern;
 
         // Cannot use regex global flag since it doesn't work with exec in IE5

@@ -12,7 +12,7 @@ class InPageAppender extends ConsoleAppender {
         scrollToLatestMessage: true,
         width: "100%",
         height: "220px",
-        maxMessages: null,
+        maxMessages: <number><any>null,
         showCommandLine: true,
         commandLineObjectExpansionDepth: 1,
         showHideButton: false,

@@ -144,8 +144,8 @@ function testLayoutWithVariables(layout, tsLogger) {
         var testItem = arrayOfTestItems[i];
         var ex = new Error("Test error");
         var logEvent = new LogEvent(tsLogger, new Date(), Level.INFO, [testItem], null);
-        tsLogger.info("Formatting", testItem, result);
         var result = layout.format(logEvent);
+        tsLogger.info("Formatting", testItem, result);
         // Now try with an exception
         logEvent.exception = ex;
         tsLogger.info("Formatting with exception", testItem, result);

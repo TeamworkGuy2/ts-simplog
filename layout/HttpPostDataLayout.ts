@@ -21,7 +21,7 @@ class HttpPostDataLayout extends Layout {
 
     public format(logEvent: Log4Ts.LogEvent) {
         var dataValues = this.getDataValues(logEvent);
-        var queryBits = [];
+        var queryBits: string[] = [];
         for (var i = 0, len = dataValues.length; i < len; i++) {
             var dataVal = dataValues[i][1];
             var val = (dataVal instanceof Date) ? String(dataVal.getTime()) : dataVal;

@@ -105,10 +105,10 @@ declare module Log4Ts {
 
     export interface Logger {
         name: string;
-        parent: Logger;
+        parent: Logger | null;
         children: any[];
         appenders: Appender[];
-        loggerLevel: Level;
+        loggerLevel: Level | null;
 
 
         trace(...msgs: any[]): void;
@@ -146,9 +146,9 @@ declare module Log4Ts {
 
         callAppenders(logEvent: LogEvent): void;
 
-        setLevel(level: Level): void;
+        setLevel(level: Level | null): void;
 
-        getLevel(): Level;
+        getLevel(): Level | null;
 
         getEffectiveLevel(): Level;
 

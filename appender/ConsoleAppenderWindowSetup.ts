@@ -1,4 +1,5 @@
-﻿var htmlStart = [
+﻿/*
+var htmlStart = [
 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
 '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">',
 ];
@@ -49,7 +50,7 @@ function script() {
     }
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class LogItem {
         static serializedItemKeys = { LOG_ENTRY: 0, GROUP_START: 1, GROUP_END: 2 };
@@ -119,7 +120,7 @@ function script() {
 
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class LogItemContainerElement {
         containerDomNode: Node;
@@ -142,7 +143,7 @@ function script() {
 
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class SeparatorElementContainer extends LogItemContainerElement {
 
@@ -164,7 +165,7 @@ function script() {
 
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class Separator extends LogItem {
         content: any;
@@ -195,7 +196,7 @@ function script() {
 
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
     interface GroupElementContainerType extends LogItemContainerElement {
         group: GroupType;
         containerDomNode: any;
@@ -319,7 +320,7 @@ function script() {
     });
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
     type GroupTypeBase = LogItem & {
         name: string;
         group: any;
@@ -456,7 +457,7 @@ function script() {
     copyProperties(Group.prototype, groupMethods);
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class LogEntryElementContainer extends LogItemContainerElement {
         contentElement: Element;
@@ -499,7 +500,7 @@ function script() {
     }
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class LogEntryWrappedElementContainer extends LogEntryElementContainer {
         logEntry: LogEntry;
@@ -526,7 +527,7 @@ function script() {
     }
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
     interface LogEntryUnwrappedElementContainerType extends LogEntryElementContainer {
         logEntry: LogEntry;
         containerDomNode: HTMLElement;
@@ -553,7 +554,7 @@ function script() {
     };
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
     interface LogEntryMainElementContainerType extends LogEntryElementContainer {
         logEntry: LogEntry;
         containerDomNode: HTMLElement;
@@ -573,7 +574,7 @@ function script() {
     LogEntryMainElementContainer.prototype = new LogEntryElementContainer();
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     class LogEntry extends LogItem {
         level: string;
@@ -659,7 +660,7 @@ function script() {
     }
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     function LogItemVisitor() {
     }
@@ -694,7 +695,7 @@ function script() {
     };
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
     interface GroupFlattenerType {
         logEntriesAndSeparators: any[];
     }
@@ -718,7 +719,7 @@ function script() {
     };
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     window.onload = function () {
         // Sort out document.domain
@@ -837,7 +838,7 @@ function script() {
         appender = null;
     };
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     var appender = null;
 
@@ -864,7 +865,7 @@ function script() {
     }
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     function LogItemContentReverser() {
     }
@@ -877,7 +878,7 @@ function script() {
     };
 
 
-    /*----------------------------------------------------------------*/
+    // ----------------------------------------------------------------
 
     var scrollToLatest = true;
 
@@ -1235,7 +1236,7 @@ function script() {
     }
 
 
-    /* ------------------------------------------------------------------- */
+    // -------------------------------------------------------------------
     // Search
 
     var searchTimer = null;
@@ -1768,7 +1769,7 @@ function script() {
     }
 
 
-    /* ------------------------------------------------------------------------- */
+    // -------------------------------------------------------------------------
     // CSS Utilities
 
     function addClass(el: Element, cssClass: string) {
@@ -1809,7 +1810,7 @@ function script() {
     }
 
 
-    /* ------------------------------------------------------------------------- */
+    // -------------------------------------------------------------------------
     // Other utility functions
 
     function getElementsByClass<E extends Element>(el: E, cssClass: string, tagName: string) {
@@ -2374,8 +2375,8 @@ var body = [
 var htmlEnd = [
 '</html>',
 ];
-
+*/
 export = {
-    scriptFunction: script,
-    htmlDocString: htmlStart.concat(headerStart).concat("(" + script.toString() + "());").concat(headerEnd).concat(body).concat(htmlEnd),
+    scriptFunction: null, //script,
+    htmlDocString: null, //htmlStart.concat(headerStart).concat("(" + script.toString() + "());").concat(headerEnd).concat(body).concat(htmlEnd),
 };

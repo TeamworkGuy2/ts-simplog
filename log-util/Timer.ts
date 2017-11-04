@@ -21,9 +21,9 @@ module Timer {
             level: level,
             startDate: startDate,
             startMillis: <number>startDate.getTime(),
-            endDate: null,
-            endMillis: null,
-            durationMillis: null,
+            endDate: <Date><any>null,
+            endMillis: <number><any>null,
+            durationMillis: <number><any>null,
             measure: () => {
                 var endDate = new Date();
                 var endMillis = <number>endDate.getTime();
@@ -51,9 +51,9 @@ module Timer {
             level: level,
             startDate: new Date(),
             startMillis: startMillis,
-            endDate: null,
-            endMillis: null,
-            durationMillis: null,
+            endDate: <Date><any>null,
+            endMillis: <number><any>null,
+            durationMillis: <number><any>null,
             measure: () => {
                 var endMillis = <number>window.performance.now();
                 var durationMillis = endMillis - startMillis;
@@ -90,9 +90,9 @@ module Timer {
             level: level,
             startDate: new Date(),
             startMillis: startMillis,
-            endDate: null,
-            endMillis: null,
-            durationMillis: null,
+            endDate: <Date><any>null,
+            endMillis: <number><any>null,
+            durationMillis: <number><any>null,
             measure: () => {
                 window.performance.mark(endName);
                 window.performance.measure(measureName, startName, endName);

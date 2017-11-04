@@ -6,7 +6,7 @@ import EventSupport = require("./EventSupport");
  */
 module LogLog {
     export var eventHandler: Log4Ts.EventSupport;
-    export var debugMessages = []; // TODO only exported for tests
+    export var debugMessages: any[] = []; // TODO only exported for tests
     var alertAllErrors = false;
     var numberOfErrors = 0;
     var quietMode = false;
@@ -31,7 +31,7 @@ module LogLog {
     }
 
 
-    export function debug(message) {
+    export function debug(message: any) {
         debugMessages.push(message);
     }
 
@@ -41,11 +41,11 @@ module LogLog {
     }
 
 
-    export function warn(message, exception?) {
+    export function warn(message: any, exception?: any) {
     }
 
 
-    export function error(message, exception?) {
+    export function error(message: any, exception?: any) {
         if (++numberOfErrors == 1 || alertAllErrors) {
             if (!quietMode) {
                 var alertMessage = "log4ts error: " + message;

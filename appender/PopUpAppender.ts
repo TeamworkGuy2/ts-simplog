@@ -16,7 +16,7 @@ class PopUpAppender extends ConsoleAppender {
         width: "600",
         height: "400",
         reopenWhenClosed: false,
-        maxMessages: null,
+        maxMessages: <number><any>null,
         showCommandLine: true,
         commandLineObjectExpansionDepth: 1,
         showHideButton: false,

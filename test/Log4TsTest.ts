@@ -63,7 +63,7 @@ function uniqueLogNamer(parts: number) {
     res[parts - 1] = childLogger;
     var i = parts - 1;
     while (i > 0) {
-        res[i - 1] = res[i].parent;
+        res[i - 1] = <Log4Ts.Logger>res[i].parent;
         i--;
     }
 
@@ -149,8 +149,8 @@ function testLayoutWithVariables(layout: Log4Ts.Layout, tsLogger: Log4Ts.Logger)
         var testItem = arrayOfTestItems[i];
         var ex = new Error("Test error");
         var logEvent = new LogEvent(tsLogger, new Date(), Level.INFO, [testItem], null);
-        tsLogger.info("Formatting", testItem, result);
         var result = layout.format(logEvent);
+        tsLogger.info("Formatting", testItem, result);
         // Now try with an exception
         logEvent.exception = ex;
         tsLogger.info("Formatting with exception", testItem, result);
@@ -203,8 +203,8 @@ suite("log4ts test", function log4tsTest() {
 
     afterEach(function () {
         tsLogger.removeAppender(tsAppender);
-        tsLogger = null;
-        tsAppender = null;
+        tsLogger = <never>null;
+        tsAppender = <never>null;
         tslog.resetConfiguration();
     });
 
@@ -608,7 +608,7 @@ suite("log4ts test", function log4tsTest() {
         });
 
         test("formatObjectExpansion simple circular object test", function () {
-            var obj = { a: null };
+            var obj = { a: <any>null };
             obj.a = obj;
 
             asr.equal(Utils.formatObjectExpansion(obj, 2),

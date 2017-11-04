@@ -167,10 +167,10 @@ var AjaxAppender = (function (_super) {
             if (isSupported && Globals.enabled) {
                 // Create requests for everything left over, batched as normal
                 var actualBatchSize = appender.getLayout().allowBatching() ? batchSize : 1;
-                var currentLogEvent;
+                var curEvent;
                 var batchedLogEvents = [];
-                while ((currentLogEvent = queuedLogEvents.shift())) {
-                    batchedLogEvents.push(currentLogEvent);
+                while ((curEvent = queuedLogEvents.shift())) {
+                    batchedLogEvents.push(curEvent);
                     if (queuedLogEvents.length >= actualBatchSize) {
                         // Queue this batch of log entries
                         queuedRequests.push(batchedLogEvents);
@@ -193,9 +193,9 @@ var AjaxAppender = (function (_super) {
             // Format the logging events
             var formattedMessages = [];
             var postData = "";
-            var currentLogEvent;
-            while ((currentLogEvent = batchedLogEvents.shift())) {
-                formattedMessages.push(appender.getLayout().formatWithException(currentLogEvent));
+            var curEvent;
+            while ((curEvent = batchedLogEvents.shift())) {
+                formattedMessages.push(appender.getLayout().formatWithException(curEvent));
             }
             // Create the post data string
             if (batchedLogEvents.length == 1) {
@@ -295,10 +295,10 @@ var AjaxAppender = (function (_super) {
                 queuedLogEvents.push(logEvent);
                 var actualBatchSize = _this.getLayout().allowBatching() ? batchSize : 1;
                 if (queuedLogEvents.length >= actualBatchSize) {
-                    var currentLogEvent;
+                    var curEvent;
                     var batchedLogEvents = [];
-                    while ((currentLogEvent = queuedLogEvents.shift())) {
-                        batchedLogEvents.push(currentLogEvent);
+                    while ((curEvent = queuedLogEvents.shift())) {
+                        batchedLogEvents.push(curEvent);
                     }
                     // Queue this batch of log entries
                     queuedRequests.push(batchedLogEvents);
@@ -355,6 +355,7 @@ var AjaxAppender = (function (_super) {
         else {
             LogLog.handleError("getXmlHttp: unable to obtain XMLHttpRequest object");
         }
+        return undefined;
     }
     AjaxAppender.getXmlHttp = getXmlHttp;
     function isHttpRequestSuccessful(xmlHttp) {

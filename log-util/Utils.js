@@ -33,11 +33,7 @@ var Utils;
     Utils.escapeNewLines = escapeNewLines;
     function padWithSpaces(str, len) {
         if (str.length < len) {
-            var spaces = [];
-            var count = Math.max(0, len - str.length);
-            for (var i = 0; i < count; i++) {
-                spaces[i] = " ";
-            }
+            var spaces = new Array(Math.max(0, len - str.length));
             str += spaces.join("");
         }
         return str;
@@ -68,9 +64,8 @@ var Utils;
         return url.substr(lastSlashIndex + 1);
     }
     Utils.getUrlFileName = getUrlFileName;
-    // Returns a nicely formatted representation of an error
     function getExceptionStringRep(ex) {
-        if (ex) {
+        if (ex != null) {
             var exStr = "Exception: " + getExceptionMessage(ex);
             if (ex.lineNumber) {
                 exStr += " on line number " + ex.lineNumber;
