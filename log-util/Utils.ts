@@ -275,7 +275,7 @@ module Utils {
             if (childProto.hasOwnProperty(key)) {
                 var parentConflicts = newChildProto.hasOwnProperty(key) || (deepExtend && key in newChildProto);
                 if ((parentConflicts && allowChildToOverride) || !parentConflicts) {
-                    var descriptor = Object.getOwnPropertyDescriptor(childProto, key);
+                    var descriptor = <PropertyDescriptor>Object.getOwnPropertyDescriptor(childProto, key);
                     if (descriptor.get || descriptor.set) {
                         Object.defineProperty(newChildProto, key, descriptor);
                     }

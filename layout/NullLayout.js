@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 var Layout = require("./Layout");
 /** NullLayout
  */
-var NullLayout = (function (_super) {
+var NullLayout = /** @class */ (function (_super) {
     __extends(NullLayout, _super);
     function NullLayout() {
         return _super.call(this) || this;

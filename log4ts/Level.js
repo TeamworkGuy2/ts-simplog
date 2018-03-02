@@ -1,7 +1,7 @@
 "use strict";
 /** Levels
  */
-var Level = (function () {
+var Level = /** @class */ (function () {
     function Level(level, name) {
         this.level = level;
         this.name = name;

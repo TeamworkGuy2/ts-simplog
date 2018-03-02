@@ -45,7 +45,7 @@ declare module Log4Ts {
         addEventListener(eventType: string, listener: EventListener): void;
         removeEventListener(eventType: string, listener: EventListener): void;
         dispatchEvent(eventType: string, eventArgs: any[] | any): void;
-        handleError(message, exception?): void;
+        handleError(message: any, exception?: any): void;
     }
 
 

@@ -96,7 +96,7 @@ class ProcessLog {
     }
 
 
-    public setProcessErrorCallback(cb: (err, errMsg) => void): void {
+    public setProcessErrorCallback(cb: (err: any, errMsg: any) => void): void {
         if (typeof cb !== "function") { throw new Error("process error callback '" + cb + "' must be a function"); }
         this.processErrorCallback = cb;
     }
@@ -244,7 +244,7 @@ class ProcessLog {
     }
 
     
-    private static pluck<T>(ary: T[], propName: string): any[] {
+    private static pluck<T>(ary: T[], propName: keyof T): any[] {
         var res: any[] = [];
         for (var i = 0, size = ary.length; i < size; i++) {
             res.push(ary[i][propName]);

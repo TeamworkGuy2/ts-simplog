@@ -3,7 +3,7 @@ var Globals = require("../log4ts/Globals");
 var Utils = require("../log-util/Utils");
 /** Layout prototype
  */
-var Layout = (function () {
+var Layout = /** @class */ (function () {
     function Layout() {
         this.defaults = {
             loggerKey: "logger",

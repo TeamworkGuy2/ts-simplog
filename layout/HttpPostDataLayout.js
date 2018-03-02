@@ -13,7 +13,7 @@ var Utils = require("../log-util/Utils");
 var Layout = require("./Layout");
 /** HttpPostDataLayout
  */
-var HttpPostDataLayout = (function (_super) {
+var HttpPostDataLayout = /** @class */ (function (_super) {
     __extends(HttpPostDataLayout, _super);
     function HttpPostDataLayout() {
         var _this = _super.call(this) || this;

@@ -14,7 +14,7 @@ var Appender = require("../appender/Appender");
 var NullLayout = require("../layout/NullLayout");
 /** BrowserConsoleAppender (only works in Opera and Safari and Firefox with Firebug extension)
  */
-var BrowserConsoleAppender = (function (_super) {
+var BrowserConsoleAppender = /** @class */ (function (_super) {
     __extends(BrowserConsoleAppender, _super);
     function BrowserConsoleAppender(console, name, opts) {
         if (name === void 0) { name = "BrowserConsoleAppender"; }

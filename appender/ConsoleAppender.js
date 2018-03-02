@@ -66,7 +66,7 @@ function isLoaded(wnd) {
 var defaultCommandLineFunctions = [];
 var consoleAppenderIdCounter = 1;
 // ConsoleAppender (prototype for PopUpAppender and InPageAppender)
-var ConsoleAppender = (function (_super) {
+var ConsoleAppender = /** @class */ (function (_super) {
     __extends(ConsoleAppender, _super);
     function ConsoleAppender(opts) {
         var _this = _super.call(this, opts) || this;
@@ -349,7 +349,7 @@ var ConsoleAppender = (function (_super) {
         }
         var getConsoleWindow = this.getConsoleWindow;
         // Common methods
-        var QueuedLoggingEvent = (function () {
+        var QueuedLoggingEvent = /** @class */ (function () {
             function QueuedLoggingEvent(logEvent, formattedMessage) {
                 this.logEvent = logEvent;
                 this.levelName = logEvent.level.name;
@@ -360,7 +360,7 @@ var ConsoleAppender = (function (_super) {
             };
             return QueuedLoggingEvent;
         }());
-        var QueuedGroup = (function () {
+        var QueuedGroup = /** @class */ (function () {
             function QueuedGroup(name, initiallyExpanded) {
                 this.name = name;
                 this.initiallyExpanded = initiallyExpanded;
@@ -370,7 +370,7 @@ var ConsoleAppender = (function (_super) {
             };
             return QueuedGroup;
         }());
-        var QueuedGroupEnd = (function () {
+        var QueuedGroupEnd = /** @class */ (function () {
             function QueuedGroupEnd(name) {
                 this.name = name;
             }

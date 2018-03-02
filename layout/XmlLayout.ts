@@ -32,7 +32,7 @@ class XmlLayout extends Layout {
         var nwln = Globals.newLine;
         var layout = this;
 
-        function formatMessage(message) {
+        function formatMessage(message: any) {
             message = (typeof message === "string") ? message : Utils.toStr(message);
             return "<log4ts:message><![CDATA[" + layout.escapeCdata(message) + "]]></log4ts:message>";
         }

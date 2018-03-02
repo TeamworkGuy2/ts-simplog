@@ -17,7 +17,7 @@ var Layout = require("./Layout");
 var SimpleDateFormat = require("../log4ts/SimpleDateFormat");
 /** PatternLayout
  */
-var PatternLayout = (function (_super) {
+var PatternLayout = /** @class */ (function (_super) {
     __extends(PatternLayout, _super);
     function PatternLayout(pattern) {
         var _this = _super.call(this) || this;

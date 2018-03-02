@@ -652,7 +652,7 @@ class ConsoleAppender extends Appender {
             iframeElem.style.border = "solid gray 1px";
 
             for (var i = 0, len = cssProps.length; i < len; i++) {
-                iframeElem.style[cssProps[i][0]] = cssProps[i][1];
+                (<any>iframeElem.style)[<string>(<any>cssProps[i])[0]] = cssProps[i][1];
             }
 
             var iframeSrc = this.useDocumentWrite ? "" : " src='" + this.getConsoleUrl() + "'";
@@ -667,7 +667,7 @@ class ConsoleAppender extends Appender {
             this.consoleClosed = false;
 
             // Write the console HTML to the iframe
-            var iframeDocumentExistsTest = (wnd) => {
+            var iframeDocumentExistsTest = (wnd: any) => {
                 try {
                     return Utils.bool(wnd) && Utils.bool(wnd.document);
                 } catch (ex) {
@@ -728,7 +728,7 @@ class ConsoleAppender extends Appender {
         };
 
         this.getConsoleWindow = (): Window => {
-            var iframe = window.frames[iframeId];
+            var iframe = (<any>window.frames)[iframeId];
             if (iframe) {
                 return iframe;
             }
@@ -815,7 +815,7 @@ class ConsoleAppender extends Appender {
             try {
                 var frameEl = window.frameElement;
                 if (frameEl) {
-                    frameInfo = "_" + frameEl.tagName + "_" + (frameEl["name"] || frameEl.id || "");
+                    frameInfo = "_" + frameEl.tagName + "_" + ((<any>frameEl)["name"] || frameEl.id || "");
                 }
             } catch (e) {
                 frameInfo = "_inaccessibleParentFrame";
@@ -827,7 +827,7 @@ class ConsoleAppender extends Appender {
                 windowName = windowName + "_" + Globals.uniqueId;
             }
 
-            var checkPopUpClosed = (wnd) => {
+            var checkPopUpClosed = (wnd: any) => {
                 if (this.consoleClosed) {
                     return true;
                 } else {
@@ -854,13 +854,13 @@ class ConsoleAppender extends Appender {
             };
 
             try {
-                popUp = window.open(this.getConsoleUrl(), windowName, windowProperties);
+                popUp = (<any>window).open(this.getConsoleUrl(), windowName, windowProperties);
                 this.consoleClosed = false;
                 this.consoleWindowCreated = true;
                 if (popUp && popUp.document) {
                     if (this.useDocumentWrite && this.useOldPopUp && isLoaded(popUp)) {
                         // TODO need to inject functions into the page
-                        popUp["mainPageReloaded"]();
+                        (<any>popUp)["mainPageReloaded"]();
                         finalInit();
                     } else {
                         if (this.useDocumentWrite) {
@@ -1147,7 +1147,7 @@ function createCommandLineFunctions() {
                 win = args[0];
                 message = "Command line set to run in frame '" + args[0].name + "'";
             } else {
-                win = window.frames[args[0]];
+                win = (<any>window.frames)[args[0]];
                 if (win) {
                     message = "Command line set to run in frame '" + args[0] + "'";
                 } else {

@@ -38,7 +38,7 @@ class BrowserConsoleAppender extends Appender {
                 funcName = "log";
             }
 
-            console[funcName].apply(console, this.getFormattedMessage(logEvent, false));
+            (<any>console)[funcName].apply(console, this.getFormattedMessage(logEvent, false));
         }
         else if ((typeof opera != "undefined") && opera.postError) { // Opera
             opera.postError(this.getFormattedMessage(logEvent, true));

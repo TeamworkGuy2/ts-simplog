@@ -7,7 +7,7 @@ var LogEvent = require("./LogEvent");
 var Timer = require("../log-util/Timer");
 /** Loggers
  */
-var Logger = (function () {
+var Logger = /** @class */ (function () {
     function Logger(name, options) {
         if (options === void 0) { options = {}; }
         this.name = name;

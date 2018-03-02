@@ -4,7 +4,15 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.6.0](N/A) - 2017-11-04
+### [0.6.1](N/A) - 2018-03-01
+#### Changed
+* Update to TypeScript 2.7
+* Update dependencies: mocha, @types/chai, @types/mocha
+* Enable tsconfig.json `noImplicitAny`
+
+
+--------
+### [0.6.0](https://github.com/TeamworkGuy2/ts-simplog/commit/53c4e232ecdc58778c1153872e636ef52b02dbcb) - 2017-11-04
 #### Changed
 * Added `strictNullChecks` to `tsconfig.json` and updated code to handle null types
 * Dropped ConsoleAppenderWindowSetup support, file still exists, but returns null exports

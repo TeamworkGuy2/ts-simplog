@@ -13,7 +13,7 @@ var Appender = require("./Appender");
 var SimpleLayout = require("../layout/SimpleLayout");
 /** AlertAppender
  */
-var AlertAppender = (function (_super) {
+var AlertAppender = /** @class */ (function (_super) {
     __extends(AlertAppender, _super);
     function AlertAppender(opts) {
         var _this = _super.call(this, opts) || this;

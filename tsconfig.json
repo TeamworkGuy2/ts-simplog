@@ -1,11 +1,10 @@
 ﻿{
   "compileOnSave": true,
   "compilerOptions": {
-    "jsx": "preserve",
 	"lib": [ "es2017", "dom" ],
     "module": "commonjs",
     "noEmitOnError": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noImplicitThis": true,
     "removeComments": false,
     "sourceMap": false,

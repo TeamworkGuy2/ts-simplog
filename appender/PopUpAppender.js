@@ -13,7 +13,7 @@ var ConsoleAppender = require("./ConsoleAppender");
 var PatternLayout = require("../layout/PatternLayout");
 /** PopUpAppender class
  */
-var PopUpAppender = (function (_super) {
+var PopUpAppender = /** @class */ (function (_super) {
     __extends(PopUpAppender, _super);
     function PopUpAppender(lazyInit, initiallyMinimized, useDocumentWrite, width, height, opts) {
         var _this = _super.call(this, opts) || this;

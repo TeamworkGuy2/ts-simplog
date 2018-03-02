@@ -115,7 +115,7 @@ function compareObjectInterface(obj1: any, obj1_name: string, obj2: any, obj2_na
 // Simply tests a layout for exceptions when formatting
 function testLayoutWithVariables(layout: Log4Ts.Layout, tsLogger: Log4Ts.Logger) {
     var emptyObject = {};
-    var emptyArray = [];
+    var emptyArray: any = [];
     var emptyString = "";
     var localUndefined = emptyArray[0];
     var oneLevelObject = {
@@ -138,7 +138,7 @@ function testLayoutWithVariables(layout: Log4Ts.Layout, tsLogger: Log4Ts.Logger)
         null,
         localUndefined,
         3.14,
-        function (p) { return "I'm a function"; },
+        function (p: any) { return "I'm a function"; },
         [1, "things"]
     ];
     var arrayOfTestItems = [emptyObject, emptyString, emptyString, localUndefined, oneLevelObject,

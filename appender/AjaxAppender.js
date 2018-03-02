@@ -16,7 +16,7 @@ var Appender = require("../appender/Appender");
 var HttpPostDataLayout = require("../layout/HttpPostDataLayout");
 /** AjaxAppender
  */
-var AjaxAppender = (function (_super) {
+var AjaxAppender = /** @class */ (function (_super) {
     __extends(AjaxAppender, _super);
     function AjaxAppender(url, withCredentials, opts) {
         var _this = _super.call(this, opts) || this;

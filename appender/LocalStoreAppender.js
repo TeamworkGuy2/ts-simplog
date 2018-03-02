@@ -17,7 +17,7 @@ var NullLayout = require("../layout/NullLayout");
  * @author TeamworkGuy2
  * @since 2016-6-4
  */
-var LocalStoreAppender = (function (_super) {
+var LocalStoreAppender = /** @class */ (function (_super) {
     __extends(LocalStoreAppender, _super);
     function LocalStoreAppender(store, name, mergeGroupEvents, opts) {
         if (name === void 0) { name = "LocalStoreAppender"; }

@@ -3,7 +3,7 @@ var Globals = require("./Globals");
 var Utils = require("../log-util/Utils");
 /** Logging events
  */
-var LogEvent = (function () {
+var LogEvent = /** @class */ (function () {
     function LogEvent(logger, timeStamp, level, messages, exception) {
         this.logger = logger;
         this.timeStamp = timeStamp;

@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
 var Layout = require("./Layout");
 /** SimpleLayout
  */
-var SimpleLayout = (function (_super) {
+var SimpleLayout = /** @class */ (function (_super) {
     __extends(SimpleLayout, _super);
     function SimpleLayout(ignoreThowable) {
         if (ignoreThowable === void 0) { ignoreThowable = true; }

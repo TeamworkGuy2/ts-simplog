@@ -42,7 +42,7 @@ class JsonLayout extends Layout {
         var dataValues = this.getDataValues(logEvent, this.combineMessages);
         var str = "{" + this.lineBreak;
 
-        function formatValue(val, prefix: string, expand: boolean) {
+        function formatValue(val: any, prefix: string, expand: boolean) {
             // Check the type of the data value to decide whether quotation marks
             // or expansion are required
             var formattedValue: string;

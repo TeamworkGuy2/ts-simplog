@@ -82,7 +82,7 @@ class AjaxAppender extends Appender {
 
         // Configuration methods. The function scope is used to prevent
         // direct alteration to the appender configuration properties.
-        function checkCanConfigure(configOptionName) {
+        function checkCanConfigure(configOptionName: string) {
             if (initialized) {
                 LogLog.handleError("AjaxAppender: configuration option '" + configOptionName + "' may not be set after the appender has been initialized");
                 return false;

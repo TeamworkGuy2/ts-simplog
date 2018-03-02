@@ -117,7 +117,7 @@ class SimpleDateFormat {
                         break;
                     case MONTH:
                         if (numberOfLetters >= 3) {
-                            formattedString += this.formatText(DateUtil.MONTHS[rawData], numberOfLetters, numberOfLetters);
+                            formattedString += this.formatText(DateUtil.MONTHS[<number>rawData], numberOfLetters, numberOfLetters);
                         } else {
                             // NB. Months returned by getMonth are zero-based
                             formattedString += this.formatNumber(<number>rawData + 1, numberOfLetters);

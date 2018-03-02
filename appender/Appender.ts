@@ -20,7 +20,7 @@ abstract class Appender extends EventSupport implements Log4Ts.Appender {
         this.options = opts || {};
     }
 
-    public abstract toString();
+    public abstract toString(): string;
 
     public group(groupTitle: string, initiallyExpanded?: boolean): void { }
 

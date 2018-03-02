@@ -16,7 +16,7 @@ var EventSupport = require("../log4ts/EventSupport");
 var PatternLayout = require("../layout/PatternLayout");
 /** Appender prototype
  */
-var Appender = (function (_super) {
+var Appender = /** @class */ (function (_super) {
     __extends(Appender, _super);
     function Appender(opts) {
         var _this = _super.call(this) || this;

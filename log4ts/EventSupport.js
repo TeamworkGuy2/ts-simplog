@@ -2,7 +2,7 @@
 var Utils = require("../log-util/Utils");
 /** Custom event support
  */
-var EventSupport = (function () {
+var EventSupport = /** @class */ (function () {
     function EventSupport(handleError) {
         this.eventTypes = [];
         this.listeners = {};

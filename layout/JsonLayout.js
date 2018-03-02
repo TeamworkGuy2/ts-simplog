@@ -14,7 +14,7 @@ var Utils = require("../log-util/Utils");
 var Layout = require("./Layout");
 /** JsonLayout
  */
-var JsonLayout = (function (_super) {
+var JsonLayout = /** @class */ (function (_super) {
     __extends(JsonLayout, _super);
     function JsonLayout(readable, combineMessages) {
         var _this = _super.call(this) || this;

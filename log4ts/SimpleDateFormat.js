@@ -24,7 +24,7 @@ var types = {
     S: NUMBER,
     Z: TIMEZONE
 };
-var SimpleDateFormat = (function () {
+var SimpleDateFormat = /** @class */ (function () {
     /** SimpleDateFormat
      * @param formatString
      */

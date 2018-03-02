@@ -12,7 +12,7 @@
  * @author TeamworkGuy2
  * @since 2016-05-26
  */
-var ProcessLog = (function () {
+var ProcessLog = /** @class */ (function () {
     function ProcessLog(name, steps, start) {
         if (steps === void 0) { steps = -1; }
         if (start === void 0) { start = false; }
@@ -212,7 +212,7 @@ var ProcessLog = (function () {
 }());
 (function (ProcessLog) {
     /** A Step in a process */
-    var LogStep = (function () {
+    var LogStep = /** @class */ (function () {
         function LogStep(timeStamp, deltaTime, message, stepNumber, totalSteps) {
             this.timeStamp = timeStamp != null ? timeStamp : null;
             this.deltaTime = deltaTime != null ? deltaTime : null;

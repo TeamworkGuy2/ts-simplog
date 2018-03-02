@@ -152,7 +152,7 @@ function testLayoutWithVariables(layout, tsLogger) {
         result = layout.format(logEvent);
     }
 }
-var ArrayAppender = (function (_super) {
+var ArrayAppender = /** @class */ (function (_super) {
     __extends(ArrayAppender, _super);
     function ArrayAppender(layout, opts) {
         var _this = _super.call(this, opts) || this;

@@ -3,13 +3,13 @@
 /** Custom event support
  */
 class EventSupport implements Log4Ts.EventSupport {
-    public static defaultErrorCallback: (msg, exception?) => void;
+    public static defaultErrorCallback: (msg: any, exception?: any) => void;
     public eventTypes: string[] = [];
     public listeners: { [type: string]: Log4Ts.EventListener[] } = {};
 
 
-    constructor(handleError?: (msg, exception?) => void) {
-        this.handleError = <(msg, exception?) => void>handleError;
+    constructor(handleError?: (msg: any, exception?: any) => void) {
+        this.handleError = <(msg: any, exception?: any) => void>handleError;
     }
 
 
@@ -50,7 +50,7 @@ class EventSupport implements Log4Ts.EventSupport {
     }
 
 
-    public handleError(message, exception?) {
+    public handleError(message: any, exception?: any) {
         (this.handleError || EventSupport.defaultErrorCallback)(message, exception);
         this.dispatchEvent("error", { "message": message, "exception": exception });
     }

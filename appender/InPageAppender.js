@@ -13,7 +13,7 @@ var ConsoleAppender = require("./ConsoleAppender");
 var PatternLayout = require("../layout/PatternLayout");
 /** InPageAppender class
 */
-var InPageAppender = (function (_super) {
+var InPageAppender = /** @class */ (function (_super) {
     __extends(InPageAppender, _super);
     function InPageAppender(container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, opts) {
         var _this = _super.call(this, opts) || this;

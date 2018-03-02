@@ -14,7 +14,7 @@ var Utils = require("../log-util/Utils");
 var Layout = require("./Layout");
 /** XmlLayout
  */
-var XmlLayout = (function (_super) {
+var XmlLayout = /** @class */ (function (_super) {
     __extends(XmlLayout, _super);
     function XmlLayout(combineMessages) {
         var _this = _super.call(this) || this;

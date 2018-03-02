@@ -18,7 +18,7 @@ var Logger = require("./Logger");
  *
  * @author: TeamworkGuy2
  */
-var Log4TsRoot = (function () {
+var Log4TsRoot = /** @class */ (function () {
     function Log4TsRoot(edition, version) {
         this.Level = Level;
         this.logLog = LogLog;
