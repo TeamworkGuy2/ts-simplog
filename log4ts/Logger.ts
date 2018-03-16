@@ -210,16 +210,16 @@ class Logger implements Log4Ts.Logger {
         if (Globals.enabled && level.isGreaterOrEqual(this.getEffectiveLevel())) {
             // Check whether last param is an exception
             var exception: Error | undefined;
-            var finalParamIndex = params.length - 1;
-            var lastParam = params[finalParamIndex];
+            var lastIdx = params.length - 1;
+            var lastParam = params[lastIdx];
             if (params.length > 1 && Utils.isError(lastParam)) {
                 exception = lastParam;
-                finalParamIndex--;
+                lastIdx--;
             }
 
             // Construct genuine array for the params
             var messages: any[] = [];
-            for (var i = 0; i <= finalParamIndex; i++) {
+            for (var i = 0; i <= lastIdx; i++) {
                 messages[i] = params[i];
             }
 

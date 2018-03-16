@@ -4,7 +4,17 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.6.1](N/A) - 2018-03-01
+### [0.6.2](N/A) - 2018-03-15
+#### Changed
+* Added simplified Console interface `Log4Ts.ConsoleLite` for the minimum console functions used by this project
+* `BrowserConsoleAppender`
+  * use `Log4Ts.ConsoleLite` instead of `Console`
+  * now uses `console.trace` instead of console.debug for `Level.TRACE` logs
+* Added README example
+
+
+--------
+### [0.6.1](https://github.com/TeamworkGuy2/ts-simplog/commit/bf21132dfd42c8081e9e97f2466e3776d501df22) - 2018-03-01
 #### Changed
 * Update to TypeScript 2.7
 * Update dependencies: mocha, @types/chai, @types/mocha

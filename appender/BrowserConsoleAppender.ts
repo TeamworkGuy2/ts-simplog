@@ -5,12 +5,12 @@ import NullLayout = require("../layout/NullLayout");
 /** BrowserConsoleAppender (only works in Opera and Safari and Firefox with Firebug extension)
  */
 class BrowserConsoleAppender extends Appender {
-    private console: Console;
+    private console: Log4Ts.ConsoleLite;
     private customName: string;
     public name = "BrowserConsoleAppender";
 
 
-    constructor(console: Console, name = "BrowserConsoleAppender", opts?: Log4Ts.AppenderOptions) {
+    constructor(console: Log4Ts.ConsoleLite, name = "BrowserConsoleAppender", opts?: Log4Ts.AppenderOptions) {
         super(opts);
         this.layout = new NullLayout();
         this.threshold = Level.DEBUG;
@@ -24,9 +24,11 @@ class BrowserConsoleAppender extends Appender {
 
         if (console && console.log) {
             // use specific logging methods or fallback to console.log
-            var funcName: string;
+            var funcName: keyof Log4Ts.ConsoleLite;
 
-            if (console.debug && Level.DEBUG.isGreaterOrEqual(logEvent.level)) {
+            if (console.trace && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
+                funcName = "trace";
+            } else if (console.debug && Level.DEBUG.equals(logEvent.level)) {
                 funcName = "debug";
             } else if (console.info && Level.INFO.equals(logEvent.level)) {
                 funcName = "info";
@@ -38,7 +40,7 @@ class BrowserConsoleAppender extends Appender {
                 funcName = "log";
             }
 
-            (<any>console)[funcName].apply(console, this.getFormattedMessage(logEvent, false));
+            console[funcName].apply(console, this.getFormattedMessage(logEvent, false));
         }
         else if ((typeof opera != "undefined") && opera.postError) { // Opera
             opera.postError(this.getFormattedMessage(logEvent, true));

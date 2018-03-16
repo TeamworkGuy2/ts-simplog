@@ -31,7 +31,10 @@ var BrowserConsoleAppender = /** @class */ (function (_super) {
         if (console && console.log) {
             // use specific logging methods or fallback to console.log
             var funcName;
-            if (console.debug && Level.DEBUG.isGreaterOrEqual(logEvent.level)) {
+            if (console.trace && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
+                funcName = "trace";
+            }
+            else if (console.debug && Level.DEBUG.equals(logEvent.level)) {
                 funcName = "debug";
             }
             else if (console.info && Level.INFO.equals(logEvent.level)) {

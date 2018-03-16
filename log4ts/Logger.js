@@ -150,15 +150,15 @@ var Logger = /** @class */ (function () {
         if (Globals.enabled && level.isGreaterOrEqual(this.getEffectiveLevel())) {
             // Check whether last param is an exception
             var exception;
-            var finalParamIndex = params.length - 1;
-            var lastParam = params[finalParamIndex];
+            var lastIdx = params.length - 1;
+            var lastParam = params[lastIdx];
             if (params.length > 1 && Utils.isError(lastParam)) {
                 exception = lastParam;
-                finalParamIndex--;
+                lastIdx--;
             }
             // Construct genuine array for the params
             var messages = [];
-            for (var i = 0; i <= finalParamIndex; i++) {
+            for (var i = 0; i <= lastIdx; i++) {
                 messages[i] = params[i];
             }
             var logEvent = new LogEvent(this, new Date(), level, messages, exception);
