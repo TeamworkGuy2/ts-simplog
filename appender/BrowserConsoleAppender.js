@@ -51,7 +51,7 @@ var BrowserConsoleAppender = /** @class */ (function (_super) {
             }
             console[funcName].apply(console, this.getFormattedMessage(logEvent, false));
         }
-        else if ((typeof opera != "undefined") && opera.postError) {
+        else if ((typeof opera != "undefined") && opera.postError) { // Opera
             opera.postError(this.getFormattedMessage(logEvent, true));
         }
     };

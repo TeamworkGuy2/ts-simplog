@@ -2,9 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project does its best to adhere to [Semantic Versioning](http://semver.org/).
 
+--------
+### [0.6.3](N/A) - 2018-04-09
+#### Changed
+* Update to TypeScript 2.8
+* Update tsconfig.json with `noImplicitReturns: true` and `forceConsistentCasingInFileNames: true`
+* Added release tarball and npm script `build-package` to package.json referencing external process to generate tarball
+
 
 --------
-### [0.6.2](N/A) - 2018-03-15
+### [0.6.2](https://github.com/TeamworkGuy2/ts-simplog/commit/374ee4ccd76a2adf29ae5cbfd7aa0ebec1b6f426) - 2018-03-15
 #### Changed
 * Added simplified Console interface `Log4Ts.ConsoleLite` for the minimum console functions used by this project
 * `BrowserConsoleAppender`

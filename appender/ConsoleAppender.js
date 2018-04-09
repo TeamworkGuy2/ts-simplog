@@ -704,7 +704,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
         };
         this.safeToAppend = function () {
             if (_this.isSupported && !Utils.isUndefined(popUp) && !_this.consoleClosed) {
-                if (popUp.closed || (_this.consoleWindowLoaded && Utils.isUndefined(popUp.closed))) {
+                if (popUp.closed || (_this.consoleWindowLoaded && Utils.isUndefined(popUp.closed))) { // Extra check for Opera
                     _this.unload();
                     LogLog.debug("PopUpAppender: pop-up closed");
                     return false;

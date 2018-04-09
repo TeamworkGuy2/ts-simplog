@@ -52,7 +52,7 @@ var PatternLayout = /** @class */ (function (_super) {
                 var replacement = "";
                 switch (conversionCharacter) {
                     case "a": // Array of messages
-                    case "m":// Message
+                    case "m": // Message
                         var depth = 0;
                         if (specifier) {
                             depth = parseInt(specifier, 10);
@@ -76,7 +76,7 @@ var PatternLayout = /** @class */ (function (_super) {
                             }
                         }
                         break;
-                    case "c":// Logger name
+                    case "c": // Logger name
                         var loggerName = logEvent.logger.name;
                         if (specifier) {
                             var precision = parseInt(specifier, 10);
@@ -92,7 +92,7 @@ var PatternLayout = /** @class */ (function (_super) {
                             replacement = loggerName;
                         }
                         break;
-                    case "d":// Date
+                    case "d": // Date
                         var dateFormat = PatternLayout.ISO8601_DATEFORMAT;
                         if (specifier) {
                             dateFormat = specifier;
@@ -110,7 +110,7 @@ var PatternLayout = /** @class */ (function (_super) {
                         // Format the date
                         replacement = (new SimpleDateFormat(dateFormat)).format(logEvent.timeStamp);
                         break;
-                    case "f":// Custom field
+                    case "f": // Custom field
                         if (this.hasCustomFields()) {
                             var fieldIndex = 0;
                             if (specifier) {
@@ -135,16 +135,16 @@ var PatternLayout = /** @class */ (function (_super) {
                             replacement = val;
                         }
                         break;
-                    case "n":// New line
+                    case "n": // New line
                         replacement = Globals.newLine;
                         break;
-                    case "p":// Level
+                    case "p": // Level
                         replacement = logEvent.level.name;
                         break;
-                    case "r":// Milliseconds since app startup
+                    case "r": // Milliseconds since app startup
                         replacement = "" + DateUtil.getMillisSince(logEvent.timeStamp, Globals.applicationStartDate);
                         break;
-                    case "%":// Literal % sign
+                    case "%": // Literal % sign
                         replacement = "%";
                         break;
                     default:

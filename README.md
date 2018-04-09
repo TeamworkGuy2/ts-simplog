@@ -16,27 +16,28 @@ import LocalStoreAppender = require(".../path-to/ts-simplog/appender/LocalStoreA
 import LocalStorageStore = require(".../path-to/ts-local-storage-manager/local-store/LocalStorageStore");
 import LocalStoreByTimestamp = require(".../path-to/ts-local-storage-manager/local-store/LocalStoreByTimestamp");
 
-function createLogger(name: string, console?: Console) {
-    console = console || window.console;
-	// local storage wrapper for LocalStoreAppender
-    var localStoreInst = LocalStoreByTimestamp.newTimestampInst(LocalStorageStore.newTimestampInst(window.localStorage));
+function createLogger(name: string, console: Console) {
+    // local storage wrapper for LocalStoreAppender
+    var localStoreInst = LocalStoreByTimestamp.newTimestampInst(
+            LocalStorageStore.newTimestampInst(window.localStorage));
 
     var logOptions: Log4Ts.LoggerOptions = {
         logOriginalLoggerName: false,
         logOutputLoggerName: false,
     };
     var log = Log4TsRoot.defaultInst.getLogger(name, logOptions);
+
     // add appenders to process logged messages, without appenders a logger does nothing
     log.addAppender(new BrowserConsoleAppender(console, null/*name*/, { doLogName: false }));
     log.addAppender(new LocalStoreAppender(localStoreInst, null/*name*/, true, { doLogName: false }));
-
     return log;
 }
 
 var logger = createLogger("my-app", window.console);
 try {
     logger.info("Houston, we have logging!");
-	logger.log(Level.DEBUG, "Any level you want");
+
+    logger.log(Level.DEBUG, "Any level you want");
 } catch(err) {
     logger.error("operation failed", err);
 }
