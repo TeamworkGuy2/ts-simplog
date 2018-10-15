@@ -27,6 +27,7 @@ var Layout = /** @class */ (function () {
         this.returnsPostData = false;
         this.overrideTimeStampsSetting = false;
         this.useTimeStampsInMilliseconds = null;
+        this.combineMessages = false;
         this.customFields = [];
         this.hasWindow = typeof window === "object";
     }

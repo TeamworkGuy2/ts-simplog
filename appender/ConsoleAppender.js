@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -15,56 +18,6 @@ var LogLog = require("../log4ts/LogLog");
 var PatternLayout = require("../layout/PatternLayout");
 var Appender = require("./Appender");
 //import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
-// PopUpAppender and InPageAppender related
-function setCookie(name, value, days, path) {
-    var expires;
-    path = path ? "; path=" + path : "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    else {
-        expires = "";
-    }
-    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + path;
-}
-function getCookie(name) {
-    var nameEquals = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(";");
-    for (var i = 0, len = ca.length; i < len; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === " ") {
-            c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEquals) === 0) {
-            return decodeURIComponent(c.substring(nameEquals.length, c.length));
-        }
-    }
-    return null;
-}
-// Gets the base URL of the location of this script.
-// This is far from infallible.
-function getBaseUrl() {
-    var scripts = document.getElementsByTagName("script");
-    for (var i = 0, len = scripts.length; i < len; ++i) {
-        if (scripts[i].src.indexOf("log4ts") != -1) {
-            var lastSlash = scripts[i].src.lastIndexOf("/");
-            return (lastSlash == -1) ? "" : scripts[i].src.substr(0, lastSlash + 1);
-        }
-    }
-    return null;
-}
-function isLoaded(wnd) {
-    try {
-        return Utils.bool(wnd.loaded);
-    }
-    catch (ex) {
-        return false;
-    }
-}
-var defaultCommandLineFunctions = [];
-var consoleAppenderIdCounter = 1;
 // ConsoleAppender (prototype for PopUpAppender and InPageAppender)
 var ConsoleAppender = /** @class */ (function (_super) {
     __extends(ConsoleAppender, _super);
@@ -722,6 +675,56 @@ var ConsoleAppender = /** @class */ (function (_super) {
     return ConsoleAppender;
 }(Appender));
 // ==== TODO different ====
+// PopUpAppender and InPageAppender related
+function setCookie(name, value, days, path) {
+    var expires;
+    path = path ? "; path=" + path : "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + path;
+}
+function getCookie(name) {
+    var nameEquals = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0, len = ca.length; i < len; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === " ") {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEquals) === 0) {
+            return decodeURIComponent(c.substring(nameEquals.length, c.length));
+        }
+    }
+    return null;
+}
+// Gets the base URL of the location of this script.
+// This is far from infallible.
+function getBaseUrl() {
+    var scripts = document.getElementsByTagName("script");
+    for (var i = 0, len = scripts.length; i < len; ++i) {
+        if (scripts[i].src.indexOf("log4ts") != -1) {
+            var lastSlash = scripts[i].src.lastIndexOf("/");
+            return (lastSlash == -1) ? "" : scripts[i].src.substr(0, lastSlash + 1);
+        }
+    }
+    return null;
+}
+function isLoaded(wnd) {
+    try {
+        return Utils.bool(wnd.loaded);
+    }
+    catch (ex) {
+        return false;
+    }
+}
+var defaultCommandLineFunctions = [];
+var consoleAppenderIdCounter = 1;
 function dir(obj) {
     var maxLen = 0;
     // Obtain the length of the longest property name

@@ -2,8 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project does its best to adhere to [Semantic Versioning](http://semver.org/).
 
+
 --------
-### [0.6.3](N/A) - 2018-04-09
+### [0.6.4](N/A) - 2018-10-14
+#### Changed
+* Update to TypeScript 3.1
+* Update dev dependencies and @types
+* Enable `tsconfig.json` `strict` and fix compile errors
+* Removed compiled bin tarball in favor of git tags and github releases
+
+
+--------
+### [0.6.3](https://github.com/TeamworkGuy2/ts-simplog/commit/9057e7fe492ecfa922a53137bed69bf839ee58f4) - 2018-04-09
 #### Changed
 * Update to TypeScript 2.8
 * Update tsconfig.json with `noImplicitReturns: true` and `forceConsistentCasingInFileNames: true`

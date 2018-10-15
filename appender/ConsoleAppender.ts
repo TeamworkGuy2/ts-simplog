@@ -5,66 +5,9 @@ import PatternLayout = require("../layout/PatternLayout");
 import Appender = require("./Appender");
 //import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 
-
-// PopUpAppender and InPageAppender related
-
-function setCookie(name: string, value: string, days?: number, path?: string) {
-    var expires;
-    path = path ? "; path=" + path : "";
-    if (days) {
-        var date = new Date();
-        date.setTime(<number>date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    } else {
-        expires = "";
-    }
-    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + path;
-}
-
-function getCookie(name: string) {
-    var nameEquals = encodeURIComponent(name) + "=";
-    var ca = document.cookie.split(";");
-    for (var i = 0, len = ca.length; i < len; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === " ") {
-            c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEquals) === 0) {
-            return decodeURIComponent(c.substring(nameEquals.length, c.length));
-        }
-    }
-    return null;
-}
-
-// Gets the base URL of the location of this script.
-// This is far from infallible.
-function getBaseUrl() {
-    var scripts = document.getElementsByTagName("script");
-    for (var i = 0, len = scripts.length; i < len; ++i) {
-        if (scripts[i].src.indexOf("log4ts") != -1) {
-            var lastSlash = scripts[i].src.lastIndexOf("/");
-            return (lastSlash == -1) ? "" : scripts[i].src.substr(0, lastSlash + 1);
-        }
-    }
-    return null;
-}
-
-function isLoaded(wnd: { loaded?: boolean; close?(): void; }) {
-    try {
-        return Utils.bool(wnd.loaded);
-    } catch (ex) {
-        return false;
-    }
-}
-
-
-var defaultCommandLineFunctions: [string, (...args: any[]) => void][] = [];
-var consoleAppenderIdCounter = 1;
-
-
 // ConsoleAppender (prototype for PopUpAppender and InPageAppender)
 class ConsoleAppender extends Appender {
-    public defaults: {
+    public defaults!: {
         initiallyMinimized: boolean;
         lazyInit: boolean;
         useDocumentWrite: boolean;
@@ -93,104 +36,104 @@ class ConsoleAppender extends Appender {
         return this.name;
     }
 
-    public isNewestMessageAtTop: () => boolean;
-    public setNewestMessageAtTop: (newestMessageAtTop: boolean) => void;
+    public isNewestMessageAtTop!: () => boolean;
+    public setNewestMessageAtTop!: (newestMessageAtTop: boolean) => void;
 
-    public isScrollToLatestMessage: () => boolean;
-    public setScrollToLatestMessage: (scrollToLatestMessage: boolean) => void;
+    public isScrollToLatestMessage!: () => boolean;
+    public setScrollToLatestMessage!: (scrollToLatestMessage: boolean) => void;
 
-    public getHeight: () => string | number;
-    public setHeight: (height: string | number) => void;
+    public getHeight!: () => string | number;
+    public setHeight!: (height: string | number) => void;
 
-    public getWidth: () => string | number;
-    public setWidth: (width: string | number) => void;
+    public getWidth!: () => string | number;
+    public setWidth!: (width: string | number) => void;
 
-    public getMaxMessages: () => number;
-    public setMaxMessages: (maxMessages: number) => void;
+    public getMaxMessages!: () => number;
+    public setMaxMessages!: (maxMessages: number) => void;
 
-    public isShowCommandLine: () => boolean;
-    public setShowCommandLine: (showCommandLine: boolean) => void;
+    public isShowCommandLine!: () => boolean;
+    public setShowCommandLine!: (showCommandLine: boolean) => void;
 
-    public isShowHideButton: () => boolean;
-    public setShowHideButton: (showHideButton: boolean) => void;
+    public isShowHideButton!: () => boolean;
+    public setShowHideButton!: (showHideButton: boolean) => void;
 
-    public isShowCloseButton: () => boolean;
-    public setShowCloseButton: (showCloseButton: boolean) => void;
+    public isShowCloseButton!: () => boolean;
+    public setShowCloseButton!: (showCloseButton: boolean) => void;
 
-    public getCommandLineObjectExpansionDepth: () => number;
-    public setCommandLineObjectExpansionDepth: (commandLineObjectExpansionDepth: number) => void;
+    public getCommandLineObjectExpansionDepth!: () => number;
+    public setCommandLineObjectExpansionDepth!: (commandLineObjectExpansionDepth: number) => void;
 
-    public isInitiallyMinimized: () => boolean;
-    public setInitiallyMinimized: (initiallyMinimized: boolean) => void;
+    public isInitiallyMinimized!: () => boolean;
+    public setInitiallyMinimized!: (initiallyMinimized: boolean) => void;
 
-    public isUseDocumentWrite: () => boolean;
-    public setUseDocumentWrite: (useDocumentWrite: boolean) => void;
+    public isUseDocumentWrite!: () => boolean;
+    public setUseDocumentWrite!: (useDocumentWrite: boolean) => void;
 
-    public getCommandWindow: () => Window;
-    public setCommandWindow: (commandWindow: Window) => void;
+    public getCommandWindow!: () => Window;
+    public setCommandWindow!: (commandWindow: Window) => void;
 
-    public getCommandLayout: () => Log4Ts.Layout;
-    public setCommandLayout: (commandLayout: Log4Ts.Layout) => void;
+    public getCommandLayout!: () => Log4Ts.Layout;
+    public setCommandLayout!: (commandLayout: Log4Ts.Layout) => void;
 
-    public isComplainAboutPopUpBlocking: () => boolean;
-    public setComplainAboutPopUpBlocking: (complainAboutPopUpBlocking: boolean) => void;
+    public isComplainAboutPopUpBlocking!: () => boolean;
+    public setComplainAboutPopUpBlocking!: (complainAboutPopUpBlocking: boolean) => void;
 
-    public isUseOldPopUp: () => boolean;
-    public setUseOldPopUp: (useOldPopUp: boolean) => void;
+    public isUseOldPopUp!: () => boolean;
+    public setUseOldPopUp!: (useOldPopUp: boolean) => void;
 
-    public isFocusPopUp: () => boolean;
-    public setFocusPopUp: (reopenWhenClosed: boolean) => void;
-    public isReopenWhenClosed: () => boolean;
-    public setReopenWhenClosed: (reopenWhenClosed: boolean) => void;
+    public isFocusPopUp!: () => boolean;
+    public setFocusPopUp!: (reopenWhenClosed: boolean) => void;
+    public isReopenWhenClosed!: () => boolean;
+    public setReopenWhenClosed!: (reopenWhenClosed: boolean) => void;
 
-    public addCommandLineFunction: (functionName: string, commandLineFunction: (...args: any[]) => void) => void;
-    public addCssProperty: (name: string, value: string | number) => void;
-    public appendQueuedLoggingEvents: () => void;
-    public clear: () => void;
-    public close: (fromButton?: boolean) => void;
-    public consoleWindowLoadHandler: () => void;
-    public consoleWindowExists: () => boolean;
-    public executeLastCommand: () => void;
-    public focus: () => void;
-    public focusCommandLine: () => void;
-    public focusSearch: () => void;
-    public getConsoleUrl: () => string;
-    public getConsoleWindow: () => Window & any; // TODO type
-    public hide: () => void;
-    public isVisible: () => boolean;
-    public pollConsoleWindow: (windowTest: (wnd: Window & any) => void, interval: number, successCallback: () => void, errorMessage: any) => void;
-    public show: () => void;
-    public storeCommandHistory: (commandHistory: string[]) => void;
-    public unload: () => void;
-    public writeHtml: (doc: { open(): void; close(): void; writeln(str: string): void; }) => void;
+    public addCommandLineFunction!: (functionName: string, commandLineFunction: (...args: any[]) => void) => void;
+    public addCssProperty!: (name: string, value: string | number) => void;
+    public appendQueuedLoggingEvents!: () => void;
+    public clear!: () => void;
+    public close!: (fromButton?: boolean) => void;
+    public consoleWindowLoadHandler!: () => void;
+    public consoleWindowExists!: () => boolean;
+    public executeLastCommand!: () => void;
+    public focus!: () => void;
+    public focusCommandLine!: () => void;
+    public focusSearch!: () => void;
+    public getConsoleUrl!: () => string;
+    public getConsoleWindow!: () => Window & any; // TODO type
+    public hide!: () => void;
+    public isVisible!: () => boolean;
+    public pollConsoleWindow!: (windowTest: (wnd: Window & any) => boolean, interval: number, successCallback: () => void, errorMessage: any) => void;
+    public show!: () => void;
+    public storeCommandHistory!: (commandHistory: string[]) => void;
+    public unload!: () => void;
+    public writeHtml!: (doc: { open(): void; close(): void; writeln(str: string): void; }) => void;
 
     // Extract params
-    public commandLineObjectExpansionDepth: number;
-    public complainAboutPopUpBlocking: boolean;
-    public consoleWindowCreated: boolean;
-    public consoleWindowLoaded: boolean;
-    public consoleClosed: boolean;
-    public container: string | Node;
-    public focusConsoleWindow: boolean;
-    public initialized: boolean;
-    public initiallyMinimized: boolean;
-    public isSupported: boolean;
-    public maxMessages: number;
-    public minimized: boolean;
-    public newestMessageAtTop: boolean;
-    public reopenWhenClosed: boolean;
-    public scrollToLatestMessage: boolean;
-    public showCommandLine: boolean;
-    public showCloseButton: boolean;
-    public showHideButton: boolean;
-    public useDocumentWrite: boolean;
-    public useOldPopUp: boolean;
+    public commandLineObjectExpansionDepth!: number;
+    public complainAboutPopUpBlocking!: boolean;
+    public consoleWindowCreated!: boolean;
+    public consoleWindowLoaded!: boolean;
+    public consoleClosed!: boolean;
+    public container!: string | Node;
+    public focusConsoleWindow!: boolean;
+    public initialized!: boolean;
+    public initiallyMinimized!: boolean;
+    public isSupported!: boolean;
+    public maxMessages!: number;
+    public minimized!: boolean;
+    public newestMessageAtTop!: boolean;
+    public reopenWhenClosed!: boolean;
+    public scrollToLatestMessage!: boolean;
+    public showCommandLine!: boolean;
+    public showCloseButton!: boolean;
+    public showHideButton!: boolean;
+    public useDocumentWrite!: boolean;
+    public useOldPopUp!: boolean;
 
     // Functions whose implementations vary between subclasses
-    public init: () => void;
-    public createWindow: (show?: boolean) => void;
-    public safeToAppend: () => boolean;
-    public open: () => void;
+    public init!: () => void;
+    public createWindow!: (show?: boolean) => void;
+    public safeToAppend!: () => boolean;
+    public open!: () => void;
 
 
     public create(inPage: boolean, container?: string | Node | null, lazyInit?: boolean, initiallyMinimized?: boolean,
@@ -471,7 +414,7 @@ class ConsoleAppender extends Appender {
             }
         };
 
-        this.pollConsoleWindow = (windowTest: (wnd: Window & any) => void, interval: number, successCallback: () => void, errorMessage: any) => {
+        this.pollConsoleWindow = (windowTest: (wnd: Window & any) => boolean, interval: number, successCallback: () => void, errorMessage: any) => {
             var doPoll = () => {
                 try {
                     // Test if the console has been closed while polling
@@ -928,6 +871,62 @@ class ConsoleAppender extends Appender {
 
 
 // ==== TODO different ====
+// PopUpAppender and InPageAppender related
+
+function setCookie(name: string, value: string, days?: number, path?: string) {
+    var expires;
+    path = path ? "; path=" + path : "";
+    if (days) {
+        var date = new Date();
+        date.setTime(<number>date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + path;
+}
+
+function getCookie(name: string) {
+    var nameEquals = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0, len = ca.length; i < len; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === " ") {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEquals) === 0) {
+            return decodeURIComponent(c.substring(nameEquals.length, c.length));
+        }
+    }
+    return null;
+}
+
+// Gets the base URL of the location of this script.
+// This is far from infallible.
+function getBaseUrl() {
+    var scripts = document.getElementsByTagName("script");
+    for (var i = 0, len = scripts.length; i < len; ++i) {
+        if (scripts[i].src.indexOf("log4ts") != -1) {
+            var lastSlash = scripts[i].src.lastIndexOf("/");
+            return (lastSlash == -1) ? "" : scripts[i].src.substr(0, lastSlash + 1);
+        }
+    }
+    return null;
+}
+
+function isLoaded(wnd: { loaded?: boolean; close?(): void; }) {
+    try {
+        return Utils.bool(wnd.loaded);
+    } catch (ex) {
+        return false;
+    }
+}
+
+
+var defaultCommandLineFunctions: [string, (...args: any[]) => void][] = [];
+var consoleAppenderIdCounter = 1;
+
+
 function dir(obj: any) {
     var maxLen = 0;
     // Obtain the length of the longest property name

@@ -54,14 +54,16 @@ class Log4TsRoot {
 
     private ROOT_LOGGER_DEFAULT_LEVEL = Level.DEBUG;
     private rootLogger: Logger;
-    private defaultLogger: Logger;
-    private nullLogger: Logger;
+    private defaultLogger: Logger | null = null;
+    private nullLogger: Logger | null = null;
     // Hashtable of loggers keyed by logger name
     private loggers: { [name: string]: Logger } = {};
     private loggerNames: string[] = [];
 
 
     constructor(edition: string, version: string) {
+        this.version = version;
+        this.edition = edition;
         this.rootLogger = new Logger(Logger.rootLoggerName);
         this.rootLogger.setLevel(this.ROOT_LOGGER_DEFAULT_LEVEL);
     }

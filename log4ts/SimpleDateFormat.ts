@@ -31,7 +31,7 @@ var types = {
 
 class SimpleDateFormat {
     private formatString: string;
-    private minimalDaysInFirstWeek: number;
+    private minimalDaysInFirstWeek: number = DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
 
 
     /** SimpleDateFormat
@@ -52,7 +52,7 @@ class SimpleDateFormat {
 
 
     public getMinimalDaysInFirstWeek() {
-        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
+        return this.minimalDaysInFirstWeek;
     }
 
 

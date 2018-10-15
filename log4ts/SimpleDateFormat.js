@@ -29,6 +29,7 @@ var SimpleDateFormat = /** @class */ (function () {
      * @param formatString
      */
     function SimpleDateFormat(formatString) {
+        this.minimalDaysInFirstWeek = DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK;
         this.formatString = formatString;
     }
     /**
@@ -39,7 +40,7 @@ var SimpleDateFormat = /** @class */ (function () {
         this.minimalDaysInFirstWeek = days;
     };
     SimpleDateFormat.prototype.getMinimalDaysInFirstWeek = function () {
-        return Utils.isUndefined(this.minimalDaysInFirstWeek) ? DateUtil.DEFAULT_MINIMAL_DAYS_IN_FIRST_WEEK : this.minimalDaysInFirstWeek;
+        return this.minimalDaysInFirstWeek;
     };
     SimpleDateFormat.prototype.formatText = function (data, numberOfLetters, minLength) {
         return (numberOfLetters >= 4) ? data : data.substr(0, Math.max(minLength, numberOfLetters));

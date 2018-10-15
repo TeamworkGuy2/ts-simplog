@@ -24,9 +24,13 @@ var Log4TsRoot = /** @class */ (function () {
         this.logLog = LogLog;
         this.handleError = LogLog.handleError;
         this.ROOT_LOGGER_DEFAULT_LEVEL = Level.DEBUG;
+        this.defaultLogger = null;
+        this.nullLogger = null;
         // Hashtable of loggers keyed by logger name
         this.loggers = {};
         this.loggerNames = [];
+        this.version = version;
+        this.edition = edition;
         this.rootLogger = new Logger(Logger.rootLoggerName);
         this.rootLogger.setLevel(this.ROOT_LOGGER_DEFAULT_LEVEL);
     }
