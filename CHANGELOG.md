@@ -2,14 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project does its best to adhere to [Semantic Versioning](http://semver.org/).
 
+--------
+### [0.6.5](N/A) - 2018-10-20
+#### Changed
+* Switch `package.json` github dependencies from tag urls to release tarballs to simplify npm install (doesn't require git to npm install tarballs)
+
 
 --------
-### [0.6.4](N/A) - 2018-10-14
+### [0.6.4](https://github.com/TeamworkGuy2/ts-simplog/commit/72ac517591e1d06e8919e14ab934913ab1c4aa55) - 2018-10-14
 #### Changed
 * Update to TypeScript 3.1
 * Update dev dependencies and @types
 * Enable `tsconfig.json` `strict` and fix compile errors
-* Removed compiled bin tarball in favor of git tags and github releases
+* Removed compiled bin tarball in favor of git tags
 
 
 --------
