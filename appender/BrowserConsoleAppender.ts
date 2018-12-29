@@ -40,7 +40,7 @@ class BrowserConsoleAppender extends Appender {
                 funcName = "log";
             }
 
-            console[funcName].apply(console, this.getFormattedMessage(logEvent, false));
+            console[funcName].apply(console, <any>this.getFormattedMessage(logEvent, false));
         }
         else if ((typeof opera != "undefined") && opera.postError) { // Opera
             opera.postError(this.getFormattedMessage(logEvent, true));
@@ -67,7 +67,10 @@ class BrowserConsoleAppender extends Appender {
     }
 
 
-    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate?: boolean) {
+    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate: true): string;
+    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate?: false): any[];
+    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate?: boolean): string | any[];
+    private getFormattedMessage(logEvent: Log4Ts.LogEvent, concatenate?: boolean): string | any[] {
         var formattedMessage = this.getLayout().formatWithException(logEvent);
         return (typeof formattedMessage === "string") ?
             (concatenate ? formattedMessage : [formattedMessage]) :

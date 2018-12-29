@@ -13,8 +13,8 @@ import Log4TsRoot = require(".../path-to/ts-simplog/log4ts/Log4TsRoot");
 import BrowserConsoleAppender = require(".../path-to/ts-simplog/appender/BrowserConsoleAppender");
 import LocalStoreAppender = require(".../path-to/ts-simplog/appender/LocalStoreAppender");
 // from dependency https://github.com/TeamworkGuy2/ts-local-storage-manager
-import LocalStorageStore = require(".../path-to/ts-local-storage-manager/local-store/LocalStorageStore");
-import LocalStoreByTimestamp = require(".../path-to/ts-local-storage-manager/local-store/LocalStoreByTimestamp");
+import LocalStorageStore = require("ts-local-storage-manager/local-store/LocalStorageStore");
+import LocalStoreByTimestamp = require("ts-local-storage-manager/local-store/LocalStoreByTimestamp");
 
 function createLogger(name: string, console: Console) {
     // local storage wrapper for LocalStoreAppender
