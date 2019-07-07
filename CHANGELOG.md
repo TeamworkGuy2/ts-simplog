@@ -2,8 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project does its best to adhere to [Semantic Versioning](http://semver.org/).
 
+
 --------
-### [0.6.5](N/A) - 2018-10-20
+### [0.6.7](N/A) - 2019-07-06
+#### Changed
+* Update to TypeScript 3.5
+
+
+--------
+### [0.6.6](https://github.com/TeamworkGuy2/ts-simplog/commit/ac6a3bbeba6c7ce89bd371dbb800bd0549e80068) - 2018-12-29
+#### Changed
+* Update to TypeScript 3.2 and fix compile errors
+
+#### Removed
+* Removed `ts-local-storage-manager` dependency
+
+
+--------
+### [0.6.5](https://github.com/TeamworkGuy2/ts-simplog/commit/fee728fd1023c51513185b01ee0951b1764d1cef) - 2018-10-20
 #### Changed
 * Switch `package.json` github dependencies from tag urls to release tarballs to simplify npm install (doesn't require git to npm install tarballs)
 

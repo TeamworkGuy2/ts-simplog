@@ -1,6 +1,6 @@
 {
   "name": "ts-simplog",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "TypeScript port of log4javascript with customization and decoupling of heavy parts, and TypeScript interface based for easy customization.",
   "author": "TeamworkGuy2",
   "homepage": "https://github.com/TeamworkGuy2/ts-simplog",
@@ -15,10 +15,10 @@
     "@types/mocha": "~5.2.5",
     "chai": "~4.2.0",
     "mocha": "~5.2.0",
-    "typescript": "~3.2.2"
+    "typescript": "~3.5.2"
   },
   "scripts": {
-    "test": "mocha -u tdd --recursive",
-    "tsc": "tsc"
+    "test": "node node_modules/mocha/bin/_mocha -u tdd --recursive",
+    "tsc": "node node_modules/typescript/bin/tsc"
   }
 }
