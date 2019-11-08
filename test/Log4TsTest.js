@@ -747,7 +747,6 @@ suite("log4ts test", function log4tsTest() {
         inPageAppender.setInitiallyMinimized(false);
         inPageAppender.setNewestMessageAtTop(false);
         inPageAppender.setScrollToLatestMessage(true);
-        inPageAppender.setUseDocumentWrite(false);
         inPageAppender.setWidth(600);
         inPageAppender.setHeight(200);
 
@@ -774,7 +773,6 @@ suite("log4ts test", function log4tsTest() {
         popUpAppender.setNewestMessageAtTop(false);
         popUpAppender.setScrollToLatestMessage(true);
         popUpAppender.setComplainAboutPopUpBlocking(false);
-        popUpAppender.setUseDocumentWrite(false);
         popUpAppender.setWidth(600);
         popUpAppender.setHeight(200);
 

@@ -17,7 +17,6 @@ var Utils = require("../log-util/Utils");
 var LogLog = require("../log4ts/LogLog");
 var PatternLayout = require("../layout/PatternLayout");
 var Appender = require("./Appender");
-//import ConsoleAppenderWindowSetup = require("./ConsoleAppenderWindowSetup");
 // ConsoleAppender (prototype for PopUpAppender and InPageAppender)
 var ConsoleAppender = /** @class */ (function (_super) {
     __extends(ConsoleAppender, _super);
@@ -29,7 +28,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
     ConsoleAppender.prototype.toString = function () {
         return this.name;
     };
-    ConsoleAppender.prototype.create = function (inPage, container, lazyInit, initiallyMinimized, useDocumentWrite, width, height, focusConsoleWindow) {
+    ConsoleAppender.prototype.create = function (inPage, container, lazyInit, initiallyMinimized, width, height, focusConsoleWindow) {
         var _this = this;
         var queuedLoggingEvents = [];
         var consoleAppenderId = consoleAppenderIdCounter++;
@@ -37,7 +36,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
         lazyInit = Utils.booleanOrDefault(lazyInit, this.defaults.lazyInit);
         width = width ? width : this.defaults.width;
         height = height ? height : this.defaults.height;
-        this.commandLineObjectExpansionDepth = this.defaults.commandLineObjectExpansionDepth;
         this.complainAboutPopUpBlocking = this.defaults.complainAboutPopUpBlocking;
         this.container = container;
         this.focusConsoleWindow = focusConsoleWindow;
@@ -50,7 +48,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
         this.showCommandLine = this.defaults.showCommandLine;
         this.showCloseButton = this.defaults.showCloseButton;
         this.showHideButton = this.defaults.showHideButton;
-        this.useDocumentWrite = Utils.booleanOrDefault(useDocumentWrite, this.defaults.useDocumentWrite);
         this.useOldPopUp = this.defaults.useOldPopUp;
         this.setLayout(this.defaults.layout);
         // Configuration methods. The function scope is used to prevent direct alteration to the appender configuration properties.
@@ -119,10 +116,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 _this.getConsoleWindow().setShowCloseButton(_this.showCloseButton);
             }
         };
-        this.getCommandLineObjectExpansionDepth = function () { return _this.commandLineObjectExpansionDepth; };
-        this.setCommandLineObjectExpansionDepth = function (commandLineObjectExpansionDepthParam) {
-            _this.commandLineObjectExpansionDepth = Utils.intOrDefault(commandLineObjectExpansionDepthParam, _this.commandLineObjectExpansionDepth);
-        };
         this.minimized = initiallyMinimized;
         this.isInitiallyMinimized = function () { return initiallyMinimized; };
         this.setInitiallyMinimized = function (initiallyMinimizedParam) {
@@ -131,17 +124,11 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 _this.minimized = initiallyMinimized;
             }
         };
-        this.isUseDocumentWrite = function () { return useDocumentWrite; };
-        this.setUseDocumentWrite = function (useDocumentWriteParam) {
-            if (checkCanConfigure("useDocumentWrite")) {
-                useDocumentWrite = Utils.bool(useDocumentWriteParam);
-            }
-        };
         var checkAndAppend = function () {
             // Next line forces a check of whether the window has been closed
             _this.safeToAppend();
             if (!_this.initialized) {
-                init();
+                //init();
             }
             else if (_this.consoleClosed && _this.reopenWhenClosed) {
                 _this.createWindow();
@@ -181,7 +168,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
         this.setAddedToLogger = function (logger) {
             _this.loggers.push(logger);
             if (Globals.enabled && !lazyInit) {
-                init();
+                //init();
             }
         };
         this.clear = function () {
@@ -205,11 +192,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 _this.getConsoleWindow().focusSearch();
             }
         };
-        var cmdWnd = typeof window === "object" ? window : null;
-        this.getCommandWindow = function () { return cmdWnd; };
-        this.setCommandWindow = function (commandWindowParam) {
-            cmdWnd = commandWindowParam;
-        };
         this.executeLastCommand = function () {
             if (_this.consoleWindowExists()) {
                 _this.getConsoleWindow().evalLastCommand();
@@ -220,22 +202,9 @@ var ConsoleAppender = /** @class */ (function (_super) {
         this.setCommandLayout = function (commandLayoutParam) {
             commandLayout = commandLayoutParam;
         };
-        var commandLineFunctions = defaultCommandLineFunctions.concat([]);
-        this.addCommandLineFunction = function (functionName, commandLineFunction) {
-            commandLineFunctions.push([functionName, commandLineFunction]);
-        };
         var commandHistoryCookieName = "log4tsCommandHistory";
         this.storeCommandHistory = function (commandHistory) {
             setCookie(commandHistoryCookieName, commandHistory.join(","));
-        };
-        this.writeHtml = function (doc) {
-            throw new Error("currently not supported, please use ts-simplog ConsoleAppender as a normal commonjs require() import");
-            /*var lines = ConsoleAppenderWindowSetup.htmlDocString;
-            doc.open();
-            for (var i = 0, len = lines.length; i < len; i++) {
-                doc.writeln(lines[i]);
-            }
-            doc.close();*/
         };
         // Set up event listeners
         this.setEventTypes(["load", "unload"]);
@@ -290,8 +259,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
         };
         this.getConsoleUrl = function () {
             var hasDomain = (document.domain != location.hostname);
-            return useDocumentWrite ? "" : getBaseUrl() + "console_uncompressed.html" +
-                (hasDomain ? "?log4ts_domain=" + encodeURIComponent(document.domain) : "");
+            return getBaseUrl() + "console_uncompressed.html" + (hasDomain ? "?log4ts_domain=" + encodeURIComponent(document.domain) : "");
         };
         // Define methods and properties that vary between subclasses
         if (inPage) {
@@ -399,9 +367,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
             var writeToDocument = function () {
                 try {
                     var windowTest = function (win) { return isLoaded(win); };
-                    if (_this.useDocumentWrite) {
-                        _this.writeHtml(_this.getConsoleWindow().document);
-                    }
                     if (windowTest(_this.getConsoleWindow())) {
                         finalInit();
                     }
@@ -422,7 +387,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
             for (var i = 0, len = cssProps.length; i < len; i++) {
                 iframeElem.style[cssProps[i][0]] = cssProps[i][1];
             }
-            var iframeSrc = _this.useDocumentWrite ? "" : " src='" + _this.getConsoleUrl() + "'";
+            var iframeSrc = " src='" + _this.getConsoleUrl() + "'";
             // Adding an iframe using the DOM would be preferable, but it doesn't work
             // in IE5 on Windows, or in Konqueror prior to version 3.5 - in Konqueror
             // it creates the iframe fine but I haven't been able to find a way to obtain
@@ -579,7 +544,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 frameInfo = "_inaccessibleParentFrame";
             }
             var windowName = "PopUp_" + location.host.replace(/[^a-z0-9]/gi, "_") + "_" + consoleAppenderId + frameInfo;
-            if (!_this.useOldPopUp || !_this.useDocumentWrite) {
+            if (!_this.useOldPopUp) {
                 // Ensure a previous window isn't used by using a unique name
                 windowName = windowName + "_" + Globals.uniqueId;
             }
@@ -601,7 +566,7 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 }
             };
             var finalInit = function () {
-                _this.getConsoleWindow().setCloseIfOpenerCloses(!_this.useOldPopUp || !_this.useDocumentWrite);
+                _this.getConsoleWindow().setCloseIfOpenerCloses(!_this.useOldPopUp);
                 _this.consoleWindowLoadHandler();
                 _this.consoleWindowLoaded = true;
                 _this.appendQueuedLoggingEvents();
@@ -612,15 +577,12 @@ var ConsoleAppender = /** @class */ (function (_super) {
                 _this.consoleClosed = false;
                 _this.consoleWindowCreated = true;
                 if (popUp && popUp.document) {
-                    if (_this.useDocumentWrite && _this.useOldPopUp && isLoaded(popUp)) {
+                    if (_this.useOldPopUp && isLoaded(popUp)) {
                         // TODO need to inject functions into the page
                         popUp["mainPageReloaded"]();
                         finalInit();
                     }
                     else {
-                        if (_this.useDocumentWrite) {
-                            _this.writeHtml(popUp.document);
-                        }
                         // Check if the pop-up window object is available
                         var popUpLoadedTest = function (win) { return Utils.bool(win) && isLoaded(win); };
                         if (isLoaded(popUp)) {
@@ -668,9 +630,6 @@ var ConsoleAppender = /** @class */ (function (_super) {
             }
             return _this.isSupported && _this.consoleWindowLoaded && !_this.consoleClosed;
         };
-    };
-    ConsoleAppender.addGlobalCommandLineFunction = function (functionName, commandLineFunction) {
-        defaultCommandLineFunctions.push([functionName, commandLineFunction]);
     };
     return ConsoleAppender;
 }(Appender));
@@ -723,29 +682,7 @@ function isLoaded(wnd) {
         return false;
     }
 }
-var defaultCommandLineFunctions = [];
 var consoleAppenderIdCounter = 1;
-function dir(obj) {
-    var maxLen = 0;
-    // Obtain the length of the longest property name
-    for (var p in obj) {
-        maxLen = Math.max(Utils.toStr(p).length, maxLen);
-    }
-    // Create the nicely formatted property list
-    var propList = [];
-    for (p in obj) {
-        var propNameStr = "  " + Utils.padWithSpaces(Utils.toStr(p), maxLen + 2);
-        var propVal;
-        try {
-            propVal = Utils.splitIntoLines(Utils.toStr(obj[p])).join(Utils.padWithSpaces(Globals.newLine, maxLen + 6));
-        }
-        catch (ex) {
-            propVal = "[Error obtaining property. Details: " + Utils.getExceptionMessage(ex) + "]";
-        }
-        propList.push(propNameStr + propVal);
-    }
-    return propList.join(Globals.newLine);
-}
 var nodeTypes = {
     ELEMENT_NODE: 1,
     ATTRIBUTE_NODE: 2,
@@ -905,88 +842,4 @@ function getXhtml(rootNode, includeRootNode, indentation, startNewLine, preforma
         return xhtml;
     }
 }
-function createCommandLineFunctions() {
-    ConsoleAppender.addGlobalCommandLineFunction("$", function (appender, args, returnValue) {
-        return document.getElementById(args[0]);
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("dir", function (appender, args, returnValue) {
-        var lines = [];
-        for (var i = 0, len = args.length; i < len; i++) {
-            lines[i] = dir(args[i]);
-        }
-        return lines.join(Globals.newLine + Globals.newLine);
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("dirxml", function (appender, args, returnValue) {
-        var lines = [];
-        for (var i = 0, len = args.length; i < len; i++) {
-            lines[i] = getXhtml(args[i]);
-        }
-        return lines.join(Globals.newLine + Globals.newLine);
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("cd", function (appender, args, returnValue) {
-        var win, message;
-        if (args.length === 0 || args[0] === "") {
-            win = window;
-            message = "Command line set to run in main window";
-        }
-        else {
-            if (args[0].window == args[0]) {
-                win = args[0];
-                message = "Command line set to run in frame '" + args[0].name + "'";
-            }
-            else {
-                win = window.frames[args[0]];
-                if (win) {
-                    message = "Command line set to run in frame '" + args[0] + "'";
-                }
-                else {
-                    returnValue.isError = true;
-                    message = "Frame '" + args[0] + "' does not exist";
-                    win = appender.getCommandWindow();
-                }
-            }
-        }
-        appender.setCommandWindow(win);
-        return message;
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("clear", function (appender, args, returnValue) {
-        returnValue.appendResult = false;
-        appender.clear();
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("keys", function (appender, args, returnValue) {
-        var keys = [];
-        for (var k in args[0]) {
-            keys.push(k);
-        }
-        return keys;
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("values", function (appender, args, returnValue) {
-        var values = [];
-        for (var k in args[0]) {
-            try {
-                values.push(args[0][k]);
-            }
-            catch (ex) {
-                LogLog.warn("values(): Unable to obtain value for key " + k + ". Details: " + Utils.getExceptionMessage(ex));
-            }
-        }
-        return values;
-    });
-    ConsoleAppender.addGlobalCommandLineFunction("expansionDepth", function (appender, args, returnValue) {
-        var expansionDepth = parseInt(args[0], 10);
-        if (isNaN(expansionDepth) || expansionDepth < 0) {
-            returnValue.isError = true;
-            return "" + args[0] + " is not a valid expansion depth";
-        }
-        else {
-            appender.setCommandLineObjectExpansionDepth(expansionDepth);
-            return "Object expansion depth set to " + expansionDepth;
-        }
-    });
-}
-function init() {
-    // Add command line functions
-    createCommandLineFunctions();
-}
-init();
 module.exports = ConsoleAppender;

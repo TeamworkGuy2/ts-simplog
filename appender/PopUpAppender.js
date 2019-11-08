@@ -18,7 +18,7 @@ var PatternLayout = require("../layout/PatternLayout");
  */
 var PopUpAppender = /** @class */ (function (_super) {
     __extends(PopUpAppender, _super);
-    function PopUpAppender(lazyInit, initiallyMinimized, useDocumentWrite, width, height, opts) {
+    function PopUpAppender(lazyInit, initiallyMinimized, width, height, opts) {
         var _this = _super.call(this, opts) || this;
         _this.defaults = {
             layout: new PatternLayout("%d{HH:mm:ss} %-5p - %m{1}%n"),
@@ -34,13 +34,11 @@ var PopUpAppender = /** @class */ (function (_super) {
             reopenWhenClosed: false,
             maxMessages: null,
             showCommandLine: true,
-            commandLineObjectExpansionDepth: 1,
             showHideButton: false,
             showCloseButton: true,
-            useDocumentWrite: true
         };
         _this.name = "PopUpAppender";
-        _this.create(false, null, lazyInit, initiallyMinimized, useDocumentWrite, width, height, _this.defaults.focusPopUp);
+        _this.create(false, null, lazyInit, initiallyMinimized, width, height, _this.defaults.focusPopUp);
         return _this;
     }
     PopUpAppender.prototype.toString = function () {

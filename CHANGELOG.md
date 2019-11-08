@@ -4,7 +4,24 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.6.7](N/A) - 2019-07-06
+### [0.7.0](N/A) - 2019-11-08
+#### Changed
+* Update to TypeScript 3.7
+
+#### Removed
+* Empty `ConsoleAppenderWindowSetup` file
+* Clean up unused `ConsoleAppender` code:
+  * `commandLineObjectExpansionDepth`
+  * `useDocumentWrite`
+  * `get/setCommandLineObjectExpansionDepth()`
+  * `is/setUseDocumentWrite()`
+  * `get/setCommandWindow()`
+  * `addCommandLineFunction()`
+  * `writeHtml()`
+
+
+--------
+### [0.6.7](https://github.com/TeamworkGuy2/ts-simplog/commit/1f042e53da83ec68d02786fc038b8b6982e02248) - 2019-07-06
 #### Changed
 * Update to TypeScript 3.5
 
