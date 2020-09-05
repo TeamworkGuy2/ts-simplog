@@ -33,14 +33,14 @@ declare module Log4Ts {
 
 
     interface ConsoleLite {
-        debug: typeof Console.prototype["debug"]; //(message?: any, ...optionalParams: any[]): void;
-        error: typeof Console.prototype["error"]; //(message?: any, ...optionalParams: any[]): void;
-        group: typeof Console.prototype["group"]; //(groupTitle?: string, ...optionalParams: any[]): void;
-        groupEnd: typeof Console.prototype["groupEnd"]; //(): void;
-        info: typeof Console.prototype["info"]; //(message?: any, ...optionalParams: any[]): void;
-        log: typeof Console.prototype["log"]; //(message?: any, ...optionalParams: any[]): void;
-        trace: typeof Console.prototype["trace"]; //(message?: any, ...optionalParams: any[]): void;
-        warn: typeof Console.prototype["warn"]; //(message?: any, ...optionalParams: any[]): void;
+        debug: Console["debug"]; //(message?: any, ...optionalParams: any[]): void;
+        error: Console["error"]; //(message?: any, ...optionalParams: any[]): void;
+        group: Console["group"]; //(groupTitle?: string, ...optionalParams: any[]): void;
+        groupEnd: Console["groupEnd"]; //(): void;
+        info: Console["info"]; //(message?: any, ...optionalParams: any[]): void;
+        log: Console["log"]; //(message?: any, ...optionalParams: any[]): void;
+        trace: Console["trace"]; //(message?: any, ...optionalParams: any[]): void;
+        warn: Console["warn"]; //(message?: any, ...optionalParams: any[]): void;
     }
 
 
