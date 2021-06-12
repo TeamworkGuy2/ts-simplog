@@ -7,6 +7,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -31,22 +33,22 @@ var BrowserConsoleAppender = /** @class */ (function (_super) {
     }
     BrowserConsoleAppender.prototype.append = function (logEvent) {
         var console = this.console;
-        if (console && console.log) {
+        if (console && console["log"]) {
             // use specific logging methods or fallback to console.log
             var funcName;
-            if (console.trace && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
+            if (console["trace"] && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
                 funcName = "trace";
             }
-            else if (console.debug && Level.DEBUG.equals(logEvent.level)) {
+            else if (console["debug"] && Level.DEBUG.equals(logEvent.level)) {
                 funcName = "debug";
             }
-            else if (console.info && Level.INFO.equals(logEvent.level)) {
+            else if (console["info"] && Level.INFO.equals(logEvent.level)) {
                 funcName = "info";
             }
-            else if (console.warn && Level.WARN.equals(logEvent.level)) {
+            else if (console["warn"] && Level.WARN.equals(logEvent.level)) {
                 funcName = "warn";
             }
-            else if (console.error && logEvent.level.isGreaterOrEqual(Level.ERROR)) {
+            else if (console["error"] && logEvent.level.isGreaterOrEqual(Level.ERROR)) {
                 funcName = "error";
             }
             else {

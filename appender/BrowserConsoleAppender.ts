@@ -22,19 +22,19 @@ class BrowserConsoleAppender extends Appender {
     public append(logEvent: Log4Ts.LogEvent) {
         var console = this.console;
 
-        if (console && console.log) {
+        if (console && console["log"]) {
             // use specific logging methods or fallback to console.log
             var funcName: keyof Log4Ts.ConsoleLite;
 
-            if (console.trace && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
+            if (console["trace"] && Level.TRACE.isGreaterOrEqual(logEvent.level)) {
                 funcName = "trace";
-            } else if (console.debug && Level.DEBUG.equals(logEvent.level)) {
+            } else if (console["debug"] && Level.DEBUG.equals(logEvent.level)) {
                 funcName = "debug";
-            } else if (console.info && Level.INFO.equals(logEvent.level)) {
+            } else if (console["info"] && Level.INFO.equals(logEvent.level)) {
                 funcName = "info";
-            } else if (console.warn && Level.WARN.equals(logEvent.level)) {
+            } else if (console["warn"] && Level.WARN.equals(logEvent.level)) {
                 funcName = "warn";
-            } else if (console.error && logEvent.level.isGreaterOrEqual(Level.ERROR)) {
+            } else if (console["error"] && logEvent.level.isGreaterOrEqual(Level.ERROR)) {
                 funcName = "error";
             } else {
                 funcName = "log";
