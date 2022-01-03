@@ -321,7 +321,7 @@ class AjaxAppender extends Appender {
                 LogLog.handleError(errMsg, ex);
                 isSupported = false;
                 if (failCallback) {
-                    failCallback(errMsg + ". Details: " + Utils.getExceptionStringRep(ex));
+                    failCallback(errMsg + ". Details: " + Utils.getExceptionStringRep(<any>ex));
                 }
             }
         }

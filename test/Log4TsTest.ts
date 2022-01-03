@@ -104,7 +104,7 @@ function compareObjectInterface(obj1: any, obj1_name: string, obj2: any, obj2_na
                     }
                 }
             } catch (ex) {
-                throw new Error("Exception while checking property name " + propertyFullyQualifiedName + " in " + obj2_name + ": " + ex.message);
+                throw new Error("Exception while checking property name " + propertyFullyQualifiedName + " in " + obj2_name + ": " + (<any>ex).message);
             }
         }
     }

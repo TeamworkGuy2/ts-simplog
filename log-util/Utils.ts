@@ -127,7 +127,7 @@ module Utils {
                 try {
                     expansion = Utils.toStr(obj);
                 } catch (ex) {
-                    expansion = "Error formatting property. Details: " + Utils.getExceptionStringRep(ex);
+                    expansion = "Error formatting property. Details: " + Utils.getExceptionStringRep(<any>ex);
                 }
                 return expansion + " [already expanded]";
             }
@@ -142,7 +142,7 @@ module Utils {
                         var childExpansion = doFormat(obj[i], childDepth, childIndentation);
                         childLines.push(childIndentation + childExpansion);
                     } catch (ex) {
-                        childLines.push(childIndentation + "Error formatting array member. Details: " + Utils.getExceptionStringRep(ex) + "");
+                        childLines.push(childIndentation + "Error formatting array member. Details: " + Utils.getExceptionStringRep(<any>ex) + "");
                     }
                 }
                 expansion += childLines.join("," + Globals.newLine) + Globals.newLine + indentation + "]";
@@ -162,7 +162,7 @@ module Utils {
                         var childExpansion = doFormat(obj[key], childDepth, childIndentation);
                         childLines.push(childIndentation + key + ": " + childExpansion);
                     } catch (ex) {
-                        childLines.push(childIndentation + key + ": Error formatting property. Details: " + Utils.getExceptionStringRep(ex));
+                        childLines.push(childIndentation + key + ": Error formatting property. Details: " + Utils.getExceptionStringRep(<any>ex));
                     }
                 }
                 expansion += childLines.join("," + Globals.newLine) + Globals.newLine + indentation + "}";

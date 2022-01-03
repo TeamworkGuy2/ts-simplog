@@ -4,7 +4,13 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.9.0](N/A) - 2021-06-12
+### [0.10.0](N/A) - 2022-01-02
+#### Changed
+* Update to TypeScript 4.4
+
+
+--------
+### [0.9.0](https://github.com/TeamworkGuy2/ts-simplog/commit/d58d55971e2236870326b8905fee3df183a3455e) - 2021-06-12
 #### Changed
 * Update to TypeScript 4.3
 
